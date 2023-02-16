@@ -1,0 +1,259 @@
+\chapter{SOFR hedges}
+
+\section{Hedging 3-month arithmetic with 3-month geometric}
+Consider the case where we want to hedge: 
+$$
+X^{3M\_A} = \frac{1}{T-S}\int_{S}^{T}r_{u}du
+$$
+
+Here $[S,T]$ will denote a 3-month period, in the market we only have available
+3-month futures $f^{3M}(t,S,T)$ (\ref{def: 3M_SOFR_futures})  calculated using a geometric average, this means that our hedge will look like: 
+\begin{align*}
+\argmin\limits_{a \in \R}\E_{Q}\left[
+\left(
+X^{3M\_A}-af^{3M}(t,S,T)
+\right)^{2}
+\bigg{|}\F_{t}
+\right]
+\end{align*}
+
+Let's denote $H(a) :=\E_{Q}\left[
+\left(X^{3M\_A}-af^{3M}(t,S,T)
+\right)^{2}
+\bigg{|}\F_{t}
+\right]
+$ 
+expanding the square yields:
+\begin{align*}
+H(a) &= \E_{Q}\left[(X^{3M\_A})^{2}|\F_{t}\right] -2af^{3M}(t,S,T) +
+a^{2}[f^{3M}(t,S,T)]^{2}
+\end{align*}
+Taking the derivative w.r.t. $a$ yields: 
+\begin{align*}
+H'(a) &= -2f^{3M}(t,S,T) + 2a[f^{3M}(t,S,T)]^{2}  
+\end{align*} 
+
+Now as $H''(a) = 2[f^{3M}(t,S,T)]^{2} > 0$, we have that the minimum is obtained by setting $H'(a) = 0$:
+\begin{align*}
+H'(a) &= 0 \\ 
+&\Downarrow \\ 
+a &= \frac{
+\E_{Q}[X^{3M\_A}|\F_{t}]
+}{
+f^{3M}(t,S,T)
+} \\ 
+&= \frac{
+\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du
+}{
+(T-S)f^{3M}(t,S,T)
+}
+\end{align*}
+
+\begin{result}
+Considering the above situation, we then have the following:
+\begin{align*}
+\argmin\limits_{a \in \R}\E_{Q}\left[
+\left(
+X^{3M\_A}-af^{3M}(t,S,T)
+\right)^{2}
+\bigg{|}\F_{t}
+\right] 
+\implies
+a = \frac{
+\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du
+}{
+(T-S)f^{3M}(t,S,T)
+}
+\end{align*}
+\end{result} 
+
+\newpage 
+
+\subsection{Affine Term Structure-setting}
+
+\begin{proposition}
+Consider the above setting, and let $r = (r_{t})_{t\geq 0}$ be a model that provides ATS, then 
+\begin{align*}
+\argmin\limits_{a \in \R}&\E_{Q}\left[
+\left(
+X^{3M\_A}- af^{3M}(t,S,T)
+\right)^{2}
+\bigg{|}\F_{t}
+\right] \\
+&\Downarrow \\
+a &= \frac{
+r(t)(T-S)
++ \int_{S}^{T}\int_{t}^{u}b(s)dsdu 
++ \int_{S}^{T}\int_{t}^{u}\alpha(s)g(s)dsdu
+}{
+(T-S)f^{3M}(t,S,T)
+}
+\end{align*}
+Where:
+\begin{align*}
+g(s) &= \exp\left(
+\int_{t}^{s}\beta(v)dv
+\right)
+\left(
+\int_{t}^{s}e^{-\int_{t}^{w}\beta(v)dv}b(w)dw + \E_{Q}[r(t)]
+\right) 
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+Consider the above setting, but now we assume that $r = (r_{t})_{t\geq 0}$ is a model that provides ATS (Affine Term Structure), now as described in proposition \ref{prop: condition_on_r_ATS}, we have that the dynamics of $r$ can be written as: 
+\begin{align*}
+dr(t) &= [b(t) + \beta(t)r(t)]dt + \sqrt{a(t) + \alpha(t)r(t)}dW^{Q}(t)
+\end{align*}
+Here $b, \beta, a, \alpha$ are deterministic continuous functions. Now from the dynamics, we get that for $u\geq t$: 
+\begin{align*}
+r(u) &= r(t) + \int_{t}^{u}b(s)ds + \int_{t}^{u}[\beta(s)r(s)]ds
++ \int_{t}^{u}\sqrt{\alpha(s)}dW^{Q}(s)
++ \int_{t}^{u}\sqrt{\alpha(s)r(s)}dW^{Q}(s)
+\end{align*}
+
+Each term is assumed to be Ito-integrable, i.e in $M^{2}([0,T])$, and by \\ $\F_{t}$-independence, we get:
+\begin{align*}
+\E_{Q}\left[
+\int_{t}^{u}\sqrt{\alpha(s)}dW^{Q}(s)
+\right]
+&= 0 \\ 
+\E_{Q}\left[
+\int_{t}^{u}\sqrt{\alpha(s)r(s)}dW^{Q}(s)
+\right] 
+&= 0
+\end{align*} 
+
+And by using Stochastic-Fubini(\ref{thm: Stochastic_Fubini}), we get:
+\begin{align*}
+\E_{Q}\left[
+\int_{t}^{u}[\beta(s)r(s)]ds
+\right]
+&= 
+\int_{t}^{u}\beta(s)\E_{Q}[r(s)]ds
+\end{align*}
+
+This leaves us with: 
+\begin{align*}
+\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du 
+&= r(t)(T-S)
++ \int_{S}^{T}\int_{t}^{u}b(s)dsdu 
++ \int_{S}^{T}\int_{t}^{u}\alpha(s)\E_{Q}[r(s)]dsdu
+\end{align*}
+
+
+\textbf{Overview of time-interval:}
+
+
+\begin{tikzpicture}[snake=zigzag, line before snake = 5mm, line after snake = 5mm]
+    % draw horizontal line   
+    \draw (0,0) -- (9,0);
+    %\draw[snake] (2,0) -- (4,0);
+    %\draw (4,0) -- (5,0);
+    %\draw[snake] (5,0) -- (7,0);
+    %\draw[snake] (7,0) -- (9,0);
+    %\draw (9,0) -- (10,0);
+
+    % draw vertical lines
+    \foreach \x in {0,2,4,5,7}
+      \draw (\x cm,3pt) -- (\x cm,-3pt);
+
+    % draw nodes
+    \draw (0,0) node[below=3pt] {$ t $} node[above=3pt] {$   $};
+    %\draw (1,0) node[below=3pt] {$ T_{0} $} node[above=3pt] {$  $};
+    \draw (2,0) node[below=3pt] {$ S $} node[above=3pt] {$  $};
+    %\draw (3,0) node[below=3pt] {$  $} node[above=3pt] {$  $};
+    \draw (4,0) node[below=3pt] {$ s $} node[above=3pt] {$  $};
+    \draw (5,0) node[below=3pt] {$ u $} node[above=3pt] {$  $};
+    \draw (6,0) node[below=3pt] {$  $} node[above=3pt] {$  $};
+    \draw (7,0) node[below=3pt] {$ T $} node[above=3pt] {$ $};
+    %\draw (9,0) node[below=3pt] {$ T_{M} $} node[above=3pt] {$ $};
+\end{tikzpicture} 
+  
+Thus in our setting we have: $t\leq S \leq s \leq u \leq T$, using same argument as above: 
+
+\begin{align*}
+r(s) &= r(t) + \int_{t}^{s}b(v)dv + \int_{t}^{s}[\beta(v)r(v)]dv
++ \int_{t}^{s}\sqrt{\alpha(v)}dW^{Q}(v)
++ \int_{t}^{s}\sqrt{\alpha(v)r(v)}dW^{Q}(v)    
+\end{align*}
+
+Now let $g(s) := \E_{Q}[r(s)]$: 
+\begin{align*}
+g(s) &= r(t) + \int_{t}^{s}b(v)dv + \int_{t}^{s}\beta(v)\E_{Q}[r(v)]dv
+\end{align*}
+
+Now taking the derivative w.r.t. $s$ and using the fundamental theorem of calculus, we get: 
+\begin{align*}
+g'(s) &= b(s) + \beta(s)\E_{Q}[r(s)] \\ 
+&= b(s) + \beta(s)g(s), \; g(t) = \E_{Q}[r(t)]
+\end{align*}
+
+This is an ordinary differential equation, with the explicit solution given by:
+\begin{align*}
+ g(s) &= \exp\left(
+ \int_{t}^{s}\beta(v)dv
+ \right)
+ \left(
+ \int_{t}^{s}e^{-\int_{t}^{w}\beta(v)dv}b(w)dw + \E_{Q}[r(t)]
+ \right)
+\end{align*}
+\end{proof}
+
+
+\subsection{Hedging with available instruments in the market}
+
+We now denote: 
+\begin{align*}
+X^{3M\_A} &= \frac{1}{T-S}\int_{S}^{T}r_{u}du = \frac{1}{T-S}Z \\ 
+f^{3M\_A}(t,S,T) &= \frac{1}{T-S}\E_{Q}\left[
+\int_{S}^{T}r_{u}du
+\right] = \frac{1}{T-S}\E_{Q}[Z|\F_{t}]
+\end{align*}
+
+Now from Jensen's Inequality \ref{thm: Jensen's_ineuality}, we have that for $Z, \varphi(Z) \in L^{1}(\Omega, \F, Q)$, with $\varphi(x) = e^{x}$
+\begin{align}
+\label{eq: hedging_availible_inst_market_1}
+\exp\left(
+\E_{Q}[Z|\F_{t}]
+\right)
+&\leq 
+\E_{Q}\left[
+\exp(Z)|\F_{t}
+\right] \nonumber \\ 
+&\Updownarrow \nonumber \\ 
+\exp\left(
+(T-S)f^{3M\_A}(t,S,T)
+\right) 
+&\leq 
+\E_{Q}\left[\exp(Z)|\F_{t}\right]
+\end{align} 
+
+Now from definition \ref{def: 3M_SOFR_futures}, we have: 
+\begin{align}
+\label{eq: hedging_availible_inst_market_2}
+f^{3M}(t,S,T) &= \frac{1}{T-S}\left(
+\E_{Q}\left[
+\underbrace{e^{\int_{S}^{T}r_{u}du}}_{e^{Z}}
+\bigg{|}\F_{t}\right] - 1
+\right) \nonumber \\ 
+&\Downarrow \nonumber \\ 
+\E_{Q}[\exp(Z)|\F_{t}] &= (T-S)f^{3M}(t,S,T) + 1
+\end{align}
+
+Now by inserting \ref{eq: hedging_availible_inst_market_2} into \ref{eq: hedging_availible_inst_market_1} yields:
+
+\begin{align*}
+\exp\left(
+(T-S)f^{3M\_A}(t,S,T)
+\right) 
+&\leq 
+(T-S)f^{3M}(t,S,T) + 1 \\ 
+&\Updownarrow \\
+f^{3M\_A}(t,S,T) &\leq 
+\frac{
+\ln[(T-S)f^{3M}(t,S,T)]
+}{
+(T-S)
+}
+\end{align*}
