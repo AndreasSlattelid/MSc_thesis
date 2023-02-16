@@ -690,9 +690,18 @@ d\left[
 \frac{P(t,T)}{B(t)}
 \right] 
 &= 
-dP(t,T)\frac{1}{B(t)} + P(t,T)d\left[\frac{1}{B(t)}\right] +dP(t,T)d\left[\frac{1}{B(t)}\right]    
+dP(t,T)\frac{1}{B(t)} + P(t,T)d\left[\frac{1}{B(t)}\right] +dP(t,T)d\left[\frac{1}{B(t)}\right] \\ 
+&= 
+r(t)\frac{P(t,T)}{B(t)}dt - \frac{P(t,T)}{B(t)}\int_{t}^{T}\alpha(t,u)dudt 
++\frac{1}{2}\frac{P(t,T)}{B(t)}\norm{v(t,T)}^{2}dt \\
+&+\frac{P(t,T)}{B(t)}v(t,T)dW(t) - r(t)\frac{P(t,T)}{B(t)}dt \\ 
+&= 
+\frac{P(t,T)}{B(t)}\left(
+\frac{1}{2}\norm{v(t,T)}^{2} - \int_{t}^{T}\alpha(t,u)du
+\right)dt 
++ 
+\frac{P(t,T)}{B(t)}v(t,T)dW(t)
 \end{align*}
-Collecting $dt$-terms and $dW(t)$-terms respectively yields the desired result.
 \end{proof}
 
 \newpage 
@@ -1133,10 +1142,35 @@ P(t,T)P(0,S)
 \end{align*}
 \end{proof}
 
+\newpage 
+\section{The LIBOR market model}
 
+In a \textbf{Market model} one is interested in modelling only the relevant $T$'s, meaning that one finds a model for each $T_{i}$. In the market, there are essentially three types of interest rate derivatives: \textbf{caps}, \textbf{floors} and 
+\textbf{swaptions}. By swaption, we mean a call/put on a swap.
 
+\begin{definition}[\textbf{LIBOR-rate}]
+ We define the LIBOR-rate $L(t,T)$ as: 
+ \begin{align*}
+L(t,T) &= F(t,T,T+\delta) 
+= \frac{1}{\delta}\left(
+\frac{P(t,T)}{P(t,T+\delta)}-1
+\right)     
+ \end{align*}
+\end{definition}
 
+\begin{definition}[\textbf{LIBOR-Caplet}]
+A caplet with reset date \textbf{T} and settlement \textbf{T+$\delta$} pays the holder: LIBOR minus strike $\kappa$ if it is positive: 
+\begin{align*}
+\delta(F(T;T,T+\delta) -\kappa)^{+} = \delta(L(T,T)-\kappa)^{+}
+\end{align*}
+\end{definition} 
 
+\begin{definition}[\textbf{LIBOR-Floorlet}]
+The opposite of a caplet, it has the following payoff: 
+\begin{align*}
+\delta(\kappa - L(T,T))^{+}    
+\end{align*}
+\end{definition}
 
 
 
