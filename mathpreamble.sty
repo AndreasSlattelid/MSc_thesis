@@ -1,0 +1,172 @@
+\NeedsTeXFormat{LaTeX2e}
+
+\ProvidesClass{mathpreamble}[2023/01/18 Custom LaTeX style]
+
+%% Mathematics
+\RequirePackage{amssymb}    % Extra symbols
+\RequirePackage{physics}    % Extra physics symbols, f.ex. \dd and some other operators
+\RequirePackage{amsthm}     % Theorem-like environments
+\RequirePackage{thmtools}   % Theorem-like environments, extends amsthm
+\RequirePackage{mathtools}  % Fonts and environments for mathematical formulae
+\RequirePackage{mathrsfs}   % Script font with \mathscr{}
+\RequirePackage{dsfont}     % Double stroke font with \mathds{}
+\RequirePackage{cancel}     % Cancel terms with \cancel, \bcancel or \xcancel
+\RequirePackage{stmaryrd}   % Brackets
+\everymath
+{
+    \ifodd\value{page}          % Allow multiline equations
+        \allowdisplaybreaks[1]  % to break across two pages:
+        \else                   % - Breaks from odd to even pages are allowed,
+        \allowdisplaybreaks[4]  %   but discouraged.
+    \fi                         % - Breaks from even to odd pages are allowed.
+}
+
+%% Organising tools
+\RequirePackage{etoolbox}                                % Hooks
+\RequirePackage{pgffor}                                  % For-loops
+\RequirePackage{comment}                                 % Multiline comments
+\RequirePackage[]{showkeys}               % Labels in margins
+\RequirePackage[obeyFinal,
+                color       = white,
+                bordercolor = black,
+                textsize    = footnotesize,
+                figwidth    = 0.99\linewidth]{todonotes} % Marginal notes
+\RequirePackage{enumitem} 
+                
+%% Cross references
+\RequirePackage[nameinlink, capitalize, noabbrev]{cleveref}
+
+%% Graphics
+\RequirePackage{tikz}             % Drawing tool
+\usetikzlibrary{calc}
+\usetikzlibrary{intersections}
+\usetikzlibrary{decorations.markings}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% USER-DEFINED MACROS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Environments
+\declaretheoremstyle[headfont   = \sffamily,
+                     notefont   = \normalfont,
+                     bodyfont   = \itshape,
+                     spaceabove = 6pt,
+                     spacebelow = 6pt]{plain}
+\declaretheoremstyle[headfont   = \sffamily,
+                     notefont   = \normalfont,
+                     spaceabove = 6pt,
+                     spacebelow = 6pt]{definition}
+\declaretheorem[style = plain, numberwithin = section]{theorem}
+\declaretheorem[style = plain,      sibling = theorem]{corollary}
+\declaretheorem[style = plain,      sibling = theorem]{lemma}
+\declaretheorem[style = plain,      sibling = theorem]{proposition}
+\declaretheorem[style = plain,      sibling = theorem]{observation}
+\declaretheorem[style = plain,      sibling = theorem]{conjecture}
+\declaretheorem[style = definition, sibling = theorem]{definition}
+\declaretheorem[style = definition, sibling = theorem]{example}
+\declaretheorem[style = definition, sibling = theorem]{notation}
+\declaretheorem[style = remark,     sibling = theorem]{remark}
+\declaretheorem[style = definition, sibling = theorem]{result}
+\declaretheorem[style = definition, sibling = theorem]{assumption}
+
+
+
+\crefname{observation}{Observation}{Observations}
+\Crefname{observation}{Observation}{Observations}
+\crefname{conjecture}{Conjecture}{Conjectures}
+\Crefname{conjecture}{Conjecture}{Conjectures}
+\crefname{notation}{Notation}{Notations}
+\Crefname{notation}{Notation}{Notations}
+
+
+
+%% Operators
+\newcommand{\diff}{\mathop{}\!\mathrm{d}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\DeclareMathOperator{\im}{im}
+% \DeclareMathOperator{\rank}{rank}
+
+
+%% Delimiters
+\DeclarePairedDelimiter{\p}{\lparen}{\rparen}          % Parenthesis
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}        % Set
+%\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}          % Absolute value
+%\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}         % Norm
+%\DeclarePairedDelimiter{\ip}{\langle}{\rangle}         % Inner product, ideal
+\DeclarePairedDelimiter{\sqb}{\lbrack}{\rbrack}        % Square brackets
+\DeclarePairedDelimiter{\ssqb}{\llbracket}{\rrbracket} % Double brackets
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}         % Ceiling
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}      % Floor
+
+
+%% Blackboard bold
+\newcommand{\N}{\mathbb{N}}    % Natural numbers
+\newcommand{\Z}{\mathbb{Z}}    % Integers
+\newcommand{\Q}{\mathbb{Q}}    % Rational numbers
+\newcommand{\R}{\mathbb{R}}    % Real numbers
+\newcommand{\C}{\mathbb{C}}    % Complex numbers
+%\newcommand{\AFF}{\mathbb{A}}    % Affine space
+%\newcommand{\PRP}{\mathbb{P}}  % Projective space
+
+
+%% Bold face
+\renewcommand{\a}{\mathbf{a}}
+\renewcommand{\b}{\mathbf{b}}
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\y}{\mathbf{y}}
+\newcommand{\0}{\mathbf{0}}
+\newcommand{\1}{\mathbf{1}}
+
+%% Getting rid of automatic indentation
+\setlength{\parindent}{0pt}  
+
+%% Enumeration with roman letters
+\usepackage{enumitem}
+
+%% Alignment with stackrel, so that equal signs gets aligned
+\usepackage{mathtools}
+
+%%Measure, Probability and Stochastic analysis:
+\newcommand{\F}{\mathcal{F}}    % Filtration
+\newcommand{\G}{\mathcal{G}}    % Filtration usually coarser
+\newcommand{\T}{\mathcal{T}}    % index set for processes
+\newcommand{\E}{\mathbb{E}}     % Expectation w.r.t P
+
+%% Indicator function
+\usepackage{bbm}  
+\newcommand{\I}{\mathcal{I}}   % index set in ESG-sequence
+
+%% argmin and argmax
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+%% manually write code and import
+\usepackage{listings} %% import
+%\usepackage{jlcode}
+\usepackage{minted}  %% writing Julia code
+\usepackage{xcolor}
+
+
+%%Drawing, main motivation: draw timelines
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing,calligraphy}
+\usetikzlibrary{snakes}
+
+
+
+%% Miscellaneous
+\renewcommand{\qedsymbol}{\(\blacksquare\)}
+\newcommand{\ie}{\leavevmode\unskip, i.e.,\xspace}
+\newcommand{\eg}{\leavevmode\unskip, e.g.,\xspace}
+\newcommand{\dash}{\textthreequartersemdash\xspace}
+\newcommand{\TikZ}{Ti\textit{k}Z\xspace}
+\newcommand{\matlab}{\textsc{Matlab}\xspace}
+
+%% Miscellaneous II
+\RequirePackage{xspace}         % Clever space
+\RequirePackage{textcomp}       % Extra symbols
+\RequirePackage{multirow}       % Rows spanning multiple lines in tables
+\RequirePackage{tablefootnote}  % Footnotes for tables
+
+
+\endinput

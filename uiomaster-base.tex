@@ -1,0 +1,92 @@
+\documentclass[UKenglish]{uiomasterbeta}  %% ... or norsk or nynorsk or USenglish
+                                      %% ... add option 'final' to remove showkeys
+
+%latexguru@ub.uio.no
+
+\usepackage[utf8]{inputenc}           %% ... or latin1
+\usepackage[T1]{url}\urlstyle{sf}
+\usepackage{babel, csquotes, graphicx, textcomp, uiomasterfp, varioref}
+\usepackage[backend=biber,
+    sortcites  = true,
+    giveninits = true,
+    %doi = false,
+    isbn = false,
+    url = false,
+   %sortlocale = nb_NO, %% ... known bug in biblatex - to be resolved
+  %sorting = none, %% ... will sort references in order of appearance
+    citestyle=alphabetic,
+    style=alphabetic]{biblatex} %% For alternatives, see https://www.overleaf.com/learn/latex/Bibtex_bibliography_styles The numeric-styles are common, but difficult to work with in a thesis because the numbers change as you add citations and the numbers do not reveal the source; consider using alphabetic instead - get automatic citekey-suggestions and less need for showkeys.
+ \DeclareNameAlias{sortname}{family-given} 
+\DeclareNameAlias{default}{family-given} %% ... Wiles, A. instead of A. Wiles. Useful if you sort references alphabetically.
+\usepackage[hidelinks]{hyperref}
+\usepackage{kantlipsum}  
+\usepackage{booktabs}
+\usepackage{microtype}
+\microtypesetup{protrusion = false}
+
+\usepackage{mathpreamble}
+
+\title{ESG-linked Interest Rate Swaps}        %% ... or whatever
+%\subtitle{Any short subtitle}         %% ... if any
+\author{Andreas Slåttelid}                      %% ... or whoever 
+
+\addbibresource{mybib.bib}            %% ... or whatever
+
+
+\begin{document}
+\uiomasterfp[dept={Department of Mathematics},  %% ... or your department
+  program={Mathematics},                        %% ... or your study program
+  supervisor={Fred Espen Benth},                    %% ... or blank
+  % or supervisors={A Name\and B Name},     %% if more than one
+  master,                                   %% ... or bachelor
+  long,                                      %% ... or short
+  color=blue]                                  %%... color options  
+
+\frontmatter{}
+    \include{sections/abstract}
+     \include{sections/sammendrag}
+
+\tableofcontents{}
+\markboth{}{} %% removes header from pages
+ \cleardoublepage
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
+\markboth{}{}  %% removes header from pages
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
+\markboth{}{} %% removes header from pages
+
+  \include{chapters/preface}
+  % \cleardoublepage %% May need this if longer than one page
+  \include{chapters/acknowledgements}
+  % \cleardoublepage %% May need this if longer than one page
+
+\mainmatter{}
+             
+
+\include{chapters/introduction}
+
+\include{chapters/chapter2}
+\include{chapters/chapter3}
+\include{chapters/chapter4}
+\include{chapters/chapter5}
+\include{chapters/chapter6}
+\include{chapters/chapter7}
+\include{chapters/chapter8}
+\include{chapters/results}
+\include{chapters/discussion}
+
+\include{chapters/conclusion}
+
+ 
+ \printbibliography[heading=bibintoc,title={References}]
+
+\backmatter{}
+
+    \appendix % "Chapter" is renamed "Appendix"
+    \begin{refsection}
+    \include{chapters/appendixA}
+    %\include{chapters/appendixB}
+ %    \printbibliography[heading=bibintoc,title={References}]
+\end{refsection}
+\end{document}

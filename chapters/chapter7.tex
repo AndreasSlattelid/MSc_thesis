@@ -1,0 +1,315 @@
+\chapter{Numerical Simulation}
+
+\section{Introduction}
+
+Assume that we can model the \textbf{ESG-index} as: 
+\[
+X(t) = 100\exp(-Z(t))
+\]
+
+Where $Z(t)$ is an OU-process given by: 
+\begin{align*}
+dZ(t) &= -\beta Z(t)dt + dI(t)    
+\end{align*} 
+and: 
+\begin{align*}
+I(t) &= \sum_{k=1}^{N(t)}J_{k}, \;\; J_{k}\sim Exp(\mu),\;\; N(t) \sim Pois(\lambda t)    
+\end{align*} 
+
+For $J\sim Exp(\mu)$, we have:
+\begin{align*}
+f_{J}(x) &= \mu e^{-\mu x}\mathbbm{1}_{[0,\infty)}(x), \;\; 
+\E[J] = \frac{1}{\mu}, \;\text{and}\; Var[J] = \frac{1}{\mu^{2}}
+\end{align*}
+
+An explicit solution is given by: 
+\begin{align}
+\label{eq: characteristic_function_Z(t)}
+d[e^{\beta t}Z(t)] &= d[e^{\beta t}]Z(t) + e^{\beta t}dZ(t) \nonumber \\ 
+&= \beta e^{\beta t}Z(t)dt + e^{\beta t}[-\beta Z(t)dt + dI(t)]
+\nonumber \\ 
+&= e^{\beta t}dI(t) \nonumber \\ 
+&\Downarrow \nonumber\\ 
+Z(t) &= Z(0)e^{-\beta t} + \int_{0}^{t}e^{-\beta (t-s)}dI(s)
+\end{align} 
+
+
+We can also control the limiting distribution of $Z$, by Theorem (\textbf{SATO 1999, thm 17, find this reference later}) 
+
+\newpage 
+
+\begin{proposition}
+\begin{align*}
+\E\left[
+\exp(iu Z(t))
+\right] 
+&= 
+\exp\left(
+iuZ(0)e^{-\beta t}\right)
+\left(
+\frac{
+1-iue^{-\beta t}1/\mu}
+{
+1-iu1/\mu
+}
+\right)^{\frac{\lambda}{\beta}}
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+Now the characteristic function of Equation \ref{eq: characteristic_function_Z(t)}, is given by: 
+\begin{align*}
+\E\left[
+\exp(iu Z(t))
+\right] 
+&= 
+\exp\left(
+iuZ(0)e^{-\beta t}\right) 
+\E\left[
+\exp\left(iu\int_{0}^{t}e^{-\beta(t-s)}dI(s)\right)
+\right]
+\end{align*}
+
+Furthermore from Proposition \ref{prop: Integral_g(s)dI(s)}, we have: 
+\begin{align*}
+\E\left[
+\exp\left(iu\int_{0}^{t}e^{-\beta(t-s)}dI(s)\right)
+\right] 
+&= 
+\exp\left(
+\int_{0}^{t}\Psi(ue^{-\beta s})ds
+\right)
+\end{align*}
+
+To ease some notation, we write:
+\begin{align*}
+\Psi(x) &= \lambda(\varphi_{F}(x) - 1), \;\text{where:}\; 
+\varphi_{F}(x) = \int_{\R}e^{iyx}F_{J}(dy) 
+\end{align*}
+
+We start with calculating $\varphi_{F}(x)$ for with $F_{J}(dy) = 
+\mu e^{-\mu y}\mathbbm{1}_{[0,\infty)}(y)dy:$ 
+\begin{align*}
+\varphi_{F}(x) &= 
+\int_{0}^{\infty}e^{ixy}\mu e^{-\mu y}dy   
+= \frac{1}{1-ix\frac{1}{\mu}}
+\end{align*}
+
+Giving us:
+\begin{align*}
+\varphi_{F}(x) - 1
+= 
+\frac{1}{1-ix\frac{1}{\mu}} - \frac{1-ix\frac{1}{\mu}}{1-ix\frac{1}{\mu}} 
+= 
+\frac{ix\frac{1}{\mu}}{1-ix\frac{1}{\mu}}
+\end{align*}
+
+Now: 
+\begin{align*}
+\Psi(ue^{-\beta s}) &= \lambda(\varphi_{F}(ue^{-\beta s})) -1) \\ 
+&= \lambda\left(
+\frac{iue^{-\beta s}1/\mu}{1-iue^{\beta s}1/\mu}
+\right)\cdot \frac{\beta}{\beta} \\ 
+&= 
+\frac{\lambda}{\beta}\left(
+\frac{\beta iue^{-\beta s}1/\mu}{1-iue^{\beta s}1/\mu}
+\right)
+\end{align*}
+
+We observe: 
+\begin{align*}
+h(s) :&= \ln[1-iue^{-\beta s}1/\mu] \\ 
+&\Downarrow \\ 
+h'(s) &= \frac{\beta iue^{-\beta s}1/\mu}{1-iue^{\beta s}1/\mu} 
+\end{align*}
+
+Leaving us with: 
+\begin{align*}
+\int_{0}^{t}\Psi(ue^{-\beta s})ds
+&= 
+\frac{\lambda}{\beta}\int_{0}^{t}h'(s)ds
+= 
+\frac{\lambda}{\beta}[h(t)-h(0)] 
+= 
+\frac{\lambda}{\beta}
+\ln\left[
+\frac{1-iue^{-\beta t}1/\mu}{1-iu1/\mu}
+\right]
+\end{align*}
+
+Thus:
+\begin{align*}
+\E\left[
+\exp(iu Z(t))
+\right] 
+&= 
+\exp\left(
+iuZ(0)e^{-\beta t}\right)
+\left(
+\frac{
+1-iue^{-\beta t}1/\mu}
+{
+1-iu1/\mu
+}
+\right)^{\frac{\lambda}{\beta}}
+\end{align*}
+\end{proof}
+
+We can only control the asymptotic distribution of $X$, as we have: 
+\begin{align*}
+\varphi_{Z_{\infty}}(u) &= 
+\frac{\lambda}{\beta}
+\int_{0}^{\infty} 
+\frac{
+\beta iu\eta e^{\beta s}\frac{1}{\mu}
+}{
+1-iu\eta e^{-\beta s} \frac{1}{\mu}
+}ds \\ 
+&= 
+\exp\left(
+\frac{\lambda}{\beta}\ln\left[
+1- i\frac{1}{\mu}u\eta e^{-\beta s}
+\right]\bigg{|}_{0}^{\infty}
+\right) \\ 
+&= 
+\exp\left(
+-\frac{\lambda}{\beta}\ln(1-i\frac{1}{\mu}u\eta)
+\right) \\ 
+&= 
+\frac{1}{
+(1-i\frac{1}{\mu}u\eta e^{-\beta s})^{\frac{\lambda}{\beta}}
+}
+\sim \Gamma\left(
+\frac{\lambda}{\beta}, \frac{\eta}{\mu}
+\right)
+\end{align*}
+
+Meaning that
+\[
+Z_{\infty} \sim \Gamma\left(
+\frac{\lambda}{\beta}, \frac{\eta}{\mu}
+\right)
+\]
+
+\newpage 
+
+\section{Simulation of Zero Coupon Bond ESG-swap}
+
+\textbf{Agreement}: 
+\begin{itemize}[leftmargin =*]
+    \item We agree upon $C^{ESG} = (C_{T_{i}}^{ESG})_{i\in \{1,2,3,4\}} = (17.6, 16.6, 15.6, 14.55)$ 
+    \item One evaluates the ESG-risk score at $(T_{1}, T_{2}, T_{3}, T_{4}) = (1.25, 2.25, 3.25, 4.25)$
+\end{itemize}
+
+\textbf{Parameters}:
+\begin{itemize}
+    \item $d = 0.005$
+    \item $\delta = 1$
+    \begin{align*}
+    \left(
+    Z(0) = -\ln(\frac{20}{100}), \beta = -0.05, \lambda = 20, \mu = 150, \Delta t = \frac{1}{360}
+    \right)   
+\end{align*} 
+    \item \begin{align*}
+        \left(
+        P(t,T_{0}) = 0.995, P(t,T_{1}) = 0.985, P(t,T_{3}) = 0.975, P(t,T_{4}) = 0.965
+        \right)
+    \end{align*}
+    \item Number of simulations: $10^{6}$
+\end{itemize}
+
+We assume that the dynamics under $Q$ look the following: 
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=10cm]{figures/ESG_OU_path.png}
+    \caption{trajectory of $X(t)$}
+    \label{fig: ESG-risk score}
+\end{figure}
+
+The Blue dots represent the ESG-risk scores at times $T_{i}$
+
+\newpage 
+
+In this simulation we got: 
+\begin{align*}
+\kappa_{t}^{ZCB} &= 0.01030    
+\end{align*}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width= 9cm]{figures/ESG_plt_criteria.png}
+    \caption{ESG-risk score where ESG-criteria is reasonable}
+    \label{fig: ESG-risk_criteria1}
+\end{figure}
+
+and: 
+\begin{center}
+    \begin{tabular}{ | l | l | l | p{5cm} |}
+    \hline
+    Time    &   Criteria  & $\kappa_{t}^{ESG}(i)$ \\ \hline
+    $T_{1}$ &      17.6   & $0.01224$  \\ \hline
+    $T_{2}$ &      16.6   & $0.01119$  \\ \hline
+    $T_{3}$ &      15.6   & $0.01023$  \\ \hline
+    $T_{4}$ &      14.55  & $0.00780$   \\ \hline
+    \end{tabular}
+\end{center} 
+
+\newpage 
+
+\textbf{Meeting criteria often}
+\\~\\ 
+In this simulation we took: $C^{ESG} = (18,17,16,15)$, and we got the following: 
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width= 9cm]{figures/ESG_plt_criteria2.png}
+    \caption{ESG-risk score where ESG-criteria is met often}
+    \label{fig: ESG-risk_score_criteri2}
+\end{figure}
+
+
+\begin{center}
+    \begin{tabular}{ | l | l | l | p{5cm} |}
+    \hline
+    Time    & Criteria   & $\kappa_{t}^{ESG}(i)$ \\ \hline
+    $T_{1}$ &   18       & $0.01046$  \\ \hline
+    $T_{2}$ &   17       & $0.00876$  \\ \hline
+    $T_{3}$ &   16       & $0.00605$\\ \hline
+    $T_{4}$ &   15       & $0.00273$ \\ \hline
+    \end{tabular}
+\end{center} 
+
+\textbf{Never meeting criteria}
+\\~\\ 
+In this simulation we took: $C^{ESG} = 2.5$, for all timepoints and got: 
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=9cm]{figures/ESG_plt_criteria3.png}
+    \caption{ESG-risk score where ESG-criteria is never met}
+    \label{fig: ESG-risk_score_criteria3}
+\end{figure}
+
+
+
+\begin{center}
+    \begin{tabular}{ | l | l | l | p{5cm} |}
+    \hline
+    Time    & Criteria  & $\kappa_{t}^{ESG}(i)$ \\ \hline
+    $T_{1}$ &    2.5    & $0.0153$  \\ \hline
+    $T_{2}$ &    2.5    & $0.0203$  \\ \hline
+    $T_{3}$ &    2.5    & $0.0253$\\ \hline
+    $T_{4}$ &    2.5    & $0.0303$ \\ \hline
+    \end{tabular}
+\end{center} 
+
+
+
+
+
+
+
+
+
+
+

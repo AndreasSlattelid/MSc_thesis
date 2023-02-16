@@ -1,0 +1,553 @@
+\chapter{SOFR- Secured Overnight Financing Rate}
+
+\section{Introduction}
+Following the LIBOR scandal, the Federal Reserve and regulators in the U.K. have come up with a replacement called the Secured Overnight Financing Rate (SOFR).
+\\~\\
+On November.30,2020, the Federal Reserve announced that the LIBOR will be phased out and eventually replaced by June 2023. Banks were also instructed to stop writing contracts using the LIBOR by end of 2021, and that all contracts using the LIBOR should wrap up by June 30, 2023. [\cite{hayes_2022}]
+\\~\\ 
+SOFR is based on transactions in the Treasury repurchase market and is fundamentally different from LIBOR as it is an overnight rate based on market data. Thus it cannot give a view of the future beyond the 24-hours.  
+
+\section{SOFR futures}
+Let $(\Omega, \F, (\F_{t})_{t\geq 0}, Q)$ denote our probability space, and let $Q$ be the risk-neutral probability measure defined via the Radon-Nikodym derivative.
+
+\begin{definition}[\textbf{Discrete overnight SOFR \cite{Skov_2020}}]
+The discrete overnight SOFR is defined as:
+\[
+R_{d_{i}}(T_{i}) = \frac{1}{d_{i}}\left(
+\frac{1}{P(T_{i}, T_{i+1})} - 1
+\right)
+\]
+where:
+\begin{itemize}[leftmargin=*]
+    \item $d_{i}$: denotes the day count fraction multiplied by the number of days to which the overnight rate applies. I.e. $d_{i} = 1/360$ on business days, and $d_{i} = 3/360$ on fridays. 
+\end{itemize}
+\end{definition}
+When dealing with SOFR futures one distinguishes between 1-month- and 3-month futures, as they are not calculated in the same way:
+
+
+\begin{definition}[\textbf{SOFR 1-month arithmetic average \cite{Skov_2020}}]
+The 1-month SOFR arithmetic average of the daily reference rate observed over the period $[S,T]$ is defined as: 
+\[
+R^{1M}(S,T) = \frac{1}{N}\sum_{i=1}^{N}R_{d_{i}}(T_{i})
+\]
+where:
+\begin{itemize}[leftmargin=*]
+    \item $N$: total number of days in the month
+    \item $S\leq T_{1} \leq \dots \leq T_{N} \leq T$ 
+\end{itemize}
+\end{definition}
+
+\begin{definition}[\textbf{SOFR 3-month geometric average}]
+The 3-month SOFR geometric average of the daily reference rate observed over the period $[S,T]$ is defined as: 
+\[
+R^{3M}(T,S) = \frac{1}{T-S}\left(
+\prod_{i=1}^{N}(1+d_{i}R_{d_{i}}(T_{i})) - 1
+\right)
+\]
+\end{definition}
+
+
+As futures contracts are free to enter, we get that: 
+\begin{align*}
+\E_{Q}\left[
+R^{iM}(S,T) - f^{iM}(t,S,T)\bigg{|}\F_{t}
+\right] = 0, \;\; i = 1,3   
+\end{align*}
+
+Furthermore one uses the following convention: 
+\begin{align*}
+R^{1M}(S,T) \approx  \frac{1}{T-S}\int_{S}^{T}r(s)ds 
+\;\;\text{and}\;\;
+R^{3M}(S,T) \approx  \frac{1}{T-S}\left(e^{\int_{S}^{T}r(s)ds} -1\right) 
+\end{align*}
+
+This gives arise to the following definitions:
+
+\begin{definition}[\textbf{1-month SOFR futures \cite{Skov_2020}}]
+We denote the time $t$ rate of the 1-month futures starting to accrue at time $S$ and with settlement on time $T$ as:
+\begin{align*}
+f^{1M}(t,S,T) &= \frac{1}{T-S}\E_{Q}\left[
+\int_{S}^{T}r(s)ds\bigg{|}\F_{t}
+\right]    
+\end{align*}
+\end{definition} 
+
+\begin{definition}[\textbf{3-month SOFR futures \cite{Skov_2020}}]
+\label{def: 3M_SOFR_futures}
+We denote the time $t$ rate of the 3-month futures starting to accrue at time $S$ and with settlement on time $T$ as:  
+\begin{align*}
+f^{3M}(t,S,T) &= \frac{1}{T-S}\left(
+\E_{Q}\left[e^{\int_{S}^{T}r(s)ds}\bigg{|}\F_{t}\right] - 1
+\right)    
+\end{align*}
+\end{definition} 
+
+\begin{proposition}[\textbf{Vasicek dynamics of 1M/3M-SOFR futures}]
+Assume that the short rate has the following dynamics: 
+\begin{align*}
+dr(t) &= \alpha[m-r(t)]dt + \sigma dW^{Q}(t)    
+\end{align*}
+
+Then the dynamics of $f^{1M}(t,S,T)$ is given by:
+\begin{align*}
+df^{1M}(t,S,T) &= \frac{1}{T-S}B(t,S,T)\sigma dW^{Q}(u)
+\end{align*}
+
+and the dynamics of $f^{3M}(t,S,T)$ is given by: 
+\begin{align*}
+df^{3M}(t,S,T) &= \left(
+f^{3M}(t,S,T) +\frac{1}{T-S}
+\right)B(t,S,T)\sigma dW^{Q}(t)
+\end{align*}
+
+Where: 
+\begin{align*}
+B(t,S,T) &= \frac{1}{\alpha}\left[
+e^{-\alpha(S-t)-e^{\alpha(T-t)}}
+\right]    
+\end{align*}
+\end{proposition}
+
+
+\begin{proof}
+We start on the next page. 
+\newpage 
+
+From Proposition \ref{prop: Vasicek_ATS}, we have that: 
+\begin{align*}
+r(s) &= e^{-\alpha(s-t)}r(t) + m[1-e^{-\alpha(s-t)}] + \sigma \int_{t}^{s}e^{-\alpha(s-u)}dW^{Q}(u)
+\end{align*}
+
+Now: $f^{1M}(t,S,T) = \frac{1}{T-S}\E_{Q}\left[\int_{S}^{T}r(s)ds|\F_{t} \right]$:  
+\begin{align*}
+\E_{Q}\left[
+r(s)|\F_{t}
+\right]
+&= 
+r(t)e^{-\alpha(s-t)} + m\left(1-e^{-\alpha(s-t)}\right) \\ 
+&\Downarrow \\ 
+f^{1M}(t,S,T)
+&= 
+\frac{e^{-\alpha S}- e^{-\alpha T}}{\alpha(T-S)}[r(t)-m]e^{\alpha t}
++ m 
+\end{align*}
+
+Giving arise to the following dynamics: 
+\begin{align*}
+df^{1M}(t,S,T) 
+&= 
+\frac{e^{-\alpha S}- e^{-\alpha T}}
+{\alpha(T-S)}
+d\left[
+(r(t)-m)e^{\alpha t}
+\right]
+\end{align*}
+
+Let's work with the differential part first: 
+\begin{align*}
+d[(r(t)-m)e^{\alpha t}] &= d[r(t)e^{\alpha t}] - md(e^{\alpha t}) \\
+&= \alpha me^{\alpha t}dt + \sigma e^{\alpha t}dW^{Q}(t) - \alpha me^{\alpha t}dt \\ 
+&= 
+\sigma e^{\alpha t}dW^{Q}(t)
+\end{align*}
+
+Thus: 
+\begin{align*}
+df^{1M}(t,S,T) 
+&= 
+\frac{e^{-\alpha S}- e^{-\alpha T}}
+{\alpha(T-S)}\sigma e^{\alpha t}dW^{Q}(t) \\ 
+&= \frac{1}{T-S}B(t,S,T)\sigma dW^{Q}(t)
+\end{align*}
+
+Now for $f^{3M}(t,S,T)$ we must study $\int_{S}^{T}r(s)ds$:  
+\\~\\
+We have the following timeline:
+
+\begin{tikzpicture}[snake=zigzag, line before snake = 5mm, line after snake = 5mm]
+    % draw horizontal line   
+    \draw (0,0) -- (4,0);
+    
+    % draw vertical lines
+    \foreach \x in {0,1,2,3, 4}
+      \draw (\x cm,3pt) -- (\x cm,-3pt);
+
+    % draw nodes
+    \draw (0,0) node[below=3pt] {$ t $} node[above=3pt] {$   $};
+    \draw (1,0) node[below=3pt] {$ S $} node[above=3pt] {$  $};
+    \draw (2,0) node[below=3pt] {$ u $} node[above=3pt] {$  $};
+    \draw (3,0) node[below=3pt] {$ s $} node[above=3pt] {$  $};
+    \draw (4,0) node[below=3pt] {$ T $} node[above=3pt] {$  $};
+  \end{tikzpicture}
+
+namely $t\leq S \leq u \leq s \leq T$, this gives us: 
+\begin{align*}
+\int_{S}^{T}r(s)ds &= \frac{r(t)}{\alpha}\left[
+e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
+\right]   
++ m(T-S) - \frac{m}{\alpha}\left[
+e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
+\right] \\ 
+&+ 
+\sigma 
+\underbrace{
+\int_{S}^{T}\int_{t}^{s}e^{-\alpha(s-u)}dW^{Q}(u)ds
+}_{=(*)}
+\end{align*}
+
+Now by additivity of the integral, we see that: 
+\begin{align*}
+\int_{t}^{s} = \int_{t}^{S} + \int_{S}^{s}    
+\end{align*}
+
+This leaves us with: 
+\begin{align*}
+(*) &= 
+\int_{S}^{T}\left(
+\int_{t}^{S}e^{-\alpha(s-u)}dW^{Q}(u) + \int_{s}^{S}e^{-\alpha(s-u)}dW^{Q}(u)
+\right)ds \\ 
+&= 
+\underbrace{
+\int_{S}^{T}\int_{t}^{S}e^{-\alpha(s-u)}dW^{Q}(u)ds 
+}_{=(1)}
++ 
+\underbrace{
+\int_{S}^{T}\int_{S}^{s}e^{-\alpha(s-u)}dW^{Q}(u)ds
+}_{= (2)}
+\end{align*}
+
+\newpage 
+By Stochastic Fubini, we get: 
+\begin{align*}
+(1) &= \int_{S}^{T}\int_{t}^{S}e^{-\alpha(s-u)}dW^{Q}(u)ds 
+= \int_{t}^{S}\int_{S}^{T}e^{-\alpha(s-u)}dsdW^{Q}(u) 
+= (1)'
+\end{align*}
+
+
+\begin{tikzpicture}[snake=zigzag, line before snake = 5mm, line after snake = 5mm]
+    % draw horizontal line   
+    \draw (0,0) -- (4,0);
+    
+    % draw vertical lines
+    \foreach \x in {0,2,4}
+      \draw (\x cm,3pt) -- (\x cm,-3pt);
+
+    % draw nodes
+    \draw (0,0) node[below=3pt] {$ S $} node[above=3pt] {$   $};
+    \draw (1,0) node[below=3pt] {$  $} node[above=3pt] {$  $};
+    \draw (2,0) node[below=3pt] {$ u $} node[above=3pt] {$  $};
+    \draw (3,0) node[below=3pt] {$  $} node[above=3pt] {$  $};
+    \draw (4,0) node[below=3pt] {$ s $} node[above=3pt] {$  $};
+  \end{tikzpicture}
+
+
+\begin{align*}
+\begin{cases}
+ S \leq s \leq T \\ 
+ S \leq u \leq s
+\end{cases}
+&\iff
+\begin{cases}
+ u \leq s \leq T \\ 
+ S \leq u \leq T
+\end{cases}
+\end{align*}
+
+Now this leaves us with: 
+\begin{align*}
+(2) &= \int_{T}^{S}\int_{u}^{T}e^{-\alpha(s-u)}dsdW^{Q}(u) = (2)'
+\end{align*}
+
+We now calculate the inner integral in $(1)'$ and $(2)'$ respectively: 
+\begin{align*}
+\int_{S}^{T}e^{-\alpha(s-u)}ds &= \frac{1}{\alpha}\left[
+e^{\alpha(S-u)}-e^{-\alpha(T-u)}
+\right] \\ 
+\int_{u}^{T}e^{-\alpha(s-u)}ds &= \frac{1}{\alpha}\left[
+1 -e^{-\alpha(T-u)}
+\right]
+\end{align*}
+
+We can then define: 
+\begin{align*}
+\Sigma(u,t,S,T) &= 
+    \begin{cases}
+      \frac{1}{\alpha}\left[
+      e^{\alpha(S-u)}-e^{-\alpha(T-u)}\right],  & u \in [t,S)\\
+      \frac{1}{\alpha}\left[1 -e^{-\alpha(T-u)}\right], & u\in [S,T]
+    \end{cases}
+\end{align*}
+
+We are thus left with: 
+\begin{align*}
+\int_{S}^{T}r(s)ds &= \frac{r(t)}{\alpha}\left[
+e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
+\right]   
++ m(T-S) - \frac{m}{\alpha}\left[
+e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
+\right] \\
+&+ \frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(s) \\ 
+&= 
+\left(
+\frac{r(t)-m}{\alpha}
+\right)
+\left[
+e^{-\alpha(S-t) - e^{-\alpha(T-t)}}
+\right]
++ m(T-S) 
++ \frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(s)
+\end{align*}
+
+
+The last part is $\F_{t}$-independent,we thus get: 
+\begin{align*}
+\E_{Q}\left[
+\exp\left(
+\int_{S}^{T}r(s)ds
+\right)\bigg{|}\F_{t}
+\right] 
+&= 
+\exp\left(
+\left(
+\frac{r(t)-m}{\alpha}
+\right)
+\left[
+e^{-\alpha(S-t) - e^{-\alpha(T-t)}}
+\right]
++ m(T-S) 
+\right)\times \\ 
+&\E_{Q}\left[
+\exp\left(
+\frac{\sigma}{\alpha}\int_{S}^{T}\Sigma(u,t,S,T)dW^{Q}(u)
+\right)
+\right]
+\end{align*}
+
+Since $\Sigma$ is deterministic, we get that: 
+\begin{align*}
+\E_{Q}\left[
+\exp\left(
+\frac{\sigma}{\alpha}\int_{S}^{T}\Sigma(u,t,S,T)dW^{Q}(u)
+\right)
+\right]
+&= 
+\exp\left(
+\frac{1}{2}\frac{\sigma^{2}}{\alpha^{2}}\int_{t}^{T}\Sigma^{2}(u,t,S,T)du
+\right)
+\end{align*}
+
+\newpage 
+This means that we now get the following expression: 
+\begin{align*}
+ \E_{Q}\left[
+\exp\left(
+\int_{S}^{T}r(s)ds
+\right)\bigg{|}\F_{t}
+\right] 
+&= 
+\exp\left(
+A(t,S,T) + B(t,S,T)r(t)
+\right):= g(t,r(t))
+\end{align*}
+
+where: 
+\begin{align*}
+A(t,S,T) &= m(T-S) - \frac{m}{\alpha}\left[
+e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
+\right] + \frac{1}{2}\frac{\sigma^{2}}{\alpha^{2}}\int_{t}^{T}\Sigma^{2}(u,t,S,T) \\
+B(t,S,T) &= \frac{1}{\alpha}\left[
+e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
+\right]
+\end{align*}
+
+This means that we have: 
+\begin{align*}
+f^{3M}(t,S,T) &= \frac{1}{T-S}\left[
+g(t,r(t) - 1
+\right]    
+\end{align*}
+
+We note that $\E_{Q}\left[
+\exp\left(
+\int_{S}^{T}r(s)ds
+\right)\bigg{|}\F_{t}
+\right]$ is a $Q$-martingale, thus from the Martingale Representation Theorem \ref{thm: Martingale_rep_thm}, we can neglect the dt-terms of $g(t,r(t))$:
+\\~\\
+We apply Ito's Formula as $g(t,x) \in C^{1,2}([0,\infty]\times \R)$, giving us: 
+\begin{align*}
+\partial_{t}g(t,x) &= 0, \;\; \partial_{x}g(t,x) = g(t,x)B(t,S,T), \;\; 
+\partial_{xx}g(t,x) = g(t,x)B^{2}(t,S,T) \\ 
+dr(t)^{2} &= \sigma^{2}dt \\ 
+&\Downarrow \\ 
+dg(t,r(t)) &= B(t,S,T)g(t,r(t))\sigma dW^{Q}(t)
+\end{align*}
+
+This gives the following dynamics for $f^{3M}(t,S,T)$:
+\begin{align*}
+df^{3M}(t,S,T) &= \frac{1}{T-S}dg(t,r(t)) \\ 
+&= \frac{1}{T-S}B(t,S,T)\exp\left(A(t,S,T) + B(t,S,T)r(t)\right)\sigma dW^{Q}(t)\\ 
+&= 
+\frac{1}{T-S}B(t,S,T)\left[
+(T-S)f^{3M}(t,S,T) +1
+\right]\sigma dW^{Q}(t) \\ 
+&= 
+\left(
+f^{3M}(t,S,T) + \frac{1}{T-S}
+\right)B(t,S,T)\sigma dW^{Q}(t)
+\end{align*}
+
+
+
+\end{proof}
+
+
+
+\newpage 
+
+\section{Options on SOFR futures}
+
+Consider a call option on a SOFR futures, with exercise time $\tau \leq S \leq T$ and strike $\kappa$, the price at time $t \leq \tau$ for $i=1,3$ is given by:
+\begin{align*}
+C^{iM}(t,\tau) :&= \E_{Q}\left[
+\frac{B(t)}{B(\tau)}\left(
+f^{iM}(t,S,T) - \kappa
+\right)^{+}
+\bigg{|}\F_{t}
+\right]  
+&\stackrel{\text{Prop \ref{prop: general_option_price}}}{=} 
+P(t,\tau)\E_{Q^{\tau}}\left[
+\left(f^{iM}(t,S,T) - \kappa
+\right)^{+}
+\bigg{|}\F_{t}
+\right]
+\end{align*} 
+
+Here we use the convention that $(x)^{+} = \max(x,0)$. From Theorem \ref{thm: arbitrage_condition_Q}, we have: 
+\begin{align*}
+\frac{dQ^{\tau}}{dQ}\bigg{|}_{\F_{t}} &= \mathcal{E}_{t}(v(\cdot, \tau)\bullet W^{Q})
+\end{align*} 
+
+Assuming Novikov's condition holds, i.e: $\E_{Q}\left[e^{\frac{1}{2}\int_{0}^{T}\norm{v(s,\tau)}^{2}ds}\right] < \infty$ we get from Girsanov's theorem, that
+\begin{align*}
+dW^{\tau}(t) &= dW^{Q}(t) - v(t,\tau)dt    
+\end{align*}
+defines a $Q^{\tau}$-Brownian motion. 
+\\~\\ 
+\begin{proposition}[\textbf{1M-SOFR futures Caplet}]
+Consider a call option on the 1M-SOFR futures with exercise time $\tau \leq T$ and strike $\kappa$. Let 
+\[
+df^{1M}(t,S,T) = \Sigma^{1M}(t,S,T)dW^{Q}(t)  
+\]
+Where $\Sigma^{1M}(t,S,T)$ is assumed to be a deterministic and bounded function. The price at time $t\leq \tau$ is given by: 
+\begin{align*}
+C^{1M}(t,\tau) &= 
+P(t,\tau)\sqrt{
+\int_{t}^{\tau}\Sigma^{1M}(u,S,T)^{2}du
+}\left[
+d\Phi(d) + \varphi(d)
+\right]
+\end{align*}
+Where: 
+\begin{align*}
+d &= 
+\frac{
+f^{1M}(t,S,T) + \int_{t}^{\tau}\Sigma^{1M}(u,S,T)v(u,\tau)du - \kappa
+}{
+\sqrt{
+\int_{t}^{\tau}\Sigma^{1M}(u,S,T)^{2}du
+}
+}
+\end{align*}
+And $\Phi, \varphi$ represents the cumulative and density function of a standard-normal distribution respectively. 
+\end{proposition}
+
+\begin{proof}
+The $Q^{\tau}$-dynamics are given by: 
+\begin{align*}
+df^{1M}(t,S,T) &= 
+\Sigma^{1M}(t,S,T)v(t,\tau)dt + \Sigma^{1M}(t,S,T)dW^{\tau}(t)\\ 
+&\Downarrow \\ 
+f^{1M}(\tau,S,T) &= 
+\underbrace{f^{1M}(t,S,T)}_{x} + 
+\underbrace{\int_{t}^{\tau}\Sigma^{1M}(u,S,T)v(u,\tau)du}_{m} +  
+\int_{t}^{\tau}\Sigma^{1M}(u,S,T)dW^{\tau}(u)
+\end{align*}    
+
+Let 
+\[
+b^{2} = \int_{t}^{\tau}\Sigma^{1M}(u,S,T)^{2}du
+\]
+
+We are then left with: 
+\begin{align*}
+C^{1M}(t,\tau) &= 
+\E_{Q^{\tau}}\left[
+(f^{1M}(\tau, S,T)-\kappa)^{+}|\F_{t}
+\right]    
+= 
+\E\left[
+(x+m+bZ-\kappa)^{+}
+\right]\bigg{|}_{x = f^{1M}(t,S,T)}
+\end{align*}
+
+where $Z \sim \mathcal{N}(0,1)$, this yields: 
+
+\begin{align*}
+\E\left[
+(x+m+bZ-\kappa)^{+}
+\right]\bigg{|}_{x = f^{1M}(t,S,T)} 
+&= 
+\int_{\R}(x+m+bz-\kappa)^{+}\varphi(z)dz 
+\end{align*}
+
+furthermore: 
+\begin{align*}
+x + m + bz - \kappa \geq 0 \iff z \geq \frac{\kappa-x-m}{b}:= d'    
+\end{align*}
+
+This yields: 
+\begin{align*}
+\int_{\R}(x+m+bz-\kappa)^{+}\varphi(z)dz  
+&= 
+\underbrace{
+(x+m-\kappa)\int_{d'}^{\infty}\varphi(z)dz
++ b\int_{d'}^{\infty}z\varphi(z)dz
+}_{(A)}
+\end{align*}
+
+By symmetry of the normal distribution we have: $P(Z > d') = P(Z \leq -d')$, 
+where we define: 
+\[
+d := -d' = \frac{x+m-\kappa}{b}
+\]
+furthermore $z\varphi(z) = - \varphi'(z)$, thus:
+
+\begin{align*}
+\int_{d'}^{\infty}z\varphi(z)dz
+&= 
+-\int_{d'}^{\infty}\varphi'(z)dz 
+= 
+-(\varphi(\infty) - \varphi(d'))
+= \varphi(d') = \varphi(d)
+\end{align*}
+
+Leaving us with:
+\begin{align*}
+(A) &= (x+m-\kappa)\Phi(d) + b\varphi(d) \\ 
+&= b[d\Phi(d) + \varphi(d)]
+\end{align*}
+Now from Proposition \ref{prop: general_option_price}, we get: 
+\begin{align*}
+C^{1M}(t,\tau) :&= \pi(t) = P(t,\tau)\E_{Q^{\tau}}\left[
+(f^{1M}(\tau, S,T)-\kappa)^{+}|\F_{t}
+\right] \\ 
+&= 
+P(t,\tau)\sqrt{
+\int_{t}^{\tau}\Sigma^{1M}(u,S,T)^{2}du
+}\left[
+d\Phi(d) + \varphi(d)
+\right]
+\end{align*}
+\end{proof}
+

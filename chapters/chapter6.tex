@@ -1,0 +1,567 @@
+\chapter{ESG swaps}
+
+
+\section{ESG}
+ESG stands for Environmental, Social, and Governance. ESG metrics are becoming more critical for the financial sector in the European Union. The European Union have established a new taxonomy \cite{EU:2021} for sustainable activities. 
+\\~\\
+This taxonomy is put in place so that the EU can be carbon neutral by 2050, the goal is to help investors and companies contribute to the Paris Climate agreement. It will enable companies and issuers to access financing consistent with these goals.
+\\~\\ 
+One such contribution could be to access cheaper swap prices by meeting certain ESG criteria. Which in our case will be a particular ESG score. Let us take a look at what the different letters could represent:
+\begin{itemize}
+    \item Environmental: typically Climate risks, one metric could be $CO_{2}$-emissions. 
+    \item Social: metrics could be: workforce rights, consumer protests etc. 
+    \item Governance: management structure, diversity, crisis management, codes of conduct etc. 
+\end{itemize}
+
+We will not go into detail when it comes to the ESG score, as that would be a thesis in itself. But we will touch upon an approach. 
+
+\newpage 
+
+\section{Case study}
+Our modelling approach will be based on the ISDA document \cite{ISDA:2021}, and in particular, the interest rate swap between SBM Offshore and ING, where the ESG score is set by Sustainalytics. The deal looks the following:
+\begin{itemize}
+    \item It gets added a positive or negative spread to the fixed rate set at the inception of the swap, based upon SBM's ESG score set by Sustainalytics. 
+    \item At the beginning of every year during the life of the swap, ING set's a target ESG score.
+    \item If the score has been met, then a discount of 5-10 basis points is applied to the fixed rate.
+    \item If the score has not been met, then a penalty of 5-10 basis points is applied to the fixed rate. 
+\end{itemize} 
+
+We will consider the ESG criteria to be $\F_{0}$-measurable, we will also take a constant discount $d$. To exemplify this deal pretend that the original fixed rate was set at $\kappa = 0.07$, with a discount/penalty $d = 0.005$ and the deal runs for $n=4$ years. 
+\\~\\
+Assume that SBM Offshore met the criteria the first three times but did not meet the criteria the last time, that would given arise to the following ESG fixed rate sequence: 
+\begin{align*}
+\kappa_{1}^{ESG} &=  0.065, \;\; 
+\kappa_{2}^{ESG} =   0.060, \;\;
+\kappa_{3}^{ESG} =   0.055, \;\; 
+\kappa_{4}^{ESG} =   0.060
+\end{align*}
+\newpage 
+
+\section{General setup}
+We will take this deal as motivation, but generalize a bit further:
+\begin{assumption}
+We assume the following: 
+\begin{itemize}[leftmargin=*]
+    \item $N$ represents the nominal value, think of it as the amount you loan/lend.
+    \item $0 < T_{0} < T_{1} < \dots < T_{n}$ a sequence of future dates. 
+    \item $\delta = T_{i} - T_{i-1}$ a fixed leg between payments 
+    \item $\kappa$ the fixed rate from the original swap, i.e without ESG-link. 
+    \item $d$ basis points added or subtracted to the fixed rate $\kappa$
+    \item $\{A_{i}\}_{i=1}^{n}$ sequence of events, where: 
+    $A_{i} = \{X_{T_{i}} \leq C_{T_{i}}^{ESG}\}$ i.e the sequence of events measuring whether or not the ESG-criteria $C_{T_{i}}^{ESG}$ is met at time $T_{i}$ or not. 
+    \item Need to know more about the process $C^{ESG} = (C_{T_{i}}^{ESG})_{i \in \mathcal{I}}$, i.e. is it $\F_{0}$-measurable? or should we say $\F_{t}$-measurable?
+\end{itemize}
+\end{assumption} 
+
+
+\begin{definition}[\textbf{ESG fixed rate process}]
+Let $K^{ESG} = (K_{i}^{ESG})_{i=1}^{n}$ denote the ESG fixed rate process, we define it recursively as: 
+\begin{align*}
+K_{i}^{ESG}(\omega) &= (K_{i-1}^{ESG}(\omega)-d)\mathbbm{1}_{A_{i}}(\omega)
++ (K_{i-1}^{ESG}(\omega)+d)\mathbbm{1}_{A_{i}^{C}}(\omega), \;\; i\geq 2
+\end{align*}
+
+where:
+\begin{align*}
+K_{1}^{ESG}(\omega) &= (\kappa - d)\mathbbm{1}_{A_{1}}(\omega)
++ (\kappa + d)\mathbbm{1}_{A_{1}^{C}}(\omega)    
+\end{align*}
+\end{definition} 
+
+\begin{notation}
+Let $\mathcal{I} = \{k_{1}, \dots, k_{n}\}$ represent an index set. Furthermore, let\\ 
+$k_{1}< \dots < k_{l} < \dots < k_{m}< \dots < k_{n}$ We then define:
+\begin{align*}
+\left(
+\bigcap_{i\in \mathcal{I}}A_{i}
+\right)^{
+\{(k_{1}, k_{l}, k_{m})\}
+}
+&= 
+A_{k_{1}}^{C}\cap A_{k_{2}} \cap \dots\cap A_{k_{l}}^{C}\cap
+A_{k_{l+1}}\cap \dots \cap A_{k_{m}}^{C}\cap A_{k_{m+1}}\cap \dots \cap A_{k_{n}}
+\end{align*}
+\end{notation}
+
+\begin{result}
+\label{prop/result: K_ESG_n}
+Let $n \in \N_{2}:= \{k: k\geq 2, k\in \N\}$, consider the above situation. Let $\mathcal{I}_{n} = \{1, \dots, n\}$ and $\mathcal{I}_{2n}^{Even} = \{2, \dots, 2n\}$,
+$(A_{i})_{i\in \mathcal{I}}$ denotes the event that the ESG criteria are met.
+furthermore $|\mathcal{I}_{2n}^{Even}|$ and $|\mathcal{I}_{n}|$ denotes the cardinality of the respective sets. 
+\\~\\ 
+We can then express $K_{n}^{ESG}(\omega)$ as:
+\begin{align*}
+K_{n}^{ESG}(\omega) &= 
+[\kappa -dn]\mathbbm{1}\left[
+\bigcap_{i\in \mathcal{I}_{n}}A_{i}
+\right](\omega) \\ 
+&+ 
+\sum_{\alpha \in \mathcal{I}_{2n}^{Even}}
+\left(
+[\kappa -d(n-\alpha)]\mathbbm{1}\left[
+\bigcup_{\{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}|}
+\}
+\in \mathcal{I}_{n}
+}\left(
+\bigcap_{i\in \mathcal{I}_{n}}A_{i}
+\right)^{
+\{
+(j_{1}, \dots , j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+\right]
+\right)(\omega) 
+\end{align*}
+\end{result}  
+
+
+
+
+\newpage 
+
+\begin{proposition}
+\label{prop: cond_expectation_ESG_sequence}
+Let us denote $\kappa_{t}^{ESG}(i) := \E_{Q}[K_{i}^{ESG}(\omega)|\F_{t}]$. We then have\\ 
+that for $t\leq T_{0}$ that: 
+\begin{align*}
+\kappa_{t}^{ESG}(i)
+&= 
+\kappa -d\cdot D(i)
+\end{align*}
+
+Where: 
+\begin{align*}
+ D(i) &= 
+i\cdot \E_{Q}\left[
+\prod_{l=1}^{i}\mathbbm{1}(A_{l})\bigg{|}\F_{t}
+\right]
++ 
+\sum_{\alpha \in \mathcal{I}_{2i}^{Even}}[i-\alpha]
+\sum_{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+}
+\E_{Q}\left[
+\left(
+\prod_{l=1}^{i}\mathbbm{1}(A_{l})
+\right)^{
+\{
+(j_{1}, \dots , j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+\bigg{|}\F_{t}
+\right]   
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+
+$K_{i}^{ESG}(\omega)$ is as described in Result \ref{prop/result: K_ESG_n}: 
+
+\begin{align*}
+\E_{Q}\left[K_{i}^{ESG}(\omega)
+\bigg{|}\F_{t}\right]
+&= 
+[\kappa - d\cdot i]\E_{Q}\left[
+\mathbbm{1}\left(
+\bigcap_{l=1}^{i}A_{l}
+\right)(\omega)\bigg{|}\F_{t}
+\right] \\ 
+&+
+\sum_{\alpha \in \mathcal{I}_{2i}^{Even}}
+\left(
+[\kappa - d(i-\alpha)]
+\E_{Q}\left[
+\mathbbm{1}\left[
+\bigcup_{\{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+\}
+}
+\left(
+\bigcap_{l=1}^{i}
+A_{l}
+\right)
+^{
+\{
+(j_{1}, \dots , j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+\right](\omega)
+\bigg{|}\F_{t}
+\right]
+\right)
+\end{align*}
+
+Now: 
+\begin{align*}
+\E_{Q}\left[
+\mathbbm{1}\left[
+\bigcup_{\{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+\}
+}
+\left(
+\bigcap_{l=1}^{i}
+A_{l}
+\right)^{
+\{
+(j_{1}, \dots , j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+\right](\omega)
+\bigg{|}\F_{t}
+\right]
+&= 
+\sum_{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+}
+\E_{Q}\left[
+\mathbbm{1}\left(
+\bigcap_{l=1}^{i}A_{l}
+\right)^{
+\{
+(j_{1}, \dots, j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+(\omega)
+\bigg{|}\F_{t}
+\right]
+\end{align*}
+
+Furthermore: 
+\begin{align*}
+\E_{Q}\left[
+\mathbbm{1}\left(
+\bigcap_{l=1}^{i}A_{l}
+\right)(\omega)\bigg{|}\F_{t}
+\right] 
+&= \underbrace{
+\E_{Q}\left[
+\prod_{l=1}^{i}\mathbbm{1}(A_{l})\bigg{|}\F_{t}
+\right]
+}_{= s(l=1, i)}
+\end{align*}
+
+and:
+\begin{align*}
+\E_{Q}\left[
+\mathbbm{1}\left(
+\bigcap_{l=1}^{i}A_{l}
+\right)^{
+\{
+(j_{1}, \dots, j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}(\omega)
+\bigg{|}\F_{t}
+\right] 
+&= \underbrace{
+\E_{Q}\left[
+\left(
+\prod_{l=1}^{i}\mathbbm{1}(A_{l})
+\right)^{
+\{
+(j_{1}, \dots, j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+(\omega)
+\bigg{|}\F_{t}
+\right]
+}_{= f(l=1, i, j_{|\mathcal{I}_{\alpha}|})}
+\end{align*}
+
+\begin{align*}
+\E_{Q}[K_{i}^{ESG}(\omega)|\F_{t}]
+&= 
+[\kappa -d\cdot i]s(l=1,i) \\
+&+ 
+\kappa \sum_{\alpha \in \mathcal{I}_{2i}^{Even}}
+\sum_{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+}
+f(l=1, i, j_{|\mathcal{I}_{\alpha}^{Even}|}) \\ 
+&-
+d\sum_{\alpha \in \mathcal{I}_{2i}^{Even}}
+[i-\alpha]\sum_{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+}
+f(l=1, i, j_{|\mathcal{I}_{\alpha}^{Even}|})
+\end{align*}
+
+\newpage 
+
+We collect $\kappa$ and $d$-terms:
+\begin{align*}
+\E_{Q}[K_{i}^{ESG}(\omega)|\F_{t}]
+&= 
+\kappa
+\underbrace{
+\left[
+s(l=1,i) + \sum_{\alpha \in \mathcal{I}_{2i}^{Even}}\sum_{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+}
+f(l=1, i, j_{|\mathcal{I}_{\alpha}^{Even}|}) 
+\right]
+}_{=M(i)}
+\\ 
+&-d
+\underbrace{
+\left[
+i\cdot s(l=1,i) + \sum_{\alpha \in \mathcal{I}_{2i}^{Even}}
+\left(
+[i-\alpha]\sum_{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+}
+f(l=1, i, j_{|\mathcal{I}_{\alpha}^{Even}|})
+\right)
+\right]
+}_{=D(i)} \\ 
+&= 
+\kappa M(i) -d\cdot D(i)
+\end{align*}
+
+Where: 
+\begin{align*}
+D(i) &= 
+i\cdot \E_{Q}\left[
+\prod_{l=1}^{i}\mathbbm{1}(A_{l})\bigg{|}\F_{t}
+\right]
++ 
+\sum_{\alpha \in \mathcal{I}_{2i}^{Even}}[i-\alpha]
+\sum_{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+}
+\E_{Q}\left[
+\left(
+\prod_{l=1}^{i}\mathbbm{1}(A_{l})
+\right)^{
+\{
+(j_{1}, \dots , j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+\bigg{|}\F_{t}
+\right]
+\end{align*}
+
+and: 
+\begin{align*}
+M(i) &= 
+\E_{Q}\left[
+\prod_{l=1}^{i}\mathbbm{1}(A_{l})\bigg{|}\F_{t}
+\right]  
++\sum_{\alpha \in \mathcal{I}_{2i}^{Even}}
+\sum_{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+}
+\E_{Q}\left[
+\left(
+\prod_{l=1}^{i}\mathbbm{1}(A_{l})
+\right)^{
+\{
+(j_{1}, \dots , j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+\bigg{|}\F_{t}
+\right]
+\end{align*}
+
+Let's rewrite $M(i)$ on set notation again: 
+\begin{align*}
+M(i) &= 
+\E_{Q}\left[
+\mathbbm{1}\left(
+\bigcap_{l \in \mathcal{I}_{i}}A_{l}
+\right)
+\bigg{|}\F_{t}
+\right]
++\sum_{\alpha \in \mathcal{I}_{2i}^{Even}}
+\E_{Q}\left[
+\mathbbm{1}
+\left[
+\bigcup_{
+j_{1} \neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+}
+\left(
+\bigcap_{l \in \mathcal{I}_{i}}A_{l}
+\right)^{
+\{
+(j_{1}, \dots, j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+\right]
+\bigg{|}\F_{t}
+\right]
+\end{align*}
+
+For $i = 1, \dots, n$, we have: 
+\begin{align*}
+\Omega_{i} 
+&= 
+\underbrace{
+\left[
+\sum_{\alpha \in \mathcal{I}_{2i}^{Even}}
+\bigcup_{
+j_{1} \neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+}
+\left(
+\bigcap_{l \in \mathcal{I}_{i}}A_{l}
+\right)^{
+\{
+(j_{1}, \dots, j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+\right]
+}_{=\mathcal{H}_{i}}
+\bigcup
+\underbrace{
+\left[
+\bigcap_{l \in \mathcal{I}_{i}}A_{l}
+\right]
+}_{=\mathcal{L}_{i}}
+\;\; 
+\text{with}\;\; 
+Q(\Omega_{i}) = 1
+\end{align*} 
+
+Now as $\mathcal{H}_{i}\cap \mathcal{L}_{i} = \emptyset$, 
+and $\mathcal{H}_{i}\cup \mathcal{L}_{i} = \Omega_{i}$, in addition to exploiting the linearity of the expectation operator we get:
+
+\begin{align*}
+M(i) 
+&= 
+\E_{Q}\left[
+\mathbbm{1}\left[
+\left[
+\sum_{\alpha \in \mathcal{I}_{2i}^{Even}}
+\bigcup_{
+j_{1} \neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+}
+\left(
+\bigcap_{l \in \mathcal{I}_{i}}A_{l}
+\right)^{
+\{
+(j_{1}, \dots, j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+\right]
+\bigcup
+\left[
+\bigcap_{l \in \mathcal{I}_{i}}A_{l}
+\right]
+\right]
+\bigg{|}\F_{t}
+\right] \\ 
+&= 
+\E_{Q}\left[
+\mathbbm{1}(\Omega_{i})|\F_{t}
+\right] \\ 
+&= 
+1
+\end{align*}
+
+Leaving us with: 
+\begin{align*}
+\E_{Q}[K_{i}^{ESG}(\omega)|\F_{t}] &= 
+\kappa - d\cdot D(i) := \kappa_{t}^{ESG}(i)
+\end{align*}
+
+
+\end{proof}
+
+
+\section{Zero Coupon Bond ESG-swap}
+
+\begin{proposition}
+Consider a zero coupon bond swap, i.e where the situation is as described in Section \cref{sec: ZCB_swap}, we then get that the
+\\ 
+ESG-fixed rate process $\kappa^{ESG}_{t} = (\kappa_{t}^{ESG}(i))_{i=1, \dots, n}$ is given by: 
+\begin{align*}
+\kappa_{t}^{ESG}(i) &= \kappa_{t}^{ZCB} -d\cdot D(i)    
+\end{align*}
+Where: 
+\begin{align*}
+\kappa_{t}^{ZCB} &=  
+\frac{
+P(t,T_{0}) - P(t,T_{n})
+}{
+\delta\sum_{i=1}^{n}P(t,T_{i})
+}
+\end{align*}
+And $D(i)$ is as described in Proposition \ref{prop: cond_expectation_ESG_sequence}
+
+\end{proposition}
+
+\begin{proof}
+Now from Section \cref{sec: ZCB_swap} we have that: 
+\begin{align*}
+\kappa_{t}^{ZCB} &=  
+\frac{
+P(t,T_{0}) - P(t,T_{n})
+}{
+\delta\sum_{i=1}^{n}P(t,T_{i})
+}    
+\end{align*}
+
+Thus: 
+\begin{align*}
+\kappa_{t}^{ESG}(i) &= \kappa_{t}^{ZCB} -d\cdot D(i)    
+\end{align*}
+\end{proof}
+
+
+\newpage 
+
+\section{ESG-swap with SOFR-futures as floating}
+
+\begin{proposition}
+The fixed swap rate $\kappa_{t}^{SOFR}$ in a swap with 3M-SOFR as floating is given by:  
+\begin{align*}
+ \kappa_{t}^{SOFR} &= 
+ \frac{
+ \sum_{i=1}^{n}P(t,T_{i})f^{3M}(t,T_{i-1}, T_{i})
+ }{
+ \sum_{i=1}^{n}P(t,T_{i})
+ }
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+    
+In this swap, we have the following specification, at time $T_{i}$:
+\begin{itemize}[leftmargin=*]
+    \item Pay $\kappa_{t}^{SOFR}\delta N$ (-)
+    \item Receive $f^{3M}(t,T_{i-1}, T_{i})\delta N$ (+)
+\end{itemize} 
+
+\textbf{Cash flow at time $T_{i}$}:
+\begin{align*}
+f^{3M}(t, T_{i-1}, T_{i})\delta N - \kappa_{t}^{SOFR}\delta N =
+[f^{3M}(t,T_{i-1}, T_{i}) -\kappa_{t}^{SOFR}]\delta N
+\end{align*}
+
+\textbf{Time $t$-value for $t\leq T_{0}$ at time $T_{i}$}: 
+\begin{align*}
+P(t,T_{i})[f^{3M}(t,T_{i-1}, T_{i}) - \kappa_{t}^{SOFR}]\delta N
+\end{align*}
+
+\textbf{Total payer cash flow:}
+\begin{align*}
+\mathcal{C}_{P}^{SOFR}(t) &= 
+\delta N \sum_{i=1}^{n}P(t,T_{i})[f^{3M}(t,T_{i-1}, T_{i}) - \kappa_{t}^{SOFR}]
+\end{align*} 
+
+$\kappa_{t}^{SOFR}$ should be chosen such that: 
+\begin{align*}
+\E_{Q}[\mathcal{C}_{P}^{SOFR}(t)|\F_{t}] = 0    
+\end{align*}
+
+Thus: 
+\begin{align*}
+\sum_{i=1}^{n}P(t,T_{i})f^{3M}(t,T_{i-1}, T_{i}) &= \sum_{i=1}^{n}P(t,T_{i})\kappa_{t}^{SOFR} \\ 
+&\Downarrow \\ 
+\kappa_{t}^{SOFR} &= \frac{
+\sum_{i=1}^{n}P(t,T_{i})f^{3M}(t,T_{i-1}, T_{i})
+}{
+\sum_{i=1}^{n}P(t,T_{i})
+}
+\end{align*}
+\end{proof}

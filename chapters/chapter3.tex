@@ -1,0 +1,89 @@
+\chapter{Mathematical Finance}
+
+\section{Market Model}
+For the time being consider $r = (r_{t})_{t\in [0,T]}$ to be a deterministic interest rate process. Furthermore assume that we have the following probability space $(\Omega, \F, (\bar{\F}_{t})_{t\in [0,T]}, P)$
+
+\begin{definition}[Money market account]
+We define the money market account $B(t)$ as a solution to the ODE: 
+$$
+dB(t) = r(t)B(t)dt
+$$
+with initial condition $B(0) = 1$, this gives the solution:
+$$
+B(t) = e^{\int_{0}^{t}r(s)ds}
+$$
+\end{definition}
+
+Consider the following processes:
+\begin{itemize}
+    \item $B = (B_{t})_{t\in [0,T]}$ the money market account
+    \item $
+    dS_{t} = \mu(t,S_{t})S_{t}dt + \sigma(t,S_{t})S_{t}dW_{t}$ the risky asset. 
+    
+\end{itemize}
+
+Let $\mu$ and $\sigma$ be defined so that the conditions in Theorem \ref{thm: SDE_sufficiency} are met. 
+\\~\\ 
+Let $\phi^{i} = \{\phi_{t}^{i}, t \in [0,T]\}$ be two stochastic processes defined on the above probability space. Denote $\phi = (\phi^{0}, \phi^{1})$, where:
+\begin{itemize}
+    \item $\phi_{t}^{0}$ represents the number of units invested in the money market account at time $t$.
+    \item $\phi_{t}^{1}$ represents the number of units invested in the risky asset $S$ at time $t$. 
+\end{itemize}
+
+\begin{definition}[\textbf{Trading strategy}]
+We say that $\phi = (\phi^{0}, \phi^{1})$ is a trading strategy is it is $(\F_{t})_{t\in [0,T]}$-adapted and: 
+\begin{align*}
+\phi^{0}rB \in M^{1}([0,T]), \;\; \phi \mu S \in M^{1}([0,T])\;\; \phi^{1}\sigma S \in M^{2}([0,T])    
+\end{align*}
+\end{definition}
+
+\begin{definition}[\textbf{Value of portfolio}]
+The value of a portfolio with trading strategy $\phi$ is given by:
+$$
+V^{\phi}(t,S_{t}) = \phi_{t}^{0}B_{t} + \phi_{t}^{1}S_{t},\;\; t \in[0,T]
+$$
+\end{definition}
+
+
+\begin{definition}[\textbf{Self-financing strategy}]
+We say that the trading strategy $\phi$ is self-financing if:
+$$
+dV^{\phi}(t,S_{t}) = \phi_{t}^{0}dB_{t} + \eta_{t}^{1}dS_{t}, \;\; t\in [0,T] 
+$$
+\end{definition}
+
+\begin{definition}[\textbf{Arbitrage opportunity}]
+An arbitrage opportunity is a self-financing strategy $\phi$ with:
+\begin{align*}
+V^{\phi}(0,S_{0}) = 0, \;\; V^{\phi}(T,S_{T}) \geq 0, \;\; P(V^{\phi}(T,S_{T}) \geq 0) > 0    
+\end{align*}
+\end{definition}
+
+
+\section{Fundamental theorems of asset pricing}
+
+\begin{theorem}[\textbf{First Fundamental theorem of asset pricing}]
+\label{thm: First_fundamental_thm_asset_price}
+The following are equivalent:
+\begin{enumerate}[label=\roman*]
+    \item There are no arbitrage opportunities
+    \item there exists an equivalent martingale measure $Q\sim P$ such that the process $(\Tilde{S})_{t \in [0,T]} = \left(\frac{S_{t}}{B_{t}}\right)_{t\in [0,T]}$ is a $(Q, \mathbbm{F})$-martingale. 
+\end{enumerate}
+\end{theorem}
+
+\begin{definition}[\textbf{Attainable claim}]
+\label{def: attainable_claim}
+We say that a claim $H$ is attainable if there exists a trading strategy $\phi = (\phi^{0}, \phi^{1})$ such that:
+$$
+V^{\phi}(T,S_{T}) = H \; a.s
+$$
+We assume that $H$ is $\F_{T}$-measurable as well as $H\in M^{2}([0,T])$
+\end{definition}
+
+\begin{definition}[\textbf{Complete market}]
+We say the market is complete if all contingent claims in Definition \ref{def: attainable_claim} are attainable.     
+\end{definition}
+
+\begin{theorem}[\textbf{Second Fundamental Theorem of Asset Pricing}]
+An arbitrage-free market is complete if and only if there exists a unique equivalent martingale measure $Q\sim P$.    
+\end{theorem}
