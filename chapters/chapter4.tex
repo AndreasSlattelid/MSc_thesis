@@ -983,6 +983,7 @@ Z^{T}(t)\E_{Q^{T}}[X|\F_{t}] &= \E_{Q}[XZ^{T}(T)|\F_{t}] \\
 
 
 \begin{lemma}[\textbf{\cite{filipovic2009term}}]
+\label{lemma: T-discounted-S-discounted-bond}
 Let $S>0$ and $S\leq T$. Then the $T$-bond discounted $S$-bond price process:
 \begin{align*}
 \frac{P(t,S)}{P(t,T)}
@@ -1172,12 +1173,197 @@ The opposite of a caplet, it has the following payoff:
 \end{align*}
 \end{definition}
 
+We assume equidistant times $T_{m} = m\delta, m = 0, 1, \dots, M$, furthermore we will work on: 
+$(\Omega, \F, (\F_{t})_{t\in [0,T_{M}]}, Q^{T_{M}})$, $W^{T_{M}}(t)$ is a $Q^{T_{M}}$-BM. In addition $L(0,T_{i})\geq 0 $ are given for $m = 1, \dots, M-1$: 
+\begin{align*}
+L(0,T_{m}) &= \frac{1}{\delta}\left(
+\frac{P(0,T_{m})}{P(0,T_{m+1})}-1
+\right), \;\; m = 0, \dots, M-1   
+\end{align*}
+
+We get the following timeline:
+
+\begin{tikzpicture}[snake=zigzag, line before snake = 5mm, line after snake = 5mm]
+    % draw horizontal line   
+    \draw (0,0) -- (2,0);
+    \draw[snake] (2,0) -- (4,0);
+    \draw (4,0) -- (5,0);
+    \draw[snake] (5,0) -- (7,0);
+    %\draw[snake] (7,0) -- (9,0);
+    \draw (7,0) -- (9,0);
+
+    % draw vertical lines
+    \foreach \x in {0,1,2,4,5,7,8}
+      \draw (\x cm,3pt) -- (\x cm,-3pt);
+
+    % draw nodes
+    \draw (0,0) node[below=3pt] {$ t $} node[above=3pt] {$   $};
+    \draw (1,0) node[below=3pt] {$ T_{m} $} node[above=3pt] {$  $};
+    \draw (2,0) node[below=3pt] {$ T_{m+1} $} node[above=3pt] {$  $};
+    \draw (3,0) node[below=3pt] {$  $} node[above=3pt] {$  $};
+    \draw (4,0) node[below=3pt] {$ T_{n} $} node[above=3pt] {$  $};
+    \draw (5,0) node[below=3pt] {$ T_{n+1} $} node[above=3pt] {$  $};
+    \draw (6,0) node[below=3pt] {$  $} node[above=3pt] {$  $};
+    \draw (7,0) node[below=3pt] {$ T_{M-1} $} node[above=3pt] {$ $};
+    \draw (8,0) node[below=3pt] {$ T_{M} $} node[above=3pt] {$ $};
+  \end{tikzpicture}
 
 
 
+The dynamics of $L(t,T_{M-1})$ are given by: 
+\begin{align*}
+dL(t,T_{M-1}) &= L(t,T_{M-1})\lambda(t,T_{M-1})dW^{T_{M}}(t), \;\; t \leq T_{M-1} \\ 
+&\Downarrow \\ 
+L(t,T_{M-1}) &= L(0,T_{M-1})\exp\left(
+\int_{0}^{t}\lambda(s,T_{M-1})dW^{T_{M}}(s) 
+-\frac{1}{2}\int_{0}^{t}\norm{\lambda(s, T_{M-1})}^{2}ds
+\right)
+\end{align*}
+
+Here: $t \mapsto \lambda(t,T_{M-1})$ is assumed to be an $\R^{d}$-valued bounded deterministic measurable function. 
+\\~\\ 
+Since
+\begin{align*}
+\E_{Q^{T_{M}}}\left[
+e^{\frac{1}{2}\int_{0}^{T_{M-1}}\norm{\lambda(s,T_{M-1}}ds}
+\right] < \infty 
+\;\;\text{and}\;\;
+\frac{L(t,T_{M-1})}{L(0,T_{M-1})} = \mathcal{E}_{t}\left(
+\lambda(\cdot, T_{M-1})\bullet W^{T_{M}})
+\right)
+\end{align*}
+
+We have that $L(t,T_{M-1})$ is a $Q^{T_{M}}$-martingale. The idea will be to iterate backwards, so that $L(t,T_{m-1})$ will be martingales under $Q^{T_{m}}$ for $m\geq 2$, we thus need valid measure changes from $Q^{T_{m}}$ to $Q^{T_{m-1}}$ on $\F_{T_{m-1}}$
+
+\newpage
+
+One defines:
+\begin{align*}
+\frac{
+dQ^{T_{M-1}}
+}{
+dQ^{T_{M}}
+}\bigg{|}_{\F_{T_{M-1}}}
+&= 
+\mathcal{E}_{T_{M-1}}\left(
+\sigma_{T_{M-1}, T_{M}}\bullet W^{T_{M}}
+\right)
+\end{align*}
+
+Where: 
+\begin{align*}
+\sigma_{T_{M-1}, T_{M}}(t) := 
+\frac{
+\delta L(t,T_{M-1})
+}{
+\delta L(t,T_{M-1}) + 1
+}
+\lambda(t,T_{M-1}), \;t\leq T_{M-1}
+\end{align*}
+
+Let $K\in \R$, now as: 
+\begin{align*}
+\norm{\sigma_{T_{M-1}, T_{M}}(t)}^{2}
+&\leq 
+\norm{\lambda(t,T_{M-1})}^{2} \leq K \\ 
+&\Downarrow \\ 
+\E_{Q^{T_{M}}}\left[
+e^{
+\frac{1}{2}\int_{0}^{T_{M-1}}\norm{\sigma_{T_{M-1}, T_{M}}(s)}^{2}ds
+}
+\right]
+&\leq 
+e^{
+\frac{1}{2}T_{M-1}K
+} < \infty
+\end{align*}
 
 
+Furthermore: 
+\begin{align*}
+\E_{Q^{T_{M}}}\left[
+\frac{
+dQ^{T_{M-1}}
+}{
+dQ^{T_{M}}
+}\bigg{|}_{\F_{T_{M-1}}}
+\right] 
+&= 
+\E_{Q^{T_{M}}}\left[
+\frac{
+dQ^{T_{M-1}}
+}{
+dQ^{T_{M}}
+}\bigg{|}_{\F_{T_{M-1}}}
+\bigg{|}\F_{0}
+\right] 
+=  
+\mathcal{E}_{0}\left(
+\sigma_{T_{M-1}, T_{M}} \bullet W^{T_{M}}
+\right)
+= 1
+\end{align*}
 
+We thus have that $Q^{T_{M-1}} \sim Q^{T_{M}}$ and from Girsanov's Theorem we have that: 
+\begin{align*}
+dW^{T_{M-1}}(t) = dW^{T_{M}}(t) - \sigma_{T_{M-1}, T_{M}}(t)dt   
+\end{align*}
 
+defines a Brownian Motion on $Q^{T_{M-1}}$. 
+
+\begin{lemma}[\textbf{\cite{filipovic2009term}}]
+Let $X$ be a $T_{m}$-contingent claim, we then have that for \\ $t\leq T_{m} \leq T_{n}$ 
+\begin{align*}
+\frac{\pi(t)}{P(t,T_{m})} 
+&= 
+\frac{
+P(t,T_{n})
+}{
+P(t,T_{m})
+}\E_{Q^{T_{n}}}\left[
+\frac{X}{P(T_{m}, T_{n})}
+\bigg{|}\F_{t}
+\right]
+\end{align*}
+\end{lemma} 
+
+\begin{proof}
+We already have that $\pi(t) = P(t,T_{m})\E_{Q^{T_{m}}}[X|\F_{t}]$, and from 
+Lemma \ref{lemma: T-discounted-S-discounted-bond}, by using $S = T_{n}$ and $T = T_{m}$, we have:
+\begin{align*}
+\frac{
+dQ^{T_{m}}
+}{
+dQ^{T_{n}}
+}\bigg{|}_{\F_{t}}
+&= 
+\mathcal{E}_{t}\left(
+\sigma_{T_{m}, T_{n}}\bullet W^{T_{n}}
+\right)
+\end{align*}
+
+This is a $Q^{T_{n}}$-martingale, now in combination with Bayes Theorem, we get: 
+\begin{align*}
+\E_{Q^{T_{m}}}\left[
+X|\F_{t}
+\right]
+&= 
+\frac{
+\E_{Q^{T_{n}}}\left[
+\frac{P(T_{m}, T_{m})}{P(T_{m}, T_{n})}
+\frac{P(0, T_{n})}{P(0, T_{m})}
+\bigg{|}\F_{t}\right]
+}{
+\frac{P(t, T_{m})}{P(t, T_{n})}
+\frac{P(0, T_{n})}{P(0, T_{m})}
+} \\ 
+&= 
+\frac{P(t, T_{n})}{P(t, T_{m})}
+\E_{Q^{T_{n}}}\left[
+\frac{X}{P(T_{m}, T_{n})}
+\bigg{|}\F_{t}\right]
+\end{align*}
+
+\end{proof}
 
 
