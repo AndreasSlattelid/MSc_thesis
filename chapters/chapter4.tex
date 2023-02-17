@@ -876,7 +876,8 @@ z_{1} + (z_{2}+z_{3}T)e^{-z_{5}T} + z_{4}Te^{-z_{6}T}
 
 \newpage 
 \section{Forward Measures}
-Consider the following probability space $(\Omega, \F, (\F_{t})_{t \in [0,T]}, Q))$, furthermore let $X\in L^{1}(\Omega, \F, Q)$ as well as $\F_{T}$-measurable. The goal of this section is to study: 
+Consider the following probability space $(\Omega, \F, (\F_{t})_{t \in [0,T]}, Q))$, furthermore let \\ 
+$X\in L^{1}(\Omega, \F, Q)$ as well as $\F_{T}$-measurable. The goal of this section is to study: 
 \begin{align*}
 \pi(t) &= \E_{Q}\left[
 \frac{B(t)}{B(T)}X\bigg{|}\F_{t}
@@ -1146,6 +1147,7 @@ P(t,T)P(0,S)
 \newpage 
 \section{The LIBOR market model}
 
+\subsection{Introduction}
 In a \textbf{Market model} one is interested in modelling only the relevant $T$'s, meaning that one finds a model for each $T_{i}$. In the market, there are essentially three types of interest rate derivatives: \textbf{caps}, \textbf{floors} and 
 \textbf{swaptions}. By swaption, we mean a call/put on a swap.
 
@@ -1225,7 +1227,7 @@ Here: $t \mapsto \lambda(t,T_{M-1})$ is assumed to be an $\R^{d}$-valued bounded
 Since
 \begin{align*}
 \E_{Q^{T_{M}}}\left[
-e^{\frac{1}{2}\int_{0}^{T_{M-1}}\norm{\lambda(s,T_{M-1}}ds}
+e^{\frac{1}{2}\int_{0}^{T_{M-1}}\norm{\lambda(s,T_{M-1})}^{2}ds}
 \right] < \infty 
 \;\;\text{and}\;\;
 \frac{L(t,T_{M-1})}{L(0,T_{M-1})} = \mathcal{E}_{t}\left(
@@ -1309,7 +1311,7 @@ We thus have that $Q^{T_{M-1}} \sim Q^{T_{M}}$ and from Girsanov's Theorem we ha
 dW^{T_{M-1}}(t) = dW^{T_{M}}(t) - \sigma_{T_{M-1}, T_{M}}(t)dt   
 \end{align*}
 
-defines a Brownian Motion on $Q^{T_{M-1}}$. 
+defines a $Q^{T_{M-1}}$ Brownian Motion on $\F_{T_{M-1}}$. 
 
 \begin{lemma}[\textbf{\cite{filipovic2009term}}]
 Let $X$ be a $T_{m}$-contingent claim, we then have that for \\ $t\leq T_{m} \leq T_{n}$ 
@@ -1364,6 +1366,213 @@ X|\F_{t}
 \bigg{|}\F_{t}\right]
 \end{align*}
 
+\end{proof} 
+
+\newpage 
+
+\subsection{LIBOR-caplets}
+
+We will consider a caplet with reset time $T_{n-1}$ and settlement $T_{n}$ and derive the $T_{m}$-price. Meaning that we will be interested in: 
+\begin{align*}
+Cpl(T_{m}, T_{n-1}, T_{n}) :&= \pi(T_{m}) \\ 
+&= 
+P(T_{m}, T_{n})\E_{Q^{T_{n}}}\left[
+\delta\left(
+L(T_{n-1}, T_{n-1}) -\kappa
+\right)^{+}
+\bigg{|}\F_{T_{m}}
+\right]
+\end{align*}
+
+\begin{proposition}[\textbf{Price of LIBOR-caplet \cite{filipovic2009term}}]
+\begin{align*}
+Cpl(T_{m}, T_{n-1}, T_{n})
+&= 
+\delta P(T_{m}, T_{n})\left[
+L(T_{m}, T_{n-1})\Phi(d_{+}(T_{m}, T_{n-1}))
+-\kappa \Phi(d_{-}(T_{m}, T_{n-1})
+\right]
+\end{align*}
+where: 
+\begin{align*}
+d_{\pm}(T_{m}, T_{n-1}) &= 
+\frac{
+\ln\left( 
+\frac{L(T_{m}, T_{n-1})}{\kappa}
+\right) \pm 
+\frac{1}{2}\int_{T_{m}}^{T_{n-1}}\norm{\lambda(s,T_{n-1})}^{2}ds
+}{
+\left(
+\int_{T_{m}}^{T_{n-1}}\norm{\lambda(s,T_{n-1}}^{2}ds
+\right)^{1/2}
+}
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+We have the following dynamics for $L(t,T_{n-1})$: 
+\begin{align*}
+dL(t,T_{n-1}) &= L(t,T_{n-1})\lambda(t,T_{n-1})dW^{T_{n}}(t) 
+\end{align*}
+where $W^{T_{n}}$ is a $Q^{T_{n}}$-Brownian motion and $t\leq T_{n-1}$
+\\~\\ 
+We also recall that: 
+\begin{align*}
+L(t,T_{n-1}) &= L(0,T_{n-1})\mathcal{E}_{t}\left(
+\lambda(\cdot, T_{n-1})\bullet W^{T_{n}}
+\right) \\ 
+L(T_{n-1}, T_{n-1}) &= L(0,T_{n-1})\mathcal{E}_{T_{n-1}}\left(
+\lambda(\cdot, T_{n-1})\bullet W^{T_{n}}
+\right)
+\end{align*}
+
+Leaving us with: 
+\begin{align*}
+L(T_{n-1}, T_{n-1}) &= L(t,T_{n-1})\mathcal{E}_{t}^{T_{n-1}}\left(
+\lambda(\cdot, T_{n-1})\bullet W^{T_{n}}
+\right) \\ 
+&= L(t,T_{n-1})\exp\left(
+\int_{t}^{T_{n-1}}\lambda(s, T_{n-1})dW^{T_{n}}(s)
+-\frac{1}{2}\int_{t}^{T_{n-1}}\norm{\lambda(s, T_{n-1}(s)}^{2}ds
+\right)
+\end{align*} 
+
+We are interested in the $T_{m}$-price, giving us: 
+\begin{align*}
+L(T_{n-1}, T_{n-1}) &= \underbrace{L(T_{m}, T_{n-1})}_{\text{$\F_{T_{m}}$- measurable}}
+\underbrace{\mathcal{E}_{T_{M}}^{T_{n-1}}\left(
+\lambda(\cdot, T_{n-1})\bullet W^{T_{n}}
+\right)}_{\text{$\F_{T_{m}}$ independent}}    
+\end{align*}
+
+Furthermore:
+\begin{align*}
+\int_{T_{m}}^{T_{n-1}}\lambda(s, T_{n-1})dW^{T_{n}}(s)
+\stackrel{Q^{T_{n}}}{\sim} \mathcal{N}\left(
+0, \int_{T_{m}}^{T_{n-1}}\norm{\lambda(s,T_{n-1})}^{2}ds
+\right)
+\end{align*}
+
+Now let $b^{2} = \int_{T_{m}}^{T_{n-1}}\norm{\lambda(s,T_{n-1})}^{2}ds$, and $Z \sim \mathcal{N}(0,1)$, then: 
+\begin{align*}
+\int_{T_{m}}^{T_{n-1}}\lambda(s, T_{n-1})dW^{T_{n}}(s)
+-\frac{1}{2}\int_{T_{m}}^{T_{n-1}}\norm{\lambda(s, T_{n-1}(s)}^{2}ds 
+\stackrel{\text{d}}{=} bZ - \frac{1}{2}b^{2}
+\end{align*}
+
+
+This leaves us with: 
+\begin{align*}
+\E_{Q^{T_{n}}}\left[
+(L(T_{n-1}, T_{n-1}) - \kappa)^{+}
+\bigg{|}\F_{T_{m}}
+\right]
+&= 
+\E_{Q^{T_{n}}}\left[
+\left(x\exp\left(bZ-\frac{1}{2}b^{2}\right) - \kappa
+\right)^{+}
+\right]_{x = L(T_{n-1}, T_{n-1})}
+\end{align*}
+
+\newpage 
+
+\begin{align*}
+\left(x\exp\left(bZ-\frac{1}{2}b^{2}\right) - \kappa\right) 
+\geq 0 \iff 
+Z \geq 
+\frac{
+\ln\left(\frac{\kappa}{x}\right) + \frac{1}{2}b^{2}
+}{
+b
+}:= d_{1}
+\end{align*}
+
+Now this gives us: 
+\begin{align*}
+\left(x\exp\left(bZ-\frac{1}{2}b^{2}\right) - \kappa
+\right)^{+}
+&= 
+\left(x\exp\left(bZ-\frac{1}{2}b^{2}\right) - \kappa
+\right)\mathbbm{1}_{\{Z\geq d_{1}\}}
+\end{align*}
+
+Taking the expectation yields: 
+\begin{align*}
+\E_{Q^{T_{n}}}\left[
+\left(x\exp\left(bZ-\frac{1}{2}b^{2}\right) - \kappa
+\right)^{+}
+\right] &= 
+\int_{d_{1}}^{\infty}\left(
+x\exp\left(bz-\frac{1}{2}b^{2}
+\right) - \kappa
+\right)f_{Z}(z)dz \\ 
+&= x
+\underbrace{
+\int_{d_{1}}^{\infty}\exp\left(bz-\frac{1}{2}b^{2}\right)f_{Z}(z)dz 
+}_{=(1)}
+-\kappa
+\underbrace{
+\int_{d_{1}}^{\infty}f_{Z}(z)dz
+}_{= (2)}
+\end{align*}
+
+Let's rewrite $(1)$:
+\begin{align*}
+(1) = 
+\int_{d_{1}}^{\infty}e^{
+bz-\frac{1}{2}b^{2}
+}\frac{1}{\sqrt{2\pi}}e^{-\frac{z^{2}}{2}}dz   
+&= 
+\int_{d_{1}}^{\infty}\frac{1}{\sqrt{2\pi}}e^{
+-\frac{1}{2}\left(
+z^{2} - 2bz + b^{2}
+\right)}
+dz\\ 
+&= 
+\int_{d_{1}}^{\infty}\frac{1}{\sqrt{2\pi}}e^{
+-\frac{1}{2}\left(
+z - b
+\right)^{2}}
+dz
+\end{align*}
+This is just an ordinary u-substitution, whit $u = (z-b)$, now 
+$z = d_{1}$ gives $u = d_{1}-b = d_{1}'$, so we have: 
+\begin{align*}
+\int_{d_{1}'}^{\infty}f_{U}(u)du &= P(U\geq d_{1}') 
+= P(U\leq -d_{1}') = \Phi(-d_{1}')
+\end{align*}
+
+\begin{align*}
+d_{+}(T_{m}, T_{n-1}) &:= -d_{1}' = 
+\frac{
+\ln\left(\frac{x}{\kappa}\right) + \frac{1}{2}\int_{T_{m}}^{T_{n-1}}\norm{\lambda(s,T_{n-1})}^{2}ds
+}{
+\left(
+\int_{T_{m}}^{T_{n-1}}\norm{\lambda(s,T_{n-1})}^{2}ds
+\right)^{1/2}
+}
+\end{align*}
+
+And then we calculate $(2)$:
+\begin{align*}
+(2) = 
+\int_{d_{1}}^{\infty}f_{Z}(z)dz &= P(Z\geq d_{1}) = P(Z \leq -d_{1}) = \Phi(-d_{1})    
+\end{align*}
+With $-d_{1} = d_{-}(T_{m}, T_{n-1})$. 
+\\~\\ 
+Plugging all together, yields: 
+\begin{align*}
+Cpl(T_{m}, T_{n-1}, T_{n}) &= 
+P(T_{m}, T_{n})\delta
+\E_{Q^{T_{n}}}\left[
+\left(x\exp\left(bZ-\frac{1}{2}b^{2}\right) - \kappa
+\right)^{+}
+\right]_{x = L(T_{n-1}, T_{n-1})} \\ 
+&= 
+\delta P(T_{m}, T_{n})\left[
+L(T_{m}, T_{n-1})\Phi(d_{+}(T_{m}, T_{n-1}))
+-\kappa \Phi(d_{-}(T_{m}, T_{n-1})
+\right]
+\end{align*}
+
 \end{proof}
-
-
