@@ -1,4 +1,5 @@
 \chapter{Mathematical Finance}
+\label{chp_mathematical_finance}
 
 \section{Market Model}
 For the time being consider $r = (r_{t})_{t\in [0,T]}$ to be a deterministic interest rate process. Furthermore assume that we have the following probability space $(\Omega, \F, (\bar{\F}_{t})_{t\in [0,T]}, P)$
@@ -65,7 +66,7 @@ V^{\phi}(0,S_{0}) = 0, \;\; V^{\phi}(T,S_{T}) \geq 0, \;\; P(V^{\phi}(T,S_{T}) \
 \begin{theorem}[\textbf{First Fundamental theorem of asset pricing}]
 \label{thm: First_fundamental_thm_asset_price}
 The following are equivalent:
-\begin{enumerate}[label=\roman*]
+\begin{enumerate}[label=\roman*, leftmargin=*]
     \item There are no arbitrage opportunities
     \item there exists an equivalent martingale measure $Q\sim P$ such that the process $(\Tilde{S})_{t \in [0,T]} = \left(\frac{S_{t}}{B_{t}}\right)_{t\in [0,T]}$ is a $(Q, \mathbbm{F})$-martingale. 
 \end{enumerate}

@@ -30,12 +30,35 @@ We will consider the ESG criteria to be $\F_{0}$-measurable, we will also take a
 \\~\\
 Assume that SBM Offshore met the criteria the first three times but did not meet the criteria the last time, that would given arise to the following ESG fixed rate sequence: 
 \begin{align*}
-\kappa_{1}^{ESG} &=  0.065, \;\; 
-\kappa_{2}^{ESG} =   0.060, \;\;
-\kappa_{3}^{ESG} =   0.055, \;\; 
-\kappa_{4}^{ESG} =   0.060
+K_{1}^{ESG} &=  0.065, \;\; 
+K_{2}^{ESG} =   0.060, \;\;
+K_{3}^{ESG} =   0.055, \;\; 
+K_{4}^{ESG} =   0.060
 \end{align*}
+
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{figures/SBM_ESG_path.png}
+    \caption{ESG-fixed rate trajectory}
+    \label{fig: SBM_ESG_path}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \newpage 
+
 
 \section{General setup}
 We will take this deal as motivation, but generalize a bit further:
@@ -100,7 +123,7 @@ K_{n}^{ESG}(\omega) &=
 \left(
 [\kappa -d(n-\alpha)]\mathbbm{1}\left[
 \bigcup_{\{
-j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}|}
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
 \}
 \in \mathcal{I}_{n}
 }\left(
@@ -513,14 +536,14 @@ Thus:
 \section{ESG-swap with SOFR-futures as floating}
 
 \begin{proposition}
-The fixed swap rate $\kappa_{t}^{SOFR}$ in a swap with 3M-SOFR as floating is given by:  
+The fixed swap rate $\kappa_{t}^{kM-SOFR}$ in a swap with 1M/3M-SOFR as floating is given by:  
 \begin{align*}
- \kappa_{t}^{SOFR} &= 
+ \kappa_{t}^{kM-SOFR} &= 
  \frac{
- \sum_{i=1}^{n}P(t,T_{i})f^{3M}(t,T_{i-1}, T_{i})
+ \sum_{i=1}^{n}P(t,T_{i})f^{kM}(t,T_{i-1}, T_{i})
  }{
  \sum_{i=1}^{n}P(t,T_{i})
- }
+ }, \;\; k = 1,3
 \end{align*}
 \end{proposition}
 
@@ -528,38 +551,38 @@ The fixed swap rate $\kappa_{t}^{SOFR}$ in a swap with 3M-SOFR as floating is gi
     
 In this swap, we have the following specification, at time $T_{i}$:
 \begin{itemize}[leftmargin=*]
-    \item Pay $\kappa_{t}^{SOFR}\delta N$ (-)
-    \item Receive $f^{3M}(t,T_{i-1}, T_{i})\delta N$ (+)
+    \item Pay $\kappa_{t}^{kM-SOFR}\delta N$ (-)
+    \item Receive $f^{kM}(t,T_{i-1}, T_{i})\delta N$, \; k=1,3 (+)
 \end{itemize} 
 
 \textbf{Cash flow at time $T_{i}$}:
 \begin{align*}
-f^{3M}(t, T_{i-1}, T_{i})\delta N - \kappa_{t}^{SOFR}\delta N =
-[f^{3M}(t,T_{i-1}, T_{i}) -\kappa_{t}^{SOFR}]\delta N
+f^{kM}(t, T_{i-1}, T_{i})\delta N - \kappa_{t}^{kM-SOFR}\delta N =
+[f^{kM}(t,T_{i-1}, T_{i}) -\kappa_{t}^{kM-SOFR}]\delta N, \;\; k=1,3
 \end{align*}
 
 \textbf{Time $t$-value for $t\leq T_{0}$ at time $T_{i}$}: 
 \begin{align*}
-P(t,T_{i})[f^{3M}(t,T_{i-1}, T_{i}) - \kappa_{t}^{SOFR}]\delta N
+P(t,T_{i})[f^{kM}(t,T_{i-1}, T_{i}) - \kappa_{t}^{SOFR}]\delta N,\;\; k=1,3
 \end{align*}
 
 \textbf{Total payer cash flow:}
 \begin{align*}
-\mathcal{C}_{P}^{SOFR}(t) &= 
-\delta N \sum_{i=1}^{n}P(t,T_{i})[f^{3M}(t,T_{i-1}, T_{i}) - \kappa_{t}^{SOFR}]
+\mathcal{C}_{P}^{kM-SOFR}(t) &= 
+\delta N \sum_{i=1}^{n}P(t,T_{i})[f^{kM}(t,T_{i-1}, T_{i}) - \kappa_{t}^{kM-SOFR}], \;\; k=1,3
 \end{align*} 
 
-$\kappa_{t}^{SOFR}$ should be chosen such that: 
+$\kappa_{t}^{kM-SOFR}$ should be chosen such that: 
 \begin{align*}
-\E_{Q}[\mathcal{C}_{P}^{SOFR}(t)|\F_{t}] = 0    
+\E_{Q}[\mathcal{C}_{P}^{kM-SOFR}(t)|\F_{t}] = 0    
 \end{align*}
 
 Thus: 
 \begin{align*}
-\sum_{i=1}^{n}P(t,T_{i})f^{3M}(t,T_{i-1}, T_{i}) &= \sum_{i=1}^{n}P(t,T_{i})\kappa_{t}^{SOFR} \\ 
+\sum_{i=1}^{n}P(t,T_{i})f^{kM}(t,T_{i-1}, T_{i}) &= \sum_{i=1}^{n}P(t,T_{i})\kappa_{t}^{kM-SOFR} \\ 
 &\Downarrow \\ 
-\kappa_{t}^{SOFR} &= \frac{
-\sum_{i=1}^{n}P(t,T_{i})f^{3M}(t,T_{i-1}, T_{i})
+\kappa_{t}^{kM-SOFR} &= \frac{
+\sum_{i=1}^{n}P(t,T_{i})f^{kM}(t,T_{i-1}, T_{i})
 }{
 \sum_{i=1}^{n}P(t,T_{i})
 }
