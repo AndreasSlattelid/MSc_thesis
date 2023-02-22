@@ -4,7 +4,7 @@
 \section{Zero Coupon Bonds and interest rates}
 
 \begin{definition}[\textbf{Zero Coupon Bond} \cite{filipovic2009term}]
-A zero coupon bond (T-bond) with a maturity $T$ guarantees the holder one dollar to be paid out at maturity $T$. We denote the time $t$ price of the zero coupon bond as $P(t,T)$
+A zero coupon bond (ZCB) \nomenclature{ZCB}{Zero Coupon Bond} with a maturity $T$ guarantees the holder one dollar to be paid out at maturity $T$. We denote the time $t$ price of the zero coupon bond as $P(t,T)$
 \end{definition}
 
 We will assume the following: 
@@ -311,7 +311,8 @@ dr(t) = b(t,r(t))dt + \sigma(t,r(t))dW^{Q}(t), \; (Q)
 Assume that $b$ and $\sigma$ are such that they satisfy the conditions given in Theorem \ref{thm: SDE_sufficiency} such that the solution exists and is strong and strongly unique. 
 
 \begin{definition}[\textbf{Affine Term Structure}]
-A short rate model $r$ (eq:\ref{eq: general_interest_rate_SDE}) is said to provide ATS (Affine Term Structure) if: 
+A short rate model $r$ (eq:\ref{eq: general_interest_rate_SDE}) is said to provide ATS (Affine Term Structure) \nomenclature{ATS}{Affine Term Structure}
+if: 
 \begin{align*}
 P(t,T) &= \exp\left(
 -A(t,T)-B(t,T)r(t)
@@ -489,7 +490,8 @@ We have seen how the short rate and the zero coupon bond are related, however, w
 P(t,T) = e^{-\int_{t}^{T}f(t,u)du}
 \]
 
-where $f$ represents the forward rate, the Heath-Jarrow-Morton (HJM) approach consists of modelling the forward rate directly:
+where $f$ represents the forward rate, the Heath-Jarrow-Morton (HJM) \nomenclature{HJM}{Heath-Jarrow-Morton}
+approach consists of modelling the forward rate directly:
 
 \begin{align*}
 df(t,T) &= \alpha(t,T)dt + \sigma(t,T)dW(t) \\ 
@@ -623,6 +625,7 @@ r(t)dt - \int_{t}^{T}\alpha(t,u)dudt - \int_{t}^{T}\sigma(t,u)dudW(t)
 \end{proof}
 
 \begin{notation}[\textbf{Volatility process}]
+\nomenclature{$v(t,T)$}{Volatility process}
 We will use the following notation for the volatility process:
 \[
 v(t,T) := -\int_{t}^{T}\sigma(t,u)du
@@ -1153,7 +1156,10 @@ In a \textbf{Market model} one is interested in modelling only the relevant $T$'
 \textbf{swaptions}. By swaption, we mean a call/put on a swap.
 
 \begin{definition}[\textbf{LIBOR-rate}]
- We define the LIBOR-rate $L(t,T)$ as: 
+ We define the LIBOR-rate \nomenclature{LIBOR}{London Interbank Offered Rate}
+ $L(t,T)$ \nomenclature{$L(t,T)$}{LIBOR-rate}
+ 
+ as: 
  \begin{align*}
 L(t,T) &= F(t,T,T+\delta) 
 = \frac{1}{\delta}\left(

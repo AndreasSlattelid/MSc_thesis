@@ -16,7 +16,9 @@ Assume that $X$ is a non-empty set, a family $\F$ of subsets of $X$ is called a 
 
 \begin{definition}[\textbf{Measure}]
 Assume that $X$ is a non-empty set, and that $\F$ is a $\sigma$-algebra on $X$. 
-A measure $\mu$ on $(X,\F)$ is a function $\mu:\F\to \overline{\R}_{+} =[0,\infty)\cup \{\infty\}$ such that: 
+A measure $\mu$ on $(X,\F)$ is a function $\mu:\F\to \overline{\R}_{+} =[0,\infty)\cup \{\infty\}$
+\nomenclature{$\overline{\R}_{+}$}{Positive real line including infinity, i.e $[0,\infty]$}
+such that: 
 \begin{enumerate}[label = (\roman*), leftmargin=*]
     \item $\mu(\emptyset) = 0$ 
     \item if $\{A_{n}\}_{n\in \N}$ is a pairwise disjoint sequence, then: 
@@ -95,7 +97,8 @@ Let $X,Y$ be two non-empty sets, and let $f:X\to Y$ with $B\subseteq Y$, we then
 \]
 \end{definition} 
 
-We use the convention that $\overline{\R} = \R\cup \{-\infty, \infty\}$
+We use the convention that $\overline{\R} = \R\cup \{-\infty, \infty\}$ \nomenclature{$\overline{\R}$}{Extended real-line i.e $[-\infty, \infty]$}
+
 
 \begin{definition}[\textbf{Measurable function}]
 Let $(X, \F, \mu)$ be a measure space. A function $f:X \to \overline{\R}$ is measurable if:
@@ -666,7 +669,7 @@ M_{t} &= \E[M_{T}] + \int_{0}^{T}H_{s}dW_{s}
 Let $b(t,x) = (b_{i}(t,x))_{1\leq i \leq m}$ and
 $\sigma(t,x) = (\sigma(t,x)_{ij})_{\substack{1\leq i\leq m\\1\leq j\leq d}}$ be measurable functions on $[0,T]\times \R^{m}$
 \begin{definition}[\textbf{\cite{baldi2017stochastic}}]
-Let $X = (X_{t})_{t\in [u,T]}$ be a stochastic process defined on $(\Omega, \F, (\F_{t})_{t\in [0,T]}, P)$, it is said to be a solution of the SDE (Stochastic differential equation)
+Let $X = (X_{t})_{t\in [u,T]}$ be a stochastic process defined on $(\Omega, \F, (\F_{t})_{t\in [0,T]}, P)$, it is said to be a solution of the SDE \nomenclature{SDE}{Stochastic Differential Equation} (Stochastic differential equation)
 \begin{align*}
 (*)\begin{cases}
       dX_{t} &= b(t,X_{t})dt + \sigma(t,X_{t})dW_{t} \\
@@ -860,7 +863,7 @@ The triplet $(\gamma, \sigma, \nu)$ defines the law of $L$ uniquely and is calle
 
 \begin{definition}[\textbf{Compound Poisson process}]
 \label{def: CPP}
-A compound Poisson process (CPP) with intensity $\lambda > 0$ and jump size distribution $F_{J}(dx)$  is a stochastic process: 
+A compound Poisson process (CPP) \nomenclature{CPP}{Compound Poisson process} with intensity $\lambda > 0$ and jump size distribution $F_{J}(dx)$  is a stochastic process: 
 $$
 Y(t) = \sum_{i=1}^{N(t)}J_{k}
 $$
@@ -974,6 +977,7 @@ Where $\Psi(x)$ is the cumulant function of $I(1)$ i.e:
 \end{proposition}
 
 \begin{proof}
+\nomenclature{DCT}{Dominated Convergence Theorem}
 Since $g$ is a continuous function on $[s,t]$ we know that there exist $M>0$ such that $|g(u)| \leq M,\; \forall u \in [s,t]$, furthermore from Proposition \ref{prop: simple_functions_conv_pointwise_to_f}, we know that $g$ may be approximated by simple functions: 
 \begin{align*}
 h(u) &= \sum_{k=1}^{n}a_{k}\mathbbm{1}_{(u_{k-1}, u_{k}]}(u), \;\text{where:}\; s = u_{0} < u_{1} < \dots < u_{n} = t  

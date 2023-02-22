@@ -32,7 +32,7 @@
 
 \addbibresource{mybib.bib}            %% ... or whatever
 
-
+\makenomenclature
 \begin{document}
 \uiomasterfp[dept={Department of Mathematics},  %% ... or your department
   program={Mathematics},                        %% ... or your study program
@@ -77,16 +77,17 @@
 \include{chapters/discussion}
 
 \include{chapters/conclusion}
+%\include{chapters/abbreviations}
 
  
- \printbibliography[heading=bibintoc,title={References}]
+\printbibliography[heading=bibintoc,title={References}]
+\printnomenclature[2.5cm]
 
 \backmatter{}
-
     \appendix % "Chapter" is renamed "Appendix"
-    \begin{refsection}
+    %\begin{refsection}
     \include{chapters/appendixA}
     %\include{chapters/appendixB}
  %    \printbibliography[heading=bibintoc,title={References}]
-\end{refsection}
+%\end{refsection}
 \end{document}
