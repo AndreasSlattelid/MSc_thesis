@@ -1,27 +1,84 @@
 \chapter{Discussion}
-\label{discussion}
-\kant[15] % Dummy text
-\section{All my great results}
-\kant[16]
-\paragraph{List with bullets}
-\begin{itemize}
-    \item This is a list with bullets - the symbol can be changed easily.
-     \item[!] A point to exclaim something!
-  \item[$\blacksquare$] Make the point fair and square.
-  \item[] A blank label?
-    \item This is the last item.
-\end{itemize}
-\paragraph{Numbered lists}
-\begin{enumerate}
-    \item This is a numbered list.
-     \item This is the second item.
-\end{enumerate}
-\paragraph{Descriptions}
-\begin{description}
-\item[My first great result] This is a description list.
- \item[My second great result] This is the second item.
-\end{description}
-\section{Pros and cons}
-\kant[17]
-\section{Future research}
-\kant[18]
+
+We imposed a model for ESG-linked swaps, which lead to a sequence of fixed rates $\kappa_{t}^{ESG}  = (\kappa_{t}^{ESG}(i))_{i=1}^{n}$ giving a penalty/discount depending on whether the criteria were met or not.
+\\~\\ 
+We remember that the criteria $A_{i}$ looked like the following:
+\begin{align*}
+A_{i} &= \{X_{T_{i}} \leq C_{T_{i}}^{ESG}\}    
+\end{align*}
+
+This means that our ESG-fixed rate process heavily depends upon the OU-process $X(t)$ and the criteria $C_{T_{i}}^{ESG}$. 
+\\~\\
+In my modelling approach, I modelled directly under $Q$, however, the market one operates in and observes is under $P$, meaning that it would have been suitable with an Esscher-transform of $X(t)$, which then by  Proposition \ref{prop: Esscher_transform_CPP_Q} means that we would still have a CPP, but with altered intensity $\lambda_{Q}$ and jump-size distribution $F_{J}^{Q}(dx)$.
+\\~\\
+In our case we have $I(t) = \sum_{k=1}^{N(t)}J_{k}$ with $N(t) \sim Pois(\lambda t)$ and 
+$J\sim Exp(\mu)$, meaning that we would have gotten: 
+
+\begin{align*}
+Mathematics
+\end{align*}
+
+Furthermore, $X(t)$ is company dependent, meaning that in order to get good estimates of the necessary parameters included, the need for data accessibility is crucial in order to impose a suitable model. In the Julia script it is possible to extend $X(t)$ with a Brownian Motion, i.e: 
+
+\begin{align*}
+d\hat{Z}(t) &= -\beta \hat{Z}(t)dt + \sigma dW(t) + dI(t)\\ 
+\hat{X}(t) &= \exp\left(\hat{Z}(t)\right)
+\end{align*}
+
+
+\newpage 
+If one looks at the expression $K_{n}^{ESG}(\omega)$: 
+\begin{align*}
+K_{n}^{ESG}(\omega) &= 
+[\kappa -dn]\mathbbm{1}\left[
+\bigcap_{i\in \mathcal{I}_{n}}A_{i}
+\right](\omega) \\ 
+&+ 
+\sum_{\alpha \in \mathcal{I}_{2n}^{Even}}
+\left(
+[\kappa -d(n-\alpha)]\mathbbm{1}\left[
+\bigcup_{
+j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
+\in \mathcal{I}_{n}
+}\left(
+\bigcap_{i\in \mathcal{I}_{n}}A_{i}
+\right)^{
+\{
+(j_{1}, \dots , j_{|\mathcal{I}_{\alpha}^{Even}|})
+\}
+}
+\right]
+\right)(\omega) 
+\end{align*}
+
+We see that it tracks every path, and for each $n$ there are $2^{n}$-possible paths, meaning that as $n$ increases the complexity increases. Furthermore, this expression is rather general meaning that one must rely upon Monte Carlo simulations in order to get an estimate of $\kappa_{t}^{ESG}(i)$. At the same time, it also gives possibilities for other types of stochastic models for the ESG-risk score. 
+
+
+
+
+%\label{discussion}
+%\kant[15] % Dummy text
+%\section{All my great results}
+%\kant[16]
+%\paragraph{List with bullets}
+%\begin{itemize}
+%    \item This is a list with bullets - the symbol can be %changed easily.
+%     \item[!] A point to exclaim something!
+%  \item[$\blacksquare$] Make the point fair and square.
+%  \item[] A blank label?
+%    \item This is the last item.
+%\end{itemize}
+%\paragraph{Numbered lists}
+%\begin{enumerate}
+%    \item This is a numbered list.
+%     \item This is the second item.
+%\end{enumerate}
+%\paragraph{Descriptions}
+%\begin{description}
+%\item[My first great result] This is a description list.
+% \item[My second great result] This is the second item.
+%\end{description}
+%\section{Pros and cons}
+%\kant[17]
+%\section{Future research}
+%\kant[18]

@@ -2,13 +2,15 @@
 
 \section{Introduction}
 Following the LIBOR scandal, the Federal Reserve and regulators in the U.K. have come up with a replacement called the Secured Overnight Financing Rate (SOFR) \nomenclature{SOFR}{Secured Overnight Financing Rate}.
+There are also other RFR alternatives (Risk-Free Reference Rates) \nomenclature{RFR}{Risk-Free Reference Rates} who works in a similar way: like SONIA (Sterling Overnight Index Average) 
+\nomenclature{SONIA}{Sterling Overnight Index Average} managed by The Bank of England. One could also mention €STR (Euro Short-Term Rate) \nomenclature{€STR}{Euro Short-Term Rate}
+\cite{cmegroup}
 \\~\\
 On November.30,2020, the Federal Reserve announced that the LIBOR will be phased out and eventually replaced by June 2023. Banks were also instructed to stop writing contracts using the LIBOR by end of 2021, and that all contracts using the LIBOR should wrap up by June 30, 2023. [\cite{hayes_2022}]
 \\~\\ 
 SOFR is based on transactions in the Treasury repurchase market and is fundamentally different from LIBOR as it is an overnight rate based on market data. Thus it cannot give a view of the future beyond the 24-hours.  
 
-\section{SOFR futures}
-Let $(\Omega, \F, (\F_{t})_{t\geq 0}, Q)$ denote our probability space, and let $Q$ be the risk-neutral probability measure defined via the Radon-Nikodym derivative.
+\newpage 
 
 \begin{definition}[\textbf{Discrete overnight SOFR \cite{Skov_2020}}]
 The discrete overnight SOFR is defined as:
@@ -22,8 +24,26 @@ where:
     \item $d_{i}$: denotes the day count fraction multiplied by the number of days to which the overnight rate applies. I.e. $d_{i} = 1/360$ on business days, and $d_{i} = 3/360$ on fridays. 
 \end{itemize}
 \end{definition}
-When dealing with SOFR futures one distinguishes between 1-month- and 3-month futures, as they are not calculated in the same way:
 
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[height = 7cm, width=14cm]{figures/SOFR/overnight_SOFR_Volume.JPG}
+    \caption{Overnight SOFR rates. Source: \cite{NewYorkFedSOFR}}
+    \label{fig: Overnight_SOFR_rates}
+\end{figure}
+
+In this Figure, we see the overnight SOFR rates from April 1, 2018 until February 21, 2023. With corresponding traded volumes. 
+\\~\\
+We see that there was a spike in September 2019, this was due to a large drop in reserves due to tax date \cite{FederalReserve2019}. We also see the effects of the pandemic with almost $0\%$ interest rate, followed by now rising interest rates. 
+
+
+\newpage 
+
+\section{SOFR futures}
+Let $(\Omega, \F, (\F_{t})_{t\geq 0}, Q)$ denote our probability space, and let $Q$ be the risk-neutral probability measure defined via the Radon-Nikodym derivative.
+\\~\\
+When dealing with SOFR futures one distinguishes between 1-month- and 3-month futures, as they are not calculated in the same way:
 
 \begin{definition}[\textbf{SOFR 1-month arithmetic average \cite{Skov_2020}}]
 The 1-month \nomenclature{1M}{1-month}
@@ -86,6 +106,8 @@ f^{3M}(t,S,T) &= \frac{1}{T-S}\left(
 \end{align*}
 \end{definition} 
 
+\newpage 
+
 \begin{proposition}[\textbf{Vasicek dynamics of 1M/3M-SOFR futures}]
 Assume that the short rate has the following dynamics: 
 \begin{align*}
@@ -114,8 +136,6 @@ e^{-\alpha(S-t)}-e^{\alpha(T-t)}
 
 
 \begin{proof}
-We start on the next page. 
-\newpage 
 
 From Proposition \ref{prop: Vasicek_ATS}, we have that: 
 \begin{align*}
@@ -164,6 +184,7 @@ df^{1M}(t,S,T)
 &= \frac{1}{T-S}B(t,S,T)\sigma dW^{Q}(t)
 \end{align*}
 
+\newpage 
 Now for $f^{3M}(t,S,T)$ we must study $\int_{S}^{T}r(s)ds$:  
 \\~\\
 We have the following timeline:
@@ -220,7 +241,6 @@ This leaves us with:
 }_{= (2)}
 \end{align*}
 
-\newpage 
 By Stochastic Fubini, we get: 
 \begin{align*}
 (1) &= \int_{S}^{T}\int_{t}^{S}e^{-\alpha(s-u)}dW^{Q}(u)ds 
@@ -341,7 +361,6 @@ Since $\Sigma$ is deterministic, we get that:
 \right)
 \end{align*}
 
-\newpage 
 This means that we now get the following expression: 
 \begin{align*}
  \E_{Q}\left[
@@ -386,6 +405,8 @@ dr(t)^{2} &= \sigma^{2}dt \\
 &\Downarrow \\ 
 dg(t,r(t)) &= B(t,S,T)g(t,r(t))\sigma dW^{Q}(t)
 \end{align*}
+
+\newpage 
 
 This gives the following dynamics for $f^{3M}(t,S,T)$:
 \begin{align*}

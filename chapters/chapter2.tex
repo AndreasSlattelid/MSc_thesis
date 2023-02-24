@@ -789,7 +789,9 @@ A process $L = (L_{t})$ on $(\Omega, \F, P)$ is said to be a Levy-process if:
 
 
 \begin{proposition}[\textbf{Characteristic function of Levy-process \cite{tankov2003financial}}]
-Let $(L(t))_{t\geq 0}$ be a Levy-process on $\R^{d}$, then there exists a continuous function $\Psi: \R^{d} \to \R$ called the characteristic exponent of $L$ such that: 
+Let $(L(t))_{t\geq 0}$ be a Levy-process on $\R^{d}$, then there exists a continuous function $\Psi: \R^{d} \to \R$ 
+\nomenclature{$\Psi$}{Characteristic exponent of Levy process}
+called the characteristic exponent of $L$ such that: 
 $$
 \E[e^{iuL(t)}] = e^{t\Psi(u)}
 $$
@@ -1093,8 +1095,9 @@ Meaning that we need $\E[e^{\theta J}] < \infty $ for $Z^{\theta}(T)$ to be well
 \begin{notation}
 For simplicity and ease of notation, we define: 
 \begin{align*}
-\xi(\theta) := \Psi(-i\theta) = \lambda(\E[e^{\theta J}] -1)    
+\xi(\theta) := \Psi(-i\theta) = \lambda(\E[e^{\theta J}] -1)  
 \end{align*}
+\nomenclature{$\xi$}{Transformed characteristic exponent of Levy process, $\xi(\theta):= \Psi(-i\theta)$}
 \end{notation}
 
 We then see that we can rewrite $Z^{\theta}(T)$ as: 
@@ -1131,6 +1134,7 @@ e^{-\xi(\theta)t}e^{\theta I(s)}e^{\xi(\theta)(t-s)} \\
 \newpage 
 
 \begin{proposition}[\textbf{\cite{benth2008stochastic}}]
+\label{prop: Esscher_transform_CPP_Q}
 $I(t)$ is a CPP under $Q^{\theta}$ with intensity $\lambda_{Q^{\theta}} = \lambda \E[e^{\theta J}]$
 \end{proposition} 
 
