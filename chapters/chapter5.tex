@@ -4,11 +4,21 @@
 Following the LIBOR scandal, the Federal Reserve and regulators in the U.K. have come up with a replacement called the Secured Overnight Financing Rate (SOFR) \nomenclature{SOFR}{Secured Overnight Financing Rate}.
 There are also other RFR alternatives (Risk-Free Reference Rates) \nomenclature{RFR}{Risk-Free Reference Rates} who works in a similar way: like SONIA (Sterling Overnight Index Average) 
 \nomenclature{SONIA}{Sterling Overnight Index Average} managed by The Bank of England. One could also mention €STR (Euro Short-Term Rate) \nomenclature{€STR}{Euro Short-Term Rate}
-\cite{cmegroup}
+\cite{CME_SOFR}
 \\~\\
-On November.30,2020, the Federal Reserve announced that the LIBOR will be phased out and eventually replaced by June 2023. Banks were also instructed to stop writing contracts using the LIBOR by end of 2021, and that all contracts using the LIBOR should wrap up by June 30, 2023. [\cite{hayes_2022}]
+On November.30,2020, the Federal Reserve announced that the LIBOR will be phased out and eventually replaced by June 2023. Banks were also instructed to stop writing contracts using the LIBOR by end of 2021, and that all contracts using the LIBOR should wrap up by June 30, 2023. \cite{hayes_2022}
 \\~\\ 
-SOFR is based on transactions in the Treasury repurchase market and is fundamentally different from LIBOR as it is an overnight rate based on market data. Thus it cannot give a view of the future beyond the 24-hours.  
+SOFR is fundamentally different from LIBOR. The Federal Reserve Bank of New York collects transaction data from the overnight Treasury Repo market. It then calculates a volume-weighted median interest rate. Which then gets published 08.00 AM (Eastern Time) the following business day \cite{ARRC_SOFR}.
+\\~\\ 
+This means that SOFR is backward looking as it is based upon overnight transactions, furthermore, it cannot look beyond 24 hours.  
+\\~\\
+\textbf{Key differences between LIBOR and SOFR/RFR's}
+
+\begin{enumerate}
+    \item Calculation Method: LIBOR is calculated based on submissions from Panel Banks. SOFR is based on the overnight repo market. 
+    \item Tenors: LIBOR has multiple tenors, while SOFR has one: overnight. Meaning that LIBOR is forward-looking and SOFR is backwards-looking. 
+    \item Validity: Following the LIBOR scandal, one has seen that LIBOR has been more prone to manipulation, as one can give higher or lower rate submissions altering the trimmed mean. SOFR is transaction based, meaning that it is harder to manipulate. 
+\end{enumerate}
 
 \newpage 
 
@@ -36,6 +46,7 @@ where:
 In this Figure, we see the overnight SOFR rates from April 1, 2018 until February 21, 2023. With corresponding traded volumes. 
 \\~\\
 We see that there was a spike in September 2019, this was due to a large drop in reserves due to tax date \cite{FederalReserve2019}. We also see the effects of the pandemic with almost $0\%$ interest rate, followed by now rising interest rates. 
+
 
 
 \newpage 
@@ -320,11 +331,14 @@ e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
 e^{-\alpha(S-t) - e^{-\alpha(T-t)}}
 \right]
 + m(T-S) 
-+ \frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(s)
++ 
+\underbrace{
+\frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(s)
+}_{\F_{t}-\text{independent}}
 \end{align*}
 
 
-The last part is $\F_{t}$-independent,we thus get: 
+As the last part is $\F_{t}$-independent,we get: 
 \begin{align*}
 \E_{Q}\left[
 \exp\left(
@@ -348,7 +362,7 @@ e^{-\alpha(S-t) - e^{-\alpha(T-t)}}
 \right]
 \end{align*}
 
-Since $\Sigma$ is deterministic, we get that: 
+Since $\Sigma$ is deterministic, we have that: 
 \begin{align*}
 \E_{Q}\left[
 \exp\left(
@@ -361,7 +375,7 @@ Since $\Sigma$ is deterministic, we get that:
 \right)
 \end{align*}
 
-This means that we now get the following expression: 
+This leaves us with the following expression:
 \begin{align*}
  \E_{Q}\left[
 \exp\left(

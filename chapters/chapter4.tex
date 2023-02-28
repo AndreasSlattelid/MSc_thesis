@@ -1152,8 +1152,6 @@ P(t,T)P(0,S)
 \section{The LIBOR market model}
 
 \subsection{Introduction}
-In a \textbf{Market model} one is interested in modelling only the relevant $T$'s, meaning that one finds a model for each $T_{i}$. In the market, there are essentially three types of interest rate derivatives: \textbf{caps}, \textbf{floors} and 
-\textbf{swaptions}. By swaption, we mean a call/put on a swap.
 
 \begin{definition}[\textbf{LIBOR-rate}]
  We define the LIBOR-rate \nomenclature{LIBOR}{London Interbank Offered Rate}
@@ -1167,6 +1165,59 @@ L(t,T) &= F(t,T,T+\delta)
 \right)     
  \end{align*}
 \end{definition}
+
+Typically LIBOR has the following Tenors: 
+\begin{itemize}[leftmargin =*]
+    \item O/N (Overnight) \nomenclature{O/N}{Overnight}
+    \item 1 Week 
+    \item 1 Month 
+    \item 2 Months 
+    \item 3 Months 
+    \item 6 Months 
+    \item 12 Months
+\end{itemize}
+
+The rates are calculated by a trimmed average provided by Panel Banks, meaning that they are based upon expert judgment. Let's say that there were 16 Panel Banks: $B_{1}, \dots, B_{16}$. Each Bank $B_{i}$ would submit a borrowing rate $r_{i}$ to Intercontinental Exchange Benchmark Administration (ICE) \nomenclature{ICE}{Intercontinental Exchange Benchmark Administration}. It would then be sorted, and then one would cut the highest $25\%$, and the lowest $25\%$. For further information, one can consult \cite{ICE_IBA}.  
+
+\begin{example}
+Assume that the data below are provided by the Panel Banks for a 3-month tenor. First one collects the data, then sort it in ascending order, followed by trimming the data: 
+\begin{align*}
+\begin{bmatrix}
+0.043 & 0.056 & 0.049 & 0.050\\
+0.046 & 0.058 & 0.052 & 0.041 \\ 
+0.039 & 0.037 & 0.045 & 0.044 \\ 
+0.046 & 0.042 & 0.034 & 0.057
+\end{bmatrix}
+\to 
+\begin{bmatrix}
+0.034 & 0.037 & 0.039 & 0.041\\
+0.042 & 0.043 & 0.044 & 0.045 \\ 
+0.046 & 0.046 & 0.049 & 0.050 \\ 
+0.052 & 0.056 & 0.057 & 0.058
+\end{bmatrix} 
+\to 
+\begin{bmatrix}
+0.042 & 0.043 & 0.044 & 0.045 \\ 
+0.046 & 0.046 & 0.049 & 0.050 
+\end{bmatrix} 
+\end{align*}
+
+After the data is trimmed one takes the mean: 
+\begin{align*}
+\frac{1}{8}\left(
+0.042 + 0.043 + 0.044 + 0.045 + 0.046 + 0.049 + 0.050
+\right)
+&= 
+0.04550
+\end{align*}
+One also has conventions for the number of decimals, but these are currency specific. 
+\end{example}
+
+
+\newpage 
+
+In a \textbf{Market model} one is interested in modelling only the relevant $T$'s, meaning that one finds a model for each $T_{i}$. In the market, there are essentially three types of interest rate derivatives: \textbf{caps}, \textbf{floors} and 
+\textbf{swaptions}. By swaption, we mean a call/put on a swap.
 
 \begin{definition}[\textbf{LIBOR-Caplet}]
 A caplet with reset date \textbf{T} and settlement \textbf{T+$\delta$} pays the holder: LIBOR minus strike $\kappa$ if it is positive: 

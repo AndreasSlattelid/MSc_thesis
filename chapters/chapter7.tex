@@ -87,7 +87,7 @@ To ease some notation, we write:
 \varphi_{F}(x) = \int_{\R}e^{iyx}F_{J}(dy) 
 \end{align*}
 
-We start with calculating $\varphi_{F}(x)$ for with $F_{J}(dy) = 
+We start with calculating $\varphi_{F}(x)$ with $F_{J}(dy) = 
 \mu e^{-\mu y}\mathbbm{1}_{[0,\infty)}(y)dy:$ 
 \begin{align*}
 \varphi_{F}(x) &= 
@@ -226,13 +226,15 @@ We assume that the dynamics under $Q$ look the following:
     \label{fig: ESG-risk score}
 \end{figure}
 
-The Blue dots represent the ESG-risk scores at times $T_{i}$
+This graph indicates that the ESG-risk score is downward trending, this could be that the company are/will implement measures to reduce $CO_{2}$-emissions.
+The blue dots represent the ESG-risk score at times $T_{i}$. 
+
 
 \newpage 
 
 In this simulation we got: 
 \begin{align*}
-\kappa_{t}^{ZCB} &= 0.01030    
+\kappa_{t}^{ZCB} &= \frac{P(t,T_{0})-P(t,T_{4})}{\delta \sum_{i=1}^{4}P(t,T_{i})} = 0.01030   
 \end{align*}
 
 \begin{figure}[htp]
@@ -242,7 +244,9 @@ In this simulation we got:
     \label{fig: ESG-risk_criteria1}
 \end{figure}
 
-and: 
+In this figure, we see the underlying ESG risk score process. Here the dark-solid lines represent the criteria $C_{T_{i}}^{ESG}$. We see that the ESG criteria were bearly met at time $T_{1}$, it was not met at $T_{2}$, met at $T_{3}$ and then met again at time $T_{4}$. 
+\\~\\ 
+We summarize the findings in the following table:
 \begin{center}
     \begin{tabular}{ | l | l | l | p{5cm} |}
     \hline
@@ -253,6 +257,13 @@ and:
     $T_{4}$ &      14.55  & $0.00780$   \\ \hline
     \end{tabular}
 \end{center} 
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width= 10cm]{figures/ESG/kappa_t_ESG_1.png}
+    \caption{ESG-risk score where ESG-criteria is reasonable}
+    \label{fig: ESG_swap_1}
+\end{figure}
 
 \newpage 
 
@@ -267,6 +278,8 @@ In this simulation we took: $C^{ESG} = (18,17,16,15)$, and we got the following:
     \label{fig: ESG-risk_score_criteri2}
 \end{figure}
 
+In this particular we met the criteria at all time points $T_{i}$ for $i=1,2,3$. 
+
 
 \begin{center}
     \begin{tabular}{ | l | l | l | p{5cm} |}
@@ -279,6 +292,17 @@ In this simulation we took: $C^{ESG} = (18,17,16,15)$, and we got the following:
     \end{tabular}
 \end{center} 
 
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width= 10cm]{figures/ESG/kappa_t_ESG_2.png}
+    \caption{Meeting criteria often}
+    \label{fig: ESG_swap_2}
+\end{figure}
+
+In this simulation, we got almost the swap rate at time $T_{1}$, and then the company met the criteria for $i=2,3,4$, giving a lower fixed rate. 
+
+
+\newpage
 \textbf{Never meeting criteria}
 \\~\\ 
 In this simulation we took: $C^{ESG} = 2.5$, for all timepoints and got: 
@@ -305,6 +329,14 @@ In this simulation we took: $C^{ESG} = 2.5$, for all timepoints and got:
 \end{center} 
 
 
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=10cm]{figures/ESG/kappa_t_ESG_3.png}
+    \caption{ESG swap rate when ESG-criteria is never met}
+    \label{fig: ESG_swap_3}
+\end{figure} 
+
+We see the effect of the penalty $d = 0.005$, leading to an upward-trending ESG swap rate. 
 
 
 

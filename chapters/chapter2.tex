@@ -770,93 +770,104 @@ Throughout this thesis, unless otherwise specified, we will assume that our prob
 
 \newpage
 \section{Levy processes}
+Assume that $(\Omega, \F, P)$ is a complete probability space. 
 
 \begin{definition}[\textbf{Levy process \cite{kenlévy}}]
-A process $L = (L_{t})$ on $(\Omega, \F, P)$ is said to be a Levy-process if: 
-\begin{itemize}[leftmargin=*]
-    \item $L_{0} = 0$
-    \item independent increments: $0 < s < t < s'< t'$: 
-    $L_{t}-L_{s}$ is independent of $L_{t'}-L_{s'}$
-    \item stationary increments: 
-    $L_{t} -L_{s} \stackrel{\text{d}}{=} L_{t-s}$
-    \item it's stochastically continuous, i.e 
-    $$
-    \forall \; \epsilon > 0: \;\; \lim\limits_{h \to 0}P(|X_{t+h}-X_{t}| \geq \epsilon) = 0
-    $$
-    \item the sample paths are cadlag
-\end{itemize} 
+A stochastic process $X = (X_{t})_{t\geq 0}$ is a Levy process if:
+\begin{enumerate}[leftmargin =*]
+    \item $X_{0} = 0$
+    \item $X$ has independent increments, i.e $\forall \; 0\leq t < u:$
+    \begin{align*}
+    X_{u}-X_{t}\;\text{is independent of}\;X_{s}-X_{r}\; \forall\; 0 \leq r < s \leq t    
+    \end{align*}
+    \item $X$ has stationary increments, i.e. 
+    \begin{align*}
+    \forall\; 0 \leq s < t: \; X_{t}-X_{s} \stackrel{d}{=} X_{t-s}
+    \end{align*}
+    \item $X$ is stochastically continuous: 
+    \begin{align*}
+    \forall \; \epsilon > 0: \;\; \lim\limits_{h \to 0}P(|X_{t+h}-X_{t}| \geq \epsilon) = 0 
+    \end{align*}
+    \item $X$ has càdlàg \nomenclature{càdlàg}{right continuous with existing left limits} sample paths
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[\textbf{Infinitely divisible \cite{applebaum_lévy}}]
+A random variable $X$ is said to be infinitely divisible if $\forall\; n\in \N$ there exist $X_{n,1}, \dots, X_{n,n}$ such that: 
+\begin{align*}
+X \stackrel{d}{=} \sum_{k=1}^{n}X_{n,k}
+\end{align*}
+\end{definition}
+
+\begin{proposition}
+If $X = (X_{t})_{t\geq 0}$ is a Levy-process, then $\forall\; t\geq 0$ $X_{t}$ is infinitely divisible. 
+\end{proposition}
+
+\begin{definition}[\textbf{Levy-measure}]
+A Levy-measure is a Borel-measure \nomenclature{Borel-measure}{Measure defined on the $\sigma$-algebra of Borel sets} $\nu$  defined on $\R_{0}^{d} = \R^{d}\setminus \{0\}$ 
+\nomenclature{$\R_{0}^{d}$}{$\R^{d}\setminus \{0\}$}
+such that: 
+\begin{align*}
+\int_{\R_{0}^{d}}1\wedge|x|^{2}\nu(dx) < \infty    
+\end{align*}
+\end{definition}
+
+\begin{theorem}[\textbf{Levy-Khintchine theorem \cite{applebaum_lévy}}]
+\label{thm: Levy_Khintchine}
+Let $\mu$ be a probability measure on $\R^{d}$, then there exist: 
+\begin{itemize}[leftmargin =*]
+    \item $\gamma \in \R^{d}$
+    \item $A \in \R^{d\times d}$: Positive semi-definite symmetric matrix $(u^{Tr}Au \geq 0, \forall\; u\in \R^{d})$ 
+    \item $\nu$ a Levy-measure on $\R_{0}^{d}$ such that $\forall \; u \in \R^{d}$: 
+    \begin{align*}
+    \varphi_{\mu}(u) &= \exp\left(
+    i\langle \gamma, u \rangle - \frac{1}{2}\langle u, Au \rangle 
+    + \int_{\R_{0}^{d}}\left[
+    e^{i \langle u, x\rangle} - 1 - i\langle u, x\rangle\mathbbm{1}(|x|<1)
+    \right]\nu(dx)
+    \right)
+    \end{align*}
+\end{itemize}
+$(\gamma, A, \nu)$ is called the characteristic triplet of $X$. 
+\end{theorem} 
+
+\newpage 
+
+\begin{definition}[\textbf{Characteristic exponent}]
+The function $\Psi: \R^{d} \to \C$: 
+\begin{align*}
+\Psi(u) &= i\langle \gamma, u \rangle - \frac{1}{2}\langle u, Au \rangle 
+    + \int_{\R_{0}^{d}}\left[
+    e^{i \langle u, x\rangle} - 1 - i\langle u, x\rangle\mathbbm{1}(|x|<1)
+    \right]\nu(dx)    
+\end{align*}
+is called the characteristic exponent of the Levy-process $X$
 \end{definition}
 
 
-\begin{proposition}[\textbf{Characteristic function of Levy-process \cite{tankov2003financial}}]
-Let $(L(t))_{t\geq 0}$ be a Levy-process on $\R^{d}$, then there exists a continuous function $\Psi: \R^{d} \to \R$ 
-\nomenclature{$\Psi$}{Characteristic exponent of Levy process}
-called the characteristic exponent of $L$ such that: 
-$$
-\E[e^{iuL(t)}] = e^{t\Psi(u)}
-$$
-\end{proposition}
-
-\begin{definition}[\textbf{Random measure}]
-Let $(E, \mathcal{E})$ be a measure space, a map $\mu : \Omega \times \mathcal{E} \to \R_{+}$ is a random measure if: 
-\begin{itemize}[leftmargin=*]
-    \item $\mu(\omega, \cdot)$ is a measure $\forall\; \omega \in \Omega$ 
-    \item $\mu(\cdot, A)$ is a random variable $\forall\; A \in \mathcal{E}$
-\end{itemize}
-\end{definition} 
-
-\begin{definition}[\textbf{Poisson random measure}]
-Let $(E, \mathcal{E})$ be a measurable space, and $\nu: \mathcal{E}\to \R_{+}$ a $\sigma$-finite measure. 
-\\~\\  
-A random measure $\mu: \Omega \times \mathcal{E} \to \R_{+}$ is called a Poisson random measure with intensity measure $\nu$, if: 
-\begin{itemize}[leftmargin=*]
-    \item $\mu(\cdot, A) \sim Pois(\nu(A)) \; \forall A \in \mathcal{E}$ with $\nu(A) < \infty$
-    \item $\mu(\cdot, A_{1}), \dots, \mu(\cdot, A_{n})$ are independent for $\{A_{n}\}_{n\in \N }$ disjoint. 
-\end{itemize}
-\end{definition} 
-
-\begin{theorem}
-Let $L = (L(t))_{t\geq 0}$ be a real valued Levy-process, define for $A \in \mathcal{B}(\R)\setminus \{0\}$, $t\geq 0, \omega \in \Omega$: 
+\begin{theorem}[\textbf{\cite{applebaum_lévy}}]
+If $X = (X_{t})_{t\geq 0}$ is a Levy process, then the characteristic triplet of each random variable $X_{t}$ takes the following form: 
 \begin{align*}
-N(t, A)(\omega) &= \#\{
-s\leq t: \Delta L(s)(\omega) \in A
-\} \\ 
+(\gamma_{(t)}, A_{(t)}, \nu_{(t)})
 &= 
-\sum_{s\leq t}\mathbbm{1}_{A}(\Delta L(s)(\omega))
+(t\gamma, tA, t\nu)
 \end{align*}
-
-a) if $A$ is bounded away from zero, then: 
-$
-N(t,A) < \infty \; a.s
-$
-and $t\mapsto N(t,A)$ is a Poisson process
-\\~\\ 
-b) $N(t, \cdot)$ is a Poisson random measure, and for all $t\geq 0$ with $\sigma$-finite $\nu$: 
+where $\gamma, A$ and $\nu$ are as described in Theorem \ref{thm: Levy_Khintchine}, the characteristic function takes the following form: 
 \begin{align*}
-\E[N(t,A)] &= \nu(A)t \;\; \text{and}\;\; \int_{\R\setminus\{0\}}\min(1, z^{2})\nu(dz) < \infty    
+\E[e^{iuX(t)}] &= \exp(\Psi_{(t)}(u)) \\ 
+ &= \exp(t\Psi_{(1)}(u))
 \end{align*}
-\end{theorem} 
-
-\begin{theorem}[\textbf{Levy-Khintchine theorem}]
-\label{thm: Levy_Khintchine}
-Let $L = (L_{t})_{t\geq 0}$ be a Levy-process, and $\nu$ a Levy measure, if $u \in \C$ such that: 
-$$
-\int_{|x|>1}e^{Re(u)}\nu(dx) < \infty
-$$
-then the Characteristic function is given by:
-$$
-\E[e^{iuL(t)}] = \exp\left(
-t\Psi(u)
-\right)
-$$
-with: 
+One uses the following convetion: 
 \begin{align*}
-\Psi(u) &= \gamma iu - \frac{u^{2}\sigma^{2}}{2}
-+ \int_{\R\setminus\{0\}}[e^{iux}-1-iux\mathbbm{1}(|x|<1)]\nu(dx)
+\Psi(u):= \Psi_{(1)}(u) 
+&= 
+i\langle \gamma, u \rangle - 
+\frac{1}{2}\langle u, Au \rangle 
++ \int_{\R_{0}^{d}}\left[
+e^{i \langle u, x\rangle} - 1 - i\langle u, x\rangle\mathbbm{1}(|x|<1)
+\right]\nu(dx)  
 \end{align*}
-The triplet $(\gamma, \sigma, \nu)$ defines the law of $L$ uniquely and is called the characteristic triplet. 
-\end{theorem} 
-
+\end{theorem}
 
 
 \newpage 
@@ -924,36 +935,45 @@ n!
 \newpage 
 
 \begin{proposition}[\textbf{Characteristic triplet of CPP}]
-Let $I(t)$ be a CPP as described in Definition \ref{def: CPP}, we then have that the characteristic triplet is given by:
+Let $I(t)$ be a CPP as described in Definition \ref{def: CPP}, we then have that the characteristic triplet of $I$ is given by:
 \begin{align*}
-(\gamma, \sigma, \nu) &= 
-(\lambda x \mathbbm{1}(|x|<1), 0, \lambda F_{J})
+(\gamma, A, \nu) &= 
+\left(
+\lambda \int_{|x|<1}xF_{J}(dx), 0, \lambda F_{J}
+\right)
 \end{align*}
 \end{proposition}
 
 \begin{proof}
-From what we already have established, in combination with Levy Khintchine formula, we have that: 
-\begin{align*}
-\E[e^{iuI(1)}] &= 
-\exp\left(
-\lambda\int_{\R\setminus\{0\}}(e^{iux}-1)F_{J}(dx)
-\right)    
- = \exp(\Psi(u))   
-\end{align*}
 
-Thus: 
+From Proposition \ref{prop: characteristic_function_CPP}, we have: 
 \begin{align*}
-\lambda\int_{\R\setminus\{0\}}(e^{iux}-1)F_{J}(dx)
+\E[e^{iuI(t)}] &= \exp\left(
+\lambda t \int_{\R}(e^{iux}-1)F_{J}(dx)
+\right) \\ 
 &= 
-\lambda iux\mathbbm{1}(|x|<1)F_{J}(dx) + 
-\int_{\R\setminus\{0\}}[e^{iux}-1-iux\mathbbm{1}(|x|<1)]\nu(dx)
+\exp\left(t\Psi(u)\right)
 \end{align*}
 
-Leaving us with $\nu(dx) = \lambda F_{J}(dx)$ and: 
+Now: 
 \begin{align*}
-(\gamma, \sigma, \nu) &= 
-(\lambda x \mathbbm{1}(|x|<1), 0, \lambda F_{J})    
+\int_{\R}\left[
+e^{iux}-1-iux\mathbbm{1}(|x|<1)
+\right]\lambda F_{J}(dx) 
+&= 
+\lambda \int_{\R}[e^{iux}-1]F_{J}(dx) - iu\lambda\int_{\R}x\mathbbm{1}(|x|<1)F_{J}(dx) \\ 
+&= 
+\lambda \int_{\R}[e^{iux}-1]F_{J}(dx) - i \bigg{\langle} \lambda\int_{\R}x\mathbbm{1}(|x|<1)F_{J}(dx), u \bigg{\rangle}
 \end{align*}
+
+From this, we infer that: 
+\begin{align*}
+i\langle \gamma, u \rangle &- i\bigg{\langle} \lambda \int_{\R}x\mathbbm{1}(|x|<1)F_{J}(dx), u \bigg{\rangle}
+= 0 \\ 
+&\Updownarrow \\ 
+\gamma &= \lambda \int_{|x|<1}xF_{J}(dx)
+\end{align*}
+
 \end{proof}
 
 \begin{proposition}[\textbf{\cite{benth2008stochastic}}]
