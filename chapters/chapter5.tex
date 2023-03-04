@@ -54,6 +54,39 @@ We see that there was a spike in September 2019, this was due to a large drop in
 \section{SOFR futures}
 Let $(\Omega, \F, (\F_{t})_{t\geq 0}, Q)$ denote our probability space, and let $Q$ be the risk-neutral probability measure defined via the Radon-Nikodym derivative.
 \\~\\
+\begin{definition}[\textbf{Futures contract \cite{björk2019arbitrage}}]
+A futures contract on $X$ with delivery $T$, is a financial asset with following properties: 
+\begin{enumerate}[leftmargin =*]
+    \item For all $t$ with $0\leq t \leq T$, there exists in the market a quoted object $f(t,T;X)$ known as the futures price of $X$ at time $t$, with delivery $T$. 
+    \item At time $T$ of delivery, the holder of the contract pays: $f(T,T;X)$ and receives the claim $X$.
+    \item During an arbitrary interval $(s,t]$, the holder of the contract receives: 
+    \[
+    f(t,T;X) - f(s,T;X)
+    \]
+\end{enumerate}
+\end{definition}
+
+In typical futures contracts, $X$ could for instance be oil barrels, however, in our situation, $X$ represents an underlying interest rate.  For interest rates, the typical settlement would be a cash settlement.
+\\~\\ 
+\textbf{Reasons to enter futures contract:}
+\begin{itemize}
+    \item Speculation: By trading futures, one can make money by differences in quotes.  
+    \item Hedging: One could hedge against higher/lower interest rates. For instance, someone with paying a floating rate might buy futures to lock in a future interest rate. 
+\end{itemize}
+
+We will be interested in SOFR futures, such futures can be found at CME (Chicago Mercantile Exchange) \nomenclature{CME}{Chicago Mercantile Exchange}. For instance, a 3M-SOFR future with settlement Jun 23 quoted at $96.6$ would mean that the implied $3M$-SOFR rate over the period March 23 -June 23 would be: 
+\[
+(100-96.6)\% = 3.4\% 
+\] 
+For further specifications for the 3M-SOFR futures, one can consult \cite{cmegroup-sofr-futures}. 
+
+
+
+
+
+
+\newpage 
+
 When dealing with SOFR futures one distinguishes between 1-month- and 3-month futures, as they are not calculated in the same way:
 
 \begin{definition}[\textbf{SOFR 1-month arithmetic average \cite{Skov_2020}}]
@@ -600,42 +633,43 @@ For SOFR futures we have that there are two approaches for pricing namely arithm
 \subsection{Hedging 3-month arithmetic with 3-month geometric}
 Consider the case where we want to hedge: 
 $$
-X^{3M\_A} = \frac{1}{T-S}\int_{S}^{T}r_{u}du
+X^{3M_{A}}(S,T) = \frac{1}{T-S}\int_{S}^{T}r_{u}du
 $$
 
 Here $[S,T]$ will denote a 3-month period, in the market we only have available
 3-month futures $f^{3M}(t,S,T)$ (\ref{def: 3M_SOFR_futures})  calculated using a geometric average, this means that our hedge will look like: 
 \begin{align*}
-\argmin\limits_{a \in \R}\E_{Q}\left[
+\argmin\limits_{a_{t} \in \R}\E_{Q}\left[
 \left(
-X^{3M\_A}-af^{3M}(t,S,T)
+X^{3M_{A}}(S,T)-af^{3M}(t,S,T)
 \right)^{2}
 \bigg{|}\F_{t}
 \right]
 \end{align*}
 
-Let's denote $H(a) :=\E_{Q}\left[
-\left(X^{3M\_A}-af^{3M}(t,S,T)
+Now, fix $t$ and denote
+ $H(a_{t}) :=\E_{Q}\left[
+\left(X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \right)^{2}
 \bigg{|}\F_{t}
 \right]
 $ 
 expanding the square yields:
 \begin{align*}
-H(a) &= \E_{Q}\left[(X^{3M\_A})^{2}|\F_{t}\right] -2af^{3M}(t,S,T) +
-a^{2}[f^{3M}(t,S,T)]^{2}
+H(a_{t}) &= \E_{Q}\left[(X^{3M_{A}}(S,T))^{2}|\F_{t}\right] -2a_{t}f^{3M}(t,S,T) +
+a_{t}^{2}[f^{3M}(t,S,T)]^{2}
 \end{align*}
-Taking the derivative w.r.t. $a$ yields: 
+Taking the derivative w.r.t. $a_{t}$ yields: 
 \begin{align*}
-H'(a) &= -2f^{3M}(t,S,T) + 2a[f^{3M}(t,S,T)]^{2}  
+\frac{d}{da_{t}}H(a_{t}) &= -2f^{3M}(t,S,T) + 2a_{t}[f^{3M}(t,S,T)]^{2}  
 \end{align*} 
 
-Now as $H''(a) = 2[f^{3M}(t,S,T)]^{2} > 0$, we have that the minimum is obtained by setting $H'(a) = 0$:
+Now as $\frac{d^{2}}{da_{t}^{2}}H(a_{t}) = 2[f^{3M}(t,S,T)]^{2} > 0$, we have that the minimum is obtained by setting $\frac{d}{da_{t}}H(a_{t}) = 0$:
 \begin{align*}
-H'(a) &= 0 \\ 
+\frac{d}{da_{t}}H(a_{t}) &= 0 \\ 
 &\Downarrow \\ 
-a &= \frac{
-\E_{Q}[X^{3M\_A}|\F_{t}]
+a_{t} &= \frac{
+\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}]
 }{
 f^{3M}(t,S,T)
 } \\ 
@@ -647,16 +681,17 @@ f^{3M}(t,S,T)
 \end{align*}
 
 \begin{result}
+\label{result: optimal_SOFR_hedge_3MA_vs_3GM}
 Considering the above situation, we then have the following:
 \begin{align*}
-\argmin\limits_{a \in \R}\E_{Q}\left[
+\argmin\limits_{a_{t} \in \R}\E_{Q}\left[
 \left(
-X^{3M\_A}-af^{3M}(t,S,T)
+X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \right)^{2}
 \bigg{|}\F_{t}
 \right] 
 \implies
-a = \frac{
+\hat{a}_{t} = \frac{
 \int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du
 }{
 (T-S)f^{3M}(t,S,T)
@@ -671,14 +706,14 @@ a = \frac{
 \begin{proposition}
 Consider the above setting, and let $r = (r_{t})_{t\geq 0}$ be a model that provides ATS, then 
 \begin{align*}
-\argmin\limits_{a \in \R}&\E_{Q}\left[
+\argmin\limits_{a_{t} \in \R}&\E_{Q}\left[
 \left(
-X^{3M\_A}- af^{3M}(t,S,T)
+X^{3M_{A}}(S,T)- a_{t}f^{3M}(t,S,T)
 \right)^{2}
 \bigg{|}\F_{t}
 \right] \\
 &\Downarrow \\
-a &= \frac{
+\hat{a}_{t} &= \frac{
 r(t)(T-S)
 + \int_{S}^{T}\int_{t}^{u}b(s)dsdu 
 + \int_{S}^{T}\int_{t}^{u}\alpha(s)g(s)dsdu
@@ -802,8 +837,8 @@ This is an ordinary differential equation, with the explicit solution given by:
 
 We now denote: 
 \begin{align*}
-X^{3M\_A} &= \frac{1}{T-S}\int_{S}^{T}r_{u}du = \frac{1}{T-S}Z \\ 
-f^{3M\_A}(t,S,T) &= \frac{1}{T-S}\E_{Q}\left[
+X^{3M_{A}}(S,T) &= \frac{1}{T-S}\int_{S}^{T}r_{u}du = \frac{1}{T-S}Z \\ 
+f^{3M_{A}}(t,S,T) &= \frac{1}{T-S}\E_{Q}\left[
 \int_{S}^{T}r_{u}du
 \right] = \frac{1}{T-S}\E_{Q}[Z|\F_{t}]
 \end{align*}
@@ -820,7 +855,7 @@ Now from Jensen's Inequality \ref{thm: Jensen's_ineuality}, we have that for $Z,
 \right] \nonumber \\ 
 &\Updownarrow \nonumber \\ 
 \exp\left(
-(T-S)f^{3M\_A}(t,S,T)
+(T-S)f^{3M_{A}}(t,S,T)
 \right) 
 &\leq 
 \E_{Q}\left[\exp(Z)|\F_{t}\right]
@@ -842,15 +877,54 @@ Now by inserting \ref{eq: hedging_availible_inst_market_2} into \ref{eq: hedging
 
 \begin{align*}
 \exp\left(
-(T-S)f^{3M\_A}(t,S,T)
+(T-S)f^{3M_{A}}(t,S,T)
 \right) 
 &\leq 
 (T-S)f^{3M}(t,S,T) + 1 \\ 
 &\Updownarrow \\
-f^{3M\_A}(t,S,T) &\leq 
+f^{3M_{A}}(t,S,T) &\leq 
 \frac{
 \ln[(T-S)f^{3M}(t,S,T)]
 }{
 (T-S)
 }
 \end{align*}
+
+\newpage 
+
+\subsection{Simulation of Error distribution}
+
+In order to say something about how good the hedge is in Result \ref{result: optimal_SOFR_hedge_3MA_vs_3GM}, we study: 
+\begin{align*}
+Er(t) :&= X^{3M_{A}}(S,T) - \hat{a}_{t}f^{3M}(t,S,T) \\ 
+&= \frac{1}{T-S}\int_{S}^{T}r(u)du - \frac{1}{T-S}\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du \\ 
+&= 
+\frac{1}{T-S}\left(
+\int_{S}^{T}r(u)du - \int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du
+\right)
+\end{align*}
+
+We work with the Vasicek model: 
+\begin{align*}
+dr(t) &= \alpha[m-r(t)]dt + \sigma dW^{Q}(t)    
+\end{align*}
+
+In the simulation, we use the closed expression for $\int_{S}^{T}r(u)du$  as described in Equation \ref{eq: Vasicek_closed_expr_integral} on Page \pageref{eq: Vasicek_closed_expr_integral}. We fix $t=0$, and will therefore study $Er(0)$: 
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{figures/SOFR/Vasicek_path.png}
+    \caption{Path of $r = (r(u))_{u \in 0,T]}$}
+    \label{fig: Vasicek_path}
+\end{figure}
+
+\newpage 
+
+We ran the simulation in Julia and got the following:
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{figures/SOFR/Error_hist.png}
+    \caption{Simulation of $Er(0)$}
+    \label{fig: Error_simulation_Julia}
+\end{figure}

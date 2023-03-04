@@ -199,9 +199,9 @@ N[P(t,T_{i-1}) - P(t,T_{i})] - \kappa\delta N P(t,T_{i})
 
 \textbf{Total payer cash flow:}
 \begin{align*}
-\mathcal{C}_{p}(t) &= \sum_{i=1}^{n}\left\{
+\mathcal{C}_{p}(t) &= \sum_{i=1}^{n}\left[
  N[P(t,T_{i-1}) - P(t,T_{i})] - \kappa\delta N P(t,T_{i}) 
-\right\}  \\
+\right]  \\
 &= N(P(t,T_{0})-P(t,T_{n})) - \kappa\delta N\sum_{i=1}^{n}P(t,T_{i})
 \end{align*} 
 
@@ -311,7 +311,7 @@ dr(t) = b(t,r(t))dt + \sigma(t,r(t))dW^{Q}(t), \; (Q)
 Assume that $b$ and $\sigma$ are such that they satisfy the conditions given in Theorem \ref{thm: SDE_sufficiency} such that the solution exists and is strong and strongly unique. 
 
 \begin{definition}[\textbf{Affine Term Structure}]
-A short rate model $r$ (eq:\ref{eq: general_interest_rate_SDE}) is said to provide ATS (Affine Term Structure) \nomenclature{ATS}{Affine Term Structure}
+A short rate model $r$ is said to provide ATS (Affine Term Structure) \nomenclature{ATS}{Affine Term Structure}
 if: 
 \begin{align*}
 P(t,T) &= \exp\left(
@@ -411,7 +411,8 @@ r(T) - r(t) -\alpha m(T-t)-\sigma \int_{t}^{T}dW^{Q}(u)
 \end{align*}
 
 By plugging in the expression for $r(T)$ in Equation \ref{eq: Vasicek_closed_expr}, and dividing by $\alpha$ we get: 
-\begin{align*}
+\begin{align}
+\label{eq: Vasicek_closed_expr_integral}
 -\int_{t}^{T}r(u)du 
 &= 
 \underbrace{
@@ -425,7 +426,7 @@ r(t) + \underbrace{
 \frac{\sigma}{\alpha}[e^{-\alpha(T-u)}-1]
 }_{= -c(T-u)}
 dW^{Q}(u)
-\end{align*}
+\end{align}
 
 Now: 
 \begin{align*}
@@ -737,7 +738,7 @@ d\left[
 \end{align*} 
 
 
-\begin{theorem}
+\begin{theorem}[\textbf{\cite{filipovic2009term}}]
 We have that $\frac{P(t,T)}{B(t)}$ is a $Q$-martingale if and only if: 
 \begin{align}
 \label{thm: arbitrage_condition_Q}
@@ -770,6 +771,9 @@ As a consequence of the Martingale Representation Theorem (\ref{thm: Martingale_
 &= 
 \frac{1}{2}\norm{v(t,T)}^{2} - \int_{t}^{T}\alpha(t,u)du
 \end{align*}
+
+\newpage 
+
 In order to get the desired dynamics, we take the partial derivative w.r.t $T$ on LHS and RHS of Equation \ref{thm: arbitrage_condition_Q} where:
 \begin{align*}
 \frac{\partial}{\partial T}\left[
@@ -1154,10 +1158,8 @@ P(t,T)P(0,S)
 \subsection{Introduction}
 
 \begin{definition}[\textbf{LIBOR-rate}]
- We define the LIBOR-rate \nomenclature{LIBOR}{London Interbank Offered Rate}
- $L(t,T)$ \nomenclature{$L(t,T)$}{LIBOR-rate}
- 
- as: 
+The LIBOR-rate \nomenclature{LIBOR}{London Interbank Offered Rate} $L(t,T)$ \nomenclature{$L(t,T)$}{LIBOR-rate}
+is defined as: 
  \begin{align*}
 L(t,T) &= F(t,T,T+\delta) 
 = \frac{1}{\delta}\left(

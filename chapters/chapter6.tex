@@ -18,7 +18,7 @@ We will not go into detail when it comes to the ESG risk score, as this would be
 \newpage 
 
 \section{Case study}
-Our modelling approach will be based on the ISDA document \cite{ISDA:2021}, and in particular, the interest rate swap between SBM Offshore and ING, where the ESG score is set by Sustainalytics. The deal looks the following:
+Our modelling approach will be based on the ISDA document \cite{ISDA:2021}, and in particular, the interest rate swap between SBM Offshore and ING, where the ESG score is set by Sustainalytics. The deal has the following specifications:
 \begin{itemize}
     \item It gets added a positive or negative spread to the fixed rate set at the inception of the swap, based upon SBM's ESG score set by Sustainalytics. 
     \item At the beginning of every year during the life of the swap, ING set's a target ESG score.
@@ -26,7 +26,7 @@ Our modelling approach will be based on the ISDA document \cite{ISDA:2021}, and 
     \item If the score has not been met, then a penalty of 5-10 basis points is applied to the fixed rate. 
 \end{itemize} 
 
-We will consider the ESG criteria to be $\F_{0}$-measurable, we will also take a constant discount $d$. To exemplify this deal pretend that the original fixed rate was set at $\kappa = 0.07$, with a discount/penalty $d = 0.005$ and the deal runs for $n=4$ years. 
+In our simulation we will consider the ESG criteria to be $\F_{0}$-measurable, we will also take a constant discount $d$. To exemplify this deal pretend that the original fixed rate was set at $\kappa = 0.07$, with a discount/penalty $d = 0.005$ and the contract length is $n=4$ years. 
 \\~\\
 Assume that SBM Offshore met the criteria the first three times but did not meet the criteria the last time, that would given arise to the following ESG fixed rate sequence: 
 \begin{align*}
@@ -162,7 +162,7 @@ Thus for $n = 3$, we have $2^{3} = 8$ possible paths, and $3+1 =4$ unique values
 \kappa +3d, \; \kappa +d,\; \kappa -d\; \kappa - 3d    
 \end{align*} 
 
-We see that there are ${3 \choose 1} = 3$ different paths yielding a result of $\kappa +d$, which in this case are: $ffs, fsf, sff$
+We see that there are ${3 \choose 1} = 3$ different paths yielding a result of $\kappa +d$, which in this case are: $ffs, fsf$ and $sff$. 
 
 \newpage 
 
@@ -188,7 +188,7 @@ j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
 \right)(\omega) 
 \end{align*}
 
-The number of unique possible outcomes will be $|\{2,4,6\}| + 1 = 4$. If we fix $\alpha$, let's say, $\alpha = 4$, we get the value $\kappa +d$, and there are $3$ paths leading to this result. Now for $j_{1} < j_{2}$, we see that $j_{1} \neq j_{2} \in \{1,2,3\}$, leads to the following combinations: 
+The number of unique possible outcomes will be $|\{2,4,6\}| + 1 = 4$. If we fix $\alpha$, let's say, $\alpha = 4$, we get the value $\kappa +d$, and there are $3$ paths leading to this result. Now for $j_{1} < j_{2}$, we see that $j_{1} \neq j_{2} \in \{1,2,3\}$, leads to the following set-combinations: 
 \begin{align*}
 \{1,2\}, \; \{1,3\},\; \{2,3\}    
 \end{align*}
@@ -570,7 +570,7 @@ Leaving us with:
 \begin{proposition}
 Consider a zero coupon bond swap, i.e where the situation is as described in Section \cref{sec: ZCB_swap}, we then get that the
 \\ 
-ESG-fixed rate process $\kappa^{ESG}_{t} = (\kappa_{t}^{ESG}(i))_{i=1, \dots, n}$ is given by: 
+ESG-swap rate process $\kappa^{ESG}_{t} = (\kappa_{t}^{ESG}(i))_{i=1, \dots, n}$ is given by: 
 \begin{align*}
 \kappa_{t}^{ESG}(i) &= \kappa_{t}^{ZCB} -d\cdot D(i)    
 \end{align*}

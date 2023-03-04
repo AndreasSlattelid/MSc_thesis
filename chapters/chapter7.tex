@@ -155,7 +155,7 @@ iuZ(0)e^{-\beta t}\right)
 \end{align*}
 \end{proof}
 
-We can only control the asymptotic distribution of $X$, as we have: 
+We can only control the asymptotic distribution of $X$, now if $\beta > 0$, then:  
 \begin{align*}
 \varphi_{Z_{\infty}}(u) &= 
 \frac{\lambda}{\beta}
@@ -177,11 +177,26 @@ We can only control the asymptotic distribution of $X$, as we have:
 \right) \\ 
 &= 
 \frac{1}{
-(1-i\frac{1}{\mu}u\eta e^{-\beta s})^{\frac{\lambda}{\beta}}
+(1-i\frac{1}{\mu}u\eta)^{\frac{\lambda}{\beta}}
 }
-\sim \Gamma\left(
-\frac{\lambda}{\beta}, \frac{\eta}{\mu}
-\right)
+\end{align*}
+
+Here we use that if $M \sim \Gamma(a,b)$, then: 
+\begin{align*}
+f_{M}(x;a,b) &= \frac{1}{b^{a}\Gamma(a)}x^{a-1}e^{-\frac{x}{b}}\mathbbm{1}(x>0)\;\text{and}\; 
+\varphi_{M}(u) = (1-biu)^{-a}
+\end{align*}
+
+We have that: 
+\begin{align*}
+\varphi_{Z_{\infty}}(u) &= 
+\frac{1}{
+(1-i\frac{1}{\mu}u\eta)^{\frac{\lambda}{\beta}}
+}
+= 
+\left(
+1 - \frac{\eta}{\mu}iu
+\right)^{-\frac{\lambda}{\beta}}
 \end{align*}
 
 Meaning that
@@ -190,6 +205,15 @@ Z_{\infty} \sim \Gamma\left(
 \frac{\lambda}{\beta}, \frac{\eta}{\mu}
 \right)
 \]
+
+Thus if one for instance have $\lambda = 10, \beta = 1, \eta = 1$ and $\mu = \frac{1}{2}$, giving us $a = 10$ and $b= 2$, then the density of $Z_{\infty}\sim \Gamma(10,2)$ would look like:
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=10cm]{figures/ESG/gamma_limiting_dist.png}
+    \caption{Distribution of $\Gamma(10, 2)$}
+    \label{fig: gamma_limiting_dist}
+\end{figure}
 
 \newpage 
 
