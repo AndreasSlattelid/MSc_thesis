@@ -641,7 +641,7 @@ Here $[S,T]$ will denote a 3-month period, in the market we only have available
 \begin{align*}
 \argmin\limits_{a_{t} \in \R}\E_{Q}\left[
 \left(
-X^{3M_{A}}(S,T)-af^{3M}(t,S,T)
+X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \right)^{2}
 \bigg{|}\F_{t}
 \right]
@@ -928,3 +928,139 @@ We ran the simulation in Julia and got the following:
     \caption{Simulation of $Er(0)$}
     \label{fig: Error_simulation_Julia}
 \end{figure}
+
+\newpage 
+
+\subsection{Hedging three-month arithmetic with three 1M-SOFR futures}
+
+We still want to hedge: 
+$$
+X^{3M_{A}}(S,T) = \frac{1}{T-S}\int_{S}^{T}r_{u}du
+$$
+
+However, now we will not use the available 3M-SOFR future contract, rather we will hedge by buying three 1M-SOFR future contracts at time $t$. Here $[S,T]$ will still denote a 3M period, since we need to buy three futures to cover this interval, we get the following timeline: 
+
+
+\begin{tikzpicture}[snake=zigzag, line before snake = 5mm, line after snake = 5mm]
+    % draw horizontal line   
+    \draw (0,0) -- (8,0);
+    %\draw[snake] (2,0) -- (4,0);
+    %\draw (4,0) -- (6,0);
+    %\draw[snake] (6,0) -- (8,0);
+    %\draw (8,0) -- (9,0);
+    % Calligraphic brace
+    \draw [
+    decorate, 
+    decoration = {calligraphic brace,
+                  raise=5pt,
+                  amplitude=5pt,
+                  aspect=0.50}] (1,0) --  (7.0,0)
+                  node[pos=0.50, above =1 0pt,black]{$3M$};
+
+    % draw vertical lines
+    \foreach \x in {0,1.0,3.0,5.0,7.0}
+      \draw (\x cm,3pt) -- (\x cm,-3pt);
+
+    % draw nodes
+    \draw (0,0) node[below=3pt] {$ t $} node[above=3pt] {$   $};
+    \draw (1,0) node[below=3pt] {$ S $} node[above=3pt] {$  $};
+    \draw (3.0,0) node[below=3pt] {$ T_{1M} $} node[above=3pt] {$  $};
+    \draw (5.0,0) node[below=3pt] {$ T_{2M} $} node[above=3pt] {$  $};
+    \draw (7.0,0) node[below=3pt] {$ T $} node[above=3pt] {$   $};
+  \end{tikzpicture}
+
+
+\begin{align*}
+\argmin\limits_{(a_{t}, b_{t}, c_{t})\in \R^{3}}\E_{Q}\left[
+\left(
+X^{3M_{A}}(S,T)- \left[
+a_{t}f^{1M}(t,S,T_{1M}) + 
+b_{t}f^{1M}(t,T_{1M}, T_{2M}) + 
+c_{t}f^{1M}(t,T_{2M}, T)
+\right]
+\right)^{2}
+\bigg{|}\F_{t}
+\right]
+\end{align*}
+
+Denote: 
+\begin{align*}
+G(a_{t}, b_{t}, c_{t}) := 
+\E_{Q}\left[
+\left(
+X^{3M_{A}}(S,T)- \left[
+a_{t}f^{1M}(t,S,T_{1M}) + 
+b_{t}f^{1M}(t,T_{1M}, T_{2M}) + 
+c_{t}f^{1M}(t,T_{2M}, T)
+\right]
+\right)^{2}
+\bigg{|}\F_{t}
+\right]
+\end{align*} 
+
+Expanding the square yields: 
+\begin{align*}
+G(a_{t}, b_{t}, c_{t}) 
+&= 
+\E_{Q}\left[(X^{3M_{A}}(S,T))^{2}|\F_{t} \right] \\
+&-2\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}]\left[
+a_{t}f^{1M}(t,S,T_{1M}) + 
+b_{t}f^{1M}(t,T_{1M}, T_{2M}) + 
+c_{t}f^{1M}(t,T_{2M}, T)
+\right] \\ 
+&+ a_{t}^{2}[f^{1M}(t,S,T_{1M})]^{2} \\ 
+&+ 2a_{t}f^{1M}(t,S,T_{1M})\left[
+b_{t}f^{1M}(t,T_{1M}, T_{2M}) + 
+c_{t}f^{1M}(t,T_{2M}, T)
+\right] \\ 
+&+ b_{t}^{2}[f^{1M}(t,T_{1M}, T_{2M})]^{2} \\ 
+&+ 2b_{t}c_{t}\left[
+f^{1M}(t,T_{1M}, T_{2M})f^{1M}(t,T_{2M}, T)
+\right] \\ 
+&+ c_{t}^{2}[f^{1M}(t,T_{2M}, T)]^{2}
+\end{align*} 
+
+Fix $t$, and denote $(a_{t}, b_{t}, c_{t}) = (x_{1}, x_{2}, x_{3}) = \mathbf{x}$
+
+\begin{align*}
+\nabla G(\mathbf{x}) &= 
+\left(
+\partial_{x_{1}}G(\mathbf{x}), 
+\partial_{x_{2}}G(\mathbf{x}), 
+\partial_{x_{3}}G(\mathbf{x})
+\right) 
+\end{align*}
+
+\begin{align*}
+\partial_{x_{1}}G(\mathbf{x}) &= 
+-2\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}]f^{1M}(t,S, T_{1M}) 
++ 2x_{1}[f^{1M}(t,S,T_{1M})]^{2} \\ 
+&+ 2f^{1M}(t,S,T_{1M})\left[
+x_{2}f^{1M}(t,T_{1M}, T_{2M}) + x_{3}f^{1M}(t,T_{2M}, T)
+\right] \\ 
+\\
+\partial_{x_{2}}G(\mathbf{x}) &=
+-2\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}]f^{1M}(t,T_{1M}, T_{2M})
++ 2x_{1}f^{1M}(t,S,T_{1M})f^{1M}(t,T_{1M}, T_{2M}) \\ 
+&+ 2x_{2}[f^{1M}(t,T_{1M}, T_{2M})]^{2} 
++ 2x_{3}f^{1M}(t,T_{1M}, T_{2M})f^{1M}(t,T_{2M}, T) \\ 
+\\ 
+\partial_{x_{3}}G(\mathbf{x}) &=
+-2\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}]f^{1M}(t,T_{2M}, T) 
++ 2x_{1}f^{1M}(t,S,T_{1M})f^{1M}(t,T_{2M}, T) \\ 
+&+ 2x_{2}f^{1M}(t,T_{1M}, T_{2M})f^{1M}(t,T_{2M}, T)
++ 2x_{3}[f^{1M}(t,T_{2M}, T)]^{2}
+\end{align*}
+
+\newpage 
+
+We also find the Hessian matrix $H(G)$ of $G$, this matrix will in our case be $3\times 3$ with entries: 
+\begin{align*}
+[H(G)]_{i,j} &= 
+\frac{
+\partial^{2}G
+}{
+\partial x_{i}\partial x_{j}
+}
+\end{align*}
+

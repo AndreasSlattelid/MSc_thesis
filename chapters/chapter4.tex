@@ -3,8 +3,8 @@
 
 \section{Zero Coupon Bonds and interest rates}
 
-\begin{definition}[\textbf{Zero Coupon Bond} \cite{filipovic2009term}]
-A zero coupon bond (ZCB) \nomenclature{ZCB}{Zero Coupon Bond} with a maturity $T$ guarantees the holder one dollar to be paid out at maturity $T$. We denote the time $t$ price of the zero coupon bond as $P(t,T)$
+\begin{definition}[\textbf{Zero Coupon Bond \cite{filipovic2009term}}]
+A zero coupon bond (ZCB) \nomenclature{ZCB}{Zero Coupon Bond} with maturity $T$ guarantees the holder one dollar to be paid out at maturity $T$. We denote the time $t$ price of the zero coupon bond as $P(t,T)$
 \end{definition}
 
 We will assume the following: 
@@ -282,7 +282,7 @@ dr(t) &= \left(b(t)+\sigma(t)\gamma(t)^{Tr}\right)dt
 \end{proposition} 
 
 \begin{proof}
-Let $W = (W_{t})_{t \in [0,T]} \in \R^{m}$, and let $\F_{t} = \sigma(W_{s}:s\leq t)$, also let $\gamma \in \R^{m}$, as well as $\gamma \in M^{2}_{loc}([0,T])$. By assumption we assume no arbitrage, thus $\mathcal{E}_{t}(\gamma \bullet W) \in M^{2}([0,T])$ and is also a $(P, \mathbbm{F})$-martingale. We then have from Girsanov's theorem (\ref{thm: Girsanov's_thm}) that the $Q$-dynamics is given by:
+Let $W = (W_{t})_{t \in [0,T]} \in \R^{m}$, and let $\F_{t} = \sigma(W_{s}:s\leq t)$, also let $\gamma \in \R^{m}$, as well as $\gamma \in M^{2}_{loc}([0,T])$. By assumption we assume no arbitrage, thus $\mathcal{E}_{t}(\gamma \bullet W) \in M^{2}([0,T])$ and is also a $(P, \mathbbm{F})$-martingale. We then have from Girsanov's theorem, Theorem \ref{thm: Girsanov's_thm} that the $Q$-dynamics is given by:
 $$
 dW^{Q}(t) = dW(t) - \gamma(t)^{Tr}dt
 $$
@@ -401,16 +401,17 @@ e^{-\alpha(T-t)}r(t) + m[1-e^{-\alpha(T-t)}]
 \end{align}
 
 We want to find an expression for $-\int_{t}^{T}r(u)du$: 
-\begin{align*}
+\begin{align}
+\label{eq: Vasicek_not_closed_integral_expr}
  r(T) - r(t) 
  &= 
- \alpha m(T-t)- \alpha\int_{t}^{T}r(u)du + \sigma\int_{t}^{T}dW^{Q}(u) \\ 
- &\Downarrow \\ 
+ \alpha m(T-t)- \alpha\int_{t}^{T}r(u)du + \sigma\int_{t}^{T}dW^{Q}(u) \nonumber \\ 
+ &\Downarrow \nonumber \\ 
 - \alpha\int_{t}^{T}r(u)du &= 
 r(T) - r(t) -\alpha m(T-t)-\sigma \int_{t}^{T}dW^{Q}(u)
-\end{align*}
+\end{align}
 
-By plugging in the expression for $r(T)$ in Equation \ref{eq: Vasicek_closed_expr}, and dividing by $\alpha$ we get: 
+By plugging in the expression for $r(T)$ as found in Equation \ref{eq: Vasicek_closed_expr}, into Equation \ref{eq: Vasicek_not_closed_integral_expr} and dividing by $\alpha$ yields:  
 \begin{align}
 \label{eq: Vasicek_closed_expr_integral}
 -\int_{t}^{T}r(u)du 
@@ -496,7 +497,7 @@ approach consists of modelling the forward rate directly:
 
 \begin{align*}
 df(t,T) &= \alpha(t,T)dt + \sigma(t,T)dW(t) \\ 
-f(t,T) &= f(0,T) + \int_{0}^{t}\alpha(s,T)ds + \int_{0}^{T}\sigma(s,T)dW(s)
+f(t,T) &= f(0,T) + \int_{0}^{T}\alpha(s,T)ds + \int_{0}^{T}\sigma(s,T)dW(s)
 \end{align*}
 
 Consider $(\Omega, \F, (\F_{t})_{t \in [0,T]}, P)$ as the objective probability space, and let $\alpha = (\alpha(t,T))_{t \in [0,T]}$ denote an $\R$-valued process and let $\sigma = (\sigma(t,T))_{t \in [0,T]}$ be an $\R^{d}$-valued process, i.e $\sigma(t,T) = (\sigma_{1}(t,T), \dots, \sigma_{d}(t,T))$. We impose the following conditions: 
@@ -534,7 +535,7 @@ We have the following relationship: $\ln P(t,T) = -\int_{t}^{T}f(t,u)du$, this c
 -\int_{0}^{t}\int_{t}^{T}\sigma(s,u)dudW(s) 
 \end{align*}
 
-In order to get nice expressions, we need to split up the integral in the following way:
+In order to get cleaner expressions, we split up the integral in the following way:
 
 
 \begin{tikzpicture}[snake=zigzag, line before snake = 5mm, line after snake = 5mm]
@@ -581,7 +582,7 @@ and:
 (6) &= \int_{0}^{t}\int_{s}^{t}\sigma(s,u)dudW(s) = 
 \int_{0}^{t}\int_{0}^{u}\sigma(s,u)dW(s)du = (6)'
 \end{align*}
-Here we used Fubini (\ref{thm: Fubini}) and Stochastic Fubini (\ref{thm: Stochastic_Fubini}), with:
+Here we used Fubini (Theorem \ref{thm: Fubini}) and Stochastic Fubini (Theorem \ref{thm: Stochastic_Fubini}), with:
 \begin{align*}
 \begin{cases}
  s \leq u \leq t \\ 
@@ -635,7 +636,7 @@ v(t,T) := -\int_{t}^{T}\sigma(t,u)du
 
 \begin{lemma} 
 We have that for every maturity $T$, that the dynamics of $P(t,T)$
-can be described as:
+can be expressed as:
 
 \begin{align*}
 \frac{dP(t,T)}{P(t,T)}
@@ -805,7 +806,7 @@ This leaves us with:
 \int_{t}^{T}\sigma(t,u)du\cdot \sigma(t,T)^{Tr} 
 - \alpha(t,T)    
 \end{align*}
-Now plugging this into \ref{eq: dynamics_d_under_Q}, yields: 
+Now plugging this into Equation \ref{eq: dynamics_d_under_Q}, yields: 
 \begin{align*}
 df(t,T) &= \left[
 \alpha(t,T) + \int_{t}^{T}\sigma(t,u)du\cdot \sigma(t,T)^{Tr} 
@@ -818,7 +819,7 @@ dt
 + \sigma(t,T)dW^{Q}(t)
 \end{align*}
 
-Suppose that the arbitrage condition \ref{thm: arbitrage_condition_Q} holds, then: 
+Suppose that the arbitrage condition in Equation \ref{thm: arbitrage_condition_Q} holds, then: 
 \begin{align*}
 d\left[
 \frac{P(t,T)}{B(t)}

@@ -1,22 +1,25 @@
 \chapter{Numerical Simulation}
 
 \section{Introduction}
-
-Assume that we can model the \textbf{ESG-index} as: 
+In order to get a grasp of the ESG-swap rate process $\kappa_{t}^{ESG}$, we need a model for the ESG-risk score process of the company. It could be logical with a downward trending score since the company will have the incentive to enter such an agreement. 
+\\~\\
+There are many possible alternatives to model such a model, we impose the following model for the \textbf{ESG-risk score}:
 \[
 X(t) = 100\exp(-Z(t))
 \]
 
-Where $Z(t)$ is an OU-process given by: 
+Here $Z(t)$ is an OU-process
+\nomenclature{OU}{Ornstein Uhlenbeck}
+given by: 
 \begin{align*}
-dZ(t) &= -\beta Z(t)dt + dI(t)    
+dZ(t) &= -\beta Z(t)dt + \sigma dW^{Q}(t) + dI^{Q}(t)    
 \end{align*} 
-and: 
+where: 
 \begin{align*}
-I(t) &= \sum_{k=1}^{N(t)}J_{k}, \;\; J_{k}\sim Exp(\mu),\;\; N(t) \sim Pois(\lambda t)    
+I^{Q}(t) &= \sum_{k=1}^{N(t)}J_{k}, \;\; J_{k}\sim Exp(\mu),\;\; N(t) \sim Pois(\lambda t)    
 \end{align*} 
 
-For $J\sim Exp(\mu)$, we have:
+Furthermore $I^{Q}$ and $W^{Q}$ are assumed to be independent, now for $J\sim Exp(\mu)$, we have:
 \begin{align*}
 f_{J}(x) &= \mu e^{-\mu x}\mathbbm{1}_{[0,\infty)}(x), \;\; 
 \E[J] = \frac{1}{\mu}, \;\text{and}\; Var[J] = \frac{1}{\mu^{2}}
@@ -26,51 +29,81 @@ An explicit solution is given by:
 \begin{align}
 \label{eq: characteristic_function_Z(t)}
 d[e^{\beta t}Z(t)] &= d[e^{\beta t}]Z(t) + e^{\beta t}dZ(t) \nonumber \\ 
-&= \beta e^{\beta t}Z(t)dt + e^{\beta t}[-\beta Z(t)dt + dI(t)]
+&= \beta e^{\beta t}Z(t)dt + e^{\beta t}[-\beta Z(t)dt + 
+\sigma dW^{Q}(t) dI^{Q}(t)]
 \nonumber \\ 
-&= e^{\beta t}dI(t) \nonumber \\ 
+&=\sigma e^{\beta t}dW^{Q}(t) + e^{\beta t}dI^{Q}(t) \nonumber \\ 
 &\Downarrow \nonumber\\ 
-Z(t) &= Z(0)e^{-\beta t} + \int_{0}^{t}e^{-\beta (t-s)}dI(s)
+Z(t) &= Z(0)e^{-\beta t} +
+\int_{0}^{t}e^{-\beta (t-s)}dW^{Q}(s) + 
+\int_{0}^{t}e^{-\beta (t-s)}dI^{Q}(s)
 \end{align} 
 
 
-We can also control the limiting distribution of $Z$, by Theorem (\textbf{SATO 1999, thm 17, find this reference later}) 
 
 \newpage 
 
-\begin{proposition}
+\begin{proposition}[\textbf{Characteristic function of $Z(t)$}]
+\label{prop: Characteristic_function_ESG_risk_score}
+The characteristic function of $Z(t)$ is given by:
 \begin{align*}
-\E\left[
+\E_{Q}\left[
 \exp(iu Z(t))
 \right] 
 &= 
 \exp\left(
 iuZ(0)e^{-\beta t}\right)
 \left(
+-\frac{u^{2}}{4\beta}[1-e^{-2\beta t}]
+\right)
+\left(
 \frac{
 1-iue^{-\beta t}1/\mu}
 {
 1-iu1/\mu
 }
-\right)^{\frac{\lambda}{\beta}}
+\right)^{\frac{\lambda}{\beta}}    
 \end{align*}
 \end{proposition}
 
 \begin{proof}
-Now the characteristic function of Equation \ref{eq: characteristic_function_Z(t)}, is given by: 
+Since $I^{Q}$ and $W^{Q}$ are independent we have that: 
 \begin{align*}
-\E\left[
-\exp(iu Z(t))
-\right] 
+\E_{Q}[e^{iuZ(t)}]
 &= 
 \exp\left(
-iuZ(0)e^{-\beta t}\right) 
-\E\left[
-\exp\left(iu\int_{0}^{t}e^{-\beta(t-s)}dI(s)\right)
+iuZ(0)e^{-\beta t}
+\right)
+\E_{Q}\left[
+\exp\left(
+iu\int_{0}^{t}e^{-\beta(t-s)}dW^{Q}(s)
+\right)
+\right]
+\E_{Q}\left[
+\exp\left(
+iu\int_{0}^{t}e^{-\beta(t-s)}dI^{Q}(s)
+\right)
 \right]
 \end{align*}
 
-Furthermore from Proposition \ref{prop: Integral_g(s)dI(s)}, we have: 
+The normality of deterministic Ito-integrals gives us:
+\begin{align*}
+iu\int_{0}^{t}e^{-\beta(t-s)}dW^{Q}(s) &\sim \mathcal{N}\left(
+0, -u^{2}\int_{0}^{t}e^{-2\beta(t-s)}ds
+\right) \\ 
+&\Downarrow \\ 
+\E_{Q}\left[
+\exp\left(
+iu\int_{0}^{t}e^{-\beta(t-s)}dW^{Q}(s)
+\right)
+\right]
+&= 
+\exp\left(
+-\frac{u^{2}}{4\beta}[1-e^{-2\beta t}]
+\right)
+\end{align*}
+
+From Proposition \ref{prop: Integral_g(s)dI(s)} (p.\pageref{prop: Integral_g(s)dI(s)}), we have: 
 \begin{align*}
 \E\left[
 \exp\left(iu\int_{0}^{t}e^{-\beta(t-s)}dI(s)\right)
@@ -116,6 +149,7 @@ Now:
 \right)
 \end{align*}
 
+\newpage 
 We observe: 
 \begin{align*}
 h(s) :&= \ln[1-iue^{-\beta s}1/\mu] \\ 
@@ -137,87 +171,93 @@ Leaving us with:
 \right]
 \end{align*}
 
-Thus:
-\begin{align*}
-\E\left[
-\exp(iu Z(t))
-\right] 
-&= 
-\exp\left(
-iuZ(0)e^{-\beta t}\right)
-\left(
-\frac{
-1-iue^{-\beta t}1/\mu}
-{
-1-iu1/\mu
-}
-\right)^{\frac{\lambda}{\beta}}
-\end{align*}
 \end{proof}
 
-We can only control the asymptotic distribution of $X$, now if $\beta > 0$, then:  
+
+By using Proposition \ref{prop: Characteristic_function_ESG_risk_score} we can find the expectation of $X(t)$: 
 \begin{align*}
-\varphi_{Z_{\infty}}(u) &= 
-\frac{\lambda}{\beta}
-\int_{0}^{\infty} 
-\frac{
-\beta iu\eta e^{\beta s}\frac{1}{\mu}
-}{
-1-iu\eta e^{-\beta s} \frac{1}{\mu}
-}ds \\ 
+\E_{Q}\left[X(t)\right]
+&= 
+\E_{Q}\left[
+e^{i(-i)Z(t)}
+\right] \\ 
 &= 
 \exp\left(
-\frac{\lambda}{\beta}\ln\left[
-1- i\frac{1}{\mu}u\eta e^{-\beta s}
-\right]\bigg{|}_{0}^{\infty}
-\right) \\ 
-&= 
-\exp\left(
--\frac{\lambda}{\beta}\ln(1-i\frac{1}{\mu}u\eta)
-\right) \\ 
-&= 
-\frac{1}{
-(1-i\frac{1}{\mu}u\eta)^{\frac{\lambda}{\beta}}
-}
-\end{align*}
-
-Here we use that if $M \sim \Gamma(a,b)$, then: 
-\begin{align*}
-f_{M}(x;a,b) &= \frac{1}{b^{a}\Gamma(a)}x^{a-1}e^{-\frac{x}{b}}\mathbbm{1}(x>0)\;\text{and}\; 
-\varphi_{M}(u) = (1-biu)^{-a}
-\end{align*}
-
-We have that: 
-\begin{align*}
-\varphi_{Z_{\infty}}(u) &= 
-\frac{1}{
-(1-i\frac{1}{\mu}u\eta)^{\frac{\lambda}{\beta}}
-}
-= 
-\left(
-1 - \frac{\eta}{\mu}iu
-\right)^{-\frac{\lambda}{\beta}}
-\end{align*}
-
-Meaning that
-\[
-Z_{\infty} \sim \Gamma\left(
-\frac{\lambda}{\beta}, \frac{\eta}{\mu}
+Z(0)e^{-\beta t}
 \right)
-\]
+\exp\left(
+\frac{1}{4\beta}[1-e^{-2\beta t}]
+\right)
+\left(
+\frac{
+1 + e^{-\beta t}1/\mu
+}{
+1 + 1/\mu
+}
+\right)
+\end{align*}
 
-Thus if one for instance have $\lambda = 10, \beta = 1, \eta = 1$ and $\mu = \frac{1}{2}$, giving us $a = 10$ and $b= 2$, then the density of $Z_{\infty}\sim \Gamma(10,2)$ would look like:
+Now if $\beta > 0$, one can find: 
+\begin{align*}
+\lim\limits_{t \to \infty}\E_{Q}[X(t)]
+&= 
+\exp\left(
+\frac{1}{4\beta} + \frac{1}{1+1/\mu}
+\right)
+\end{align*}
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=10cm]{figures/ESG/gamma_limiting_dist.png}
-    \caption{Distribution of $\Gamma(10, 2)$}
-    \label{fig: gamma_limiting_dist}
+    \includegraphics[width=11cm]{figures/ESG/Trajectory_X(t)_params.png}
+    \caption{ESG-risk score with underlying process $X(t)$}
+    \label{fig: ESG_risk_score_underlying_X(t)}
 \end{figure}
+
+The blue dots represent the observed ESG-risk score at the relevant observation times. The solid dark line represents the ESG-risk score between observation times, and the orange underlying process represents our continuous time ESG-risk score process $X(t)$.  
 
 \newpage 
 
 \section{Simulation of Zero Coupon Bond ESG-swap}
+
+In this section, we will look at a numerical simulation of the ESG-swap rate process $\kappa_{t}^{ESG} = (\kappa_{t}^{ESG}(i))_{i=1, \dots, 4}$. We will simulate different scenarios, these will be when the ESG-criteria $C^{ESG}$ is reasonable, and when the ESG criteria are unreasonable. 
+\\~\\
+By unreasonable we will look at the extremes, i.e where the criteria are met all the time, and where the criteria are never met. This will show the effect of the discount and penalty respectively. 
+\\~\\ 
+Assume that after analysis one has arrived at the conclusion that the model as described in Figure \ref{fig: ESG_risk_score_underlying_X(t)} is a good fit for the counterparty company in this ESG-swap. 
+\\~\\
+\textbf{Parameters}
+\begin{itemize}
+    \item $X(0) = 20 \implies Z(0) = -\ln\left(\frac{20}{100}\right)$
+    \item $\beta = -0.05$
+    \item $\sigma = 0.2$
+    \item $\lambda = 20$
+    \item $\mu = 150$
+\end{itemize}
+
+We will use a stepsize of $dt = \frac{1}{360}$, and since the calculation is based upon Monte Carlo simulations, we will base the calculation on 1 Million simulations ($n\_sim = 10^{6})$. 
+\\~\\ 
+\textbf{Agreement/specifications}
+\begin{itemize}
+    \item For simplicity we will assume that our ESG criteria process $C^{ESG} = (C^{ESG}_{T_{i}})_{
+    \{i=1, \dots, 4\}}$ to be $\F_{0}$-measurable. 
+    \item $\delta = 1$ meaning that the time between observations times $T_{i}$ and $t_{i-1}$ is one year. 
+    \item We assume that the penalty/discount $d = 0.005$.
+    \item We will also for simplicity set: 
+    \[
+    \kappa_{t}^{ZCB} = \frac{P(t,T_{0})-P(t,T_{4})}{\delta \sum_{i=1}^{4}P(t,T_{i})} = 0.07
+    \]
+\end{itemize}
+\newpage 
+
+\textbf{Reasonable criteria}
+\begin{itemize}
+    \item $C^{ESG} = (17.6, 16.6, 15.6, 14.55)$
+\end{itemize}
+
+
+
+\newpage 
+
 
 \textbf{Agreement}: 
 \begin{itemize}[leftmargin =*]
