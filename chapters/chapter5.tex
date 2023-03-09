@@ -639,7 +639,7 @@ $$
 Here $[S,T]$ will denote a 3-month period, in the market we only have available
 3-month futures $f^{3M}(t,S,T)$ (\ref{def: 3M_SOFR_futures})  calculated using a geometric average, this means that our hedge will look like: 
 \begin{align*}
-\argmin\limits_{a_{t} \in \R}\E_{Q}\left[
+\argmin\limits_{a_{t} \in \R_{0}}\E_{Q}\left[
 \left(
 X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \right)^{2}
@@ -648,7 +648,7 @@ X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \end{align*}
 
 Now, fix $t$ and denote
- $H(a_{t}) :=\E_{Q}\left[
+ $G(a_{t}) :=\E_{Q}\left[
 \left(X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \right)^{2}
 \bigg{|}\F_{t}
@@ -656,17 +656,17 @@ Now, fix $t$ and denote
 $ 
 expanding the square yields:
 \begin{align*}
-H(a_{t}) &= \E_{Q}\left[(X^{3M_{A}}(S,T))^{2}|\F_{t}\right] -2a_{t}f^{3M}(t,S,T) +
+G(a_{t}) &= \E_{Q}\left[(X^{3M_{A}}(S,T))^{2}|\F_{t}\right] -2a_{t}f^{3M}(t,S,T) +
 a_{t}^{2}[f^{3M}(t,S,T)]^{2}
 \end{align*}
 Taking the derivative w.r.t. $a_{t}$ yields: 
 \begin{align*}
-\frac{d}{da_{t}}H(a_{t}) &= -2f^{3M}(t,S,T) + 2a_{t}[f^{3M}(t,S,T)]^{2}  
+\frac{d}{da_{t}}G(a_{t}) &= -2f^{3M}(t,S,T) + 2a_{t}[f^{3M}(t,S,T)]^{2}  
 \end{align*} 
 
-Now as $\frac{d^{2}}{da_{t}^{2}}H(a_{t}) = 2[f^{3M}(t,S,T)]^{2} > 0$, we have that the minimum is obtained by setting $\frac{d}{da_{t}}H(a_{t}) = 0$:
+Now as $\frac{d^{2}}{da_{t}^{2}}G(a_{t}) = 2[f^{3M}(t,S,T)]^{2} > 0$, we have that the minimum is obtained by setting $\frac{d}{da_{t}}G(a_{t}) = 0$:
 \begin{align*}
-\frac{d}{da_{t}}H(a_{t}) &= 0 \\ 
+\frac{d}{da_{t}}G(a_{t}) &= 0 \\ 
 &\Downarrow \\ 
 a_{t} &= \frac{
 \E_{Q}[X^{3M_{A}}(S,T)|\F_{t}]
@@ -684,7 +684,7 @@ f^{3M}(t,S,T)
 \label{result: optimal_SOFR_hedge_3MA_vs_3GM}
 Considering the above situation, we then have the following:
 \begin{align*}
-\argmin\limits_{a_{t} \in \R}\E_{Q}\left[
+\argmin\limits_{a_{t} \in \R_{0}}\E_{Q}\left[
 \left(
 X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \right)^{2}
@@ -706,7 +706,7 @@ X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \begin{proposition}
 Consider the above setting, and let $r = (r_{t})_{t\geq 0}$ be a model that provides ATS, then 
 \begin{align*}
-\argmin\limits_{a_{t} \in \R}&\E_{Q}\left[
+\argmin\limits_{a_{t} \in \R_{0}}&\E_{Q}\left[
 \left(
 X^{3M_{A}}(S,T)- a_{t}f^{3M}(t,S,T)
 \right)^{2}
@@ -892,47 +892,8 @@ f^{3M_{A}}(t,S,T) &\leq
 
 \newpage 
 
-\subsection{Simulation of Error distribution}
-
-In order to say something about how good the hedge is in Result \ref{result: optimal_SOFR_hedge_3MA_vs_3GM}, we study: 
-\begin{align*}
-Er(t) :&= X^{3M_{A}}(S,T) - \hat{a}_{t}f^{3M}(t,S,T) \\ 
-&= \frac{1}{T-S}\int_{S}^{T}r(u)du - \frac{1}{T-S}\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du \\ 
-&= 
-\frac{1}{T-S}\left(
-\int_{S}^{T}r(u)du - \int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du
-\right)
-\end{align*}
-
-We work with the Vasicek model: 
-\begin{align*}
-dr(t) &= \alpha[m-r(t)]dt + \sigma dW^{Q}(t)    
-\end{align*}
-
-In the simulation, we use the closed expression for $\int_{S}^{T}r(u)du$  as described in Equation \ref{eq: Vasicek_closed_expr_integral} on Page \pageref{eq: Vasicek_closed_expr_integral}. We fix $t=0$, and will therefore study $Er(0)$: 
-
-\begin{figure}[htp]
-    \centering
-    \includegraphics[width=12cm]{figures/SOFR/Vasicek_path.png}
-    \caption{Path of $r = (r(u))_{u \in 0,T]}$}
-    \label{fig: Vasicek_path}
-\end{figure}
-
-\newpage 
-
-We ran the simulation in Julia and got the following:
-
-\begin{figure}[htp]
-    \centering
-    \includegraphics[width=12cm]{figures/SOFR/Error_hist.png}
-    \caption{Simulation of $Er(0)$}
-    \label{fig: Error_simulation_Julia}
-\end{figure}
-
-\newpage 
-
-\subsection{Hedging three-month arithmetic with three 1M-SOFR futures}
-
+\subsection{Hedging three-month arithmetic with 1M-SOFR futures}
+\label{sec: 3M_A_vs_(a,b,c)_1M_SOFR}
 We still want to hedge: 
 $$
 X^{3M_{A}}(S,T) = \frac{1}{T-S}\int_{S}^{T}r_{u}du
@@ -971,7 +932,7 @@ However, now we will not use the available 3M-SOFR future contract, rather we wi
 
 
 \begin{align*}
-\argmin\limits_{(a_{t}, b_{t}, c_{t})\in \R^{3}}\E_{Q}\left[
+\argmin\limits_{(a_{t}, b_{t}, c_{t})\in \R^{3}_{0}}\E_{Q}\left[
 \left(
 X^{3M_{A}}(S,T)- \left[
 a_{t}f^{1M}(t,S,T_{1M}) + 
@@ -1020,8 +981,40 @@ f^{1M}(t,T_{1M}, T_{2M})f^{1M}(t,T_{2M}, T)
 &+ c_{t}^{2}[f^{1M}(t,T_{2M}, T)]^{2}
 \end{align*} 
 
-Fix $t$, and denote $(a_{t}, b_{t}, c_{t}) = (x_{1}, x_{2}, x_{3}) = \mathbf{x}$
+Fix $t$, and denote $(a_{t}, b_{t}, c_{t}) = (x_{1}, x_{2}, x_{3}) = \mathbf{x}$ furthermore let: 
+\[
+\left(
+f^{1M}(t,S,T_{1M}),f^{1M}(t,T_{1M}, T_{2M}), f^{1M}(t,T_{2M}, T) 
+\right)
+= \left(
+\alpha, \beta, \gamma
+\right)
+\]
+We also let: 
+\begin{align*}
+\E_{Q}\left[(X^{3M_{A}}(S,T))^{2}|\F_{t} \right] &= p \\ 
+\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}] &= q
+\end{align*}
 
+This leaves us with: 
+\begin{align*}
+G(\mathbf{x}) &= 
+p \\
+&- 2q\left[
+\alpha x_{1} + \beta x_{2} + \gamma x_{3}
+\right] \\ 
+&+ \alpha^{2}x_{1}^{2} \\ 
+&+ 2\alpha x_{1}\left[
+\beta x_{2} + \gamma x_{3}
+\right] \\ 
+&+ \beta^{2}x_{2}^{2} \\ 
+&+ 2\beta\gamma x_{2}x_{3} \\ 
+&+ \gamma^{2}x_{3}^{2}
+\end{align*}
+
+
+\newpage 
+In order to obtain a minimum we will be interested in:
 \begin{align*}
 \nabla G(\mathbf{x}) &= 
 \left(
@@ -1031,28 +1024,30 @@ Fix $t$, and denote $(a_{t}, b_{t}, c_{t}) = (x_{1}, x_{2}, x_{3}) = \mathbf{x}$
 \right) 
 \end{align*}
 
+Where: 
 \begin{align*}
 \partial_{x_{1}}G(\mathbf{x}) &= 
--2\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}]f^{1M}(t,S, T_{1M}) 
-+ 2x_{1}[f^{1M}(t,S,T_{1M})]^{2} \\ 
-&+ 2f^{1M}(t,S,T_{1M})\left[
-x_{2}f^{1M}(t,T_{1M}, T_{2M}) + x_{3}f^{1M}(t,T_{2M}, T)
+-2q\alpha 
++ 2 \alpha^{2}x_{1}  
++ 2\alpha\left[
+\beta x_{2}+ \gamma x_{3}
 \right] \\ 
 \\
 \partial_{x_{2}}G(\mathbf{x}) &=
--2\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}]f^{1M}(t,T_{1M}, T_{2M})
-+ 2x_{1}f^{1M}(t,S,T_{1M})f^{1M}(t,T_{1M}, T_{2M}) \\ 
-&+ 2x_{2}[f^{1M}(t,T_{1M}, T_{2M})]^{2} 
-+ 2x_{3}f^{1M}(t,T_{1M}, T_{2M})f^{1M}(t,T_{2M}, T) \\ 
+-2q\beta
++ 2\beta^{2} x_{2}
++ 2\beta\left[
+\alpha x_{1} + \gamma x_{3}
+\right] \\ 
 \\ 
 \partial_{x_{3}}G(\mathbf{x}) &=
--2\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}]f^{1M}(t,T_{2M}, T) 
-+ 2x_{1}f^{1M}(t,S,T_{1M})f^{1M}(t,T_{2M}, T) \\ 
-&+ 2x_{2}f^{1M}(t,T_{1M}, T_{2M})f^{1M}(t,T_{2M}, T)
-+ 2x_{3}[f^{1M}(t,T_{2M}, T)]^{2}
+-2q\gamma
++ 2\gamma^{2}x_{3}
++ 2\gamma\left[
+\alpha x_{1} + \beta x_{2}
+\right]
 \end{align*}
 
-\newpage 
 
 We also find the Hessian matrix $H(G)$ of $G$, this matrix will in our case be $3\times 3$ with entries: 
 \begin{align*}
@@ -1061,6 +1056,210 @@ We also find the Hessian matrix $H(G)$ of $G$, this matrix will in our case be $
 \partial^{2}G
 }{
 \partial x_{i}\partial x_{j}
-}
+}, \; i=1,2,3,\;j=1,2,3
 \end{align*}
+
+Thus, the Hessian matrix looks like the following:
+\begin{align*}
+H(G) &= 
+\begingroup
+\renewcommand*{\arraystretch}{1.5}
+\begin{bmatrix}
+2\alpha^{2} & 
+2\alpha \beta & 
+2\alpha \gamma \\ 
+2\alpha \beta &
+2\beta^{2} &
+2\beta \gamma \\
+2\alpha \gamma &
+2\beta \gamma & 
+2\gamma^{2}
+\end{bmatrix}
+\endgroup
+\end{align*}
+
+Now as $\frac{\partial^{2}G(\mathbf{x}) }{\partial x_{i}^{2}} > 0$ for $i=1,2,3$ we know that the minimum should be obtained by setting $\partial_{x_{i}}G(\mathbf{x}) = 0$, i.e we must solve: 
+\begin{align}
+\label{eq: partial_derivative_equal_zero}
+\nabla G(\mathbf{x}) = \mathbf{0}    
+\end{align}
+
+Now Equation \ref{eq: partial_derivative_equal_zero}, gives arise to the following matrix equation: 
+\begin{align*}
+\underbrace{
+\begin{bmatrix}
+\alpha^{2} & \alpha\beta & \alpha\gamma \\ 
+\beta^{2} & \alpha\beta & \beta\gamma \\ 
+\gamma^{2} & \alpha\gamma & \beta\gamma
+\end{bmatrix}
+}_{A}
+\underbrace{
+\begin{bmatrix}
+x_{1} \\ 
+x_{2} \\ 
+x_{3}
+\end{bmatrix}
+}_{\mathbf{x}}
+&= 
+\underbrace{
+q 
+\begin{bmatrix}
+\alpha \\ 
+\beta \\ 
+\gamma 
+\end{bmatrix}
+}_{\mathbf{b}}
+\iff  
+A\mathbf{x} = \mathbf{b}
+\end{align*}
+
+Now: 
+\begin{align*}
+\det(A) &= 
+\alpha^{2}\left[
+\alpha\beta^{2}\gamma - \alpha\beta\gamma^{2}
+\right]
+- \alpha\beta\left[
+\beta^{3}\gamma - \beta\gamma^{3}
+\right]
++ \alpha\gamma\left[
+\beta^{2}\alpha\gamma -\alpha\beta\gamma^{2}
+\right] \\ 
+&= 
+\alpha\beta\gamma(\beta-\gamma)\left[
+\alpha(\alpha+\gamma) -\beta(\beta + \gamma)
+\right]
+\end{align*}
+
+In order for $\det(A) \neq 0$, we must have:
+\begin{empheq}[box=\fbox]{align}
+\alpha &\neq 0, \; \beta \neq 0, \; \gamma \neq 0  \nonumber
+\\
+\beta &\neq \gamma, \; \gamma \neq -(\alpha + \beta) \label{eq: condition_det(A)_not_zero}
+\end{empheq}
+
+\newpage 
+Assume that the necessary conditions in \ref{eq: condition_det(A)_not_zero} holds, we then get, that the inverse is given by: 
+
+\begin{align*}
+A^{-1} &= 
+\begingroup
+\renewcommand*{\arraystretch}{3.0}
+\begin{bmatrix}
+\frac{
+\beta -\gamma
+}{
+(\alpha - \beta)[\alpha\beta - \alpha\gamma + \beta^{2}-\gamma^{2}]
+}
+& 
+\frac{
+-\beta^{2}+\alpha\gamma
+}{
+\beta(\alpha -\beta)[\alpha\beta - \alpha\gamma + \beta^{2}-\gamma^{2}]
+}
+& 
+-\frac{
+1
+}{
+\alpha\beta -\alpha\gamma + \beta^{2}-\gamma^{2}
+} \\
+\frac{
+-\beta^{2}+\gamma
+}{
+\alpha(\alpha-\beta)[\alpha\beta -\alpha\gamma +\beta^{2}-\gamma^{2}]
+}
+& 
+\frac{
+\alpha\beta -\gamma^{2}
+}{
+\beta(\alpha-\beta)[\alpha\beta -\alpha\gamma +\beta^{2}-\gamma^{2}]
+}
+& 
+-\frac{
+1
+}{
+\alpha\beta -\alpha\gamma +\beta^{2}-\gamma^{2}
+} \\ 
+\frac{
+\beta-\gamma
+}{
+(\alpha -\beta)[\alpha\beta -\alpha\gamma + \beta^{2}-\gamma^{2}]
+} 
+& 
+\frac{
+\alpha^{2}-\beta\gamma
+}{
+\beta(\alpha-\beta)[\alpha\beta - \alpha\gamma + \beta^{2}-\gamma^{2}]
+}
+&
+\frac{
+\alpha + \beta
+}{
+\gamma[\alpha\beta -\alpha\gamma + \beta^{2} - \gamma^{2}]
+}
+\end{bmatrix}
+\endgroup
+\end{align*}
+
+Thus the optimal   
+\begin{align*}
+\hat{\mathbf{x}} &= 
+A^{-1}\mathbf{b}
+\end{align*}
+
+
+\newpage 
+
+\subsection{Simulation of Error distribution}
+
+In order to say something about how good the hedge is in Result \ref{result: optimal_SOFR_hedge_3MA_vs_3GM}, we study: 
+\begin{align*}
+ER_{1}(t) :&= X^{3M_{A}}(S,T) - \hat{a}_{t}f^{3M}(t,S,T) \\ 
+&= \frac{1}{T-S}\int_{S}^{T}r(u)du - \frac{1}{T-S}\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du \\ 
+&= 
+\frac{1}{T-S}\left(
+\int_{S}^{T}r(u)du - \int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du
+\right)
+\end{align*}
+
+We will also study the Error distribution from Section \ref{sec: 3M_A_vs_(a,b,c)_1M_SOFR}, now this will correspond to: 
+\begin{align*}
+ER_{2}(t) &= 
+X^{3M_{A}}(S,T) - \left(
+\hat{a}_{t}f^{1M}(t,S,T_{1M}) + 
+\hat{b}_{t}f^{1M}(t,T_{1M}, T_{2M}) + 
+\hat{c}_{t}f^{1M}(t,T_{2M}, T)
+\right)
+\end{align*}
+
+
+We choose the Vasicek model for simulation:
+\begin{align*}
+dr(t) &= \alpha[m-r(t)]dt + \sigma dW^{Q}(t)    
+\end{align*}
+
+In the simulation, we use the closed expression for $\int_{S}^{T}r(u)du$  as described in Equation \ref{eq: Vasicek_closed_expr_integral} p.\pageref{eq: Vasicek_closed_expr_integral}.
+For simplicity we fix $t=0$, meaning that we will study: 
+$ER_{1}(0)$ and $ER_{2}(0)$.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{figures/SOFR/Vasicek_path.png}
+    \caption{Path of Vasicek model for $u\in [0,T]$}
+    \label{fig: Vasicek_path}
+\end{figure}
+
+
+\newpage 
+
+We ran the simulation in Julia and got the following:
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{figures/SOFR/Error_hist.png}
+    \caption{Simulation of $Er(0)$}
+    \label{fig: Error_simulation_Julia}
+\end{figure}
+
+
 
