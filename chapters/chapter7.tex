@@ -240,7 +240,7 @@ We will use a stepsize of $dt = \frac{1}{360}$, and since the calculation is bas
 \begin{itemize}
     \item For simplicity we will assume that our ESG criteria process $C^{ESG} = (C^{ESG}_{T_{i}})_{
     \{i=1, \dots, 4\}}$ to be $\F_{0}$-measurable. 
-    \item $\delta = 1$ meaning that the time between observations times $T_{i}$ and $t_{i-1}$ is one year. 
+    \item $\delta = 1$ meaning that the time between observations times $T_{i}$ and $T_{i-1}$ is one year. 
     \item We assume that the penalty/discount $d = 0.005$.
     \item We will also for simplicity set: 
     \[
@@ -251,156 +251,111 @@ We will use a stepsize of $dt = \frac{1}{360}$, and since the calculation is bas
 
 \textbf{Reasonable criteria}
 \begin{itemize}
-    \item $C^{ESG} = (17.6, 16.6, 15.6, 14.55)$
+    \item $C^{ESG} = (17.8, 16.8, 15.8, 14.8)$
 \end{itemize}
-
-
-
-\newpage 
-
-
-\textbf{Agreement}: 
-\begin{itemize}[leftmargin =*]
-    \item We agree upon $C^{ESG} = (C_{T_{i}}^{ESG})_{i\in \{1,2,3,4\}} = (17.6, 16.6, 15.6, 14.55)$ 
-    \item One evaluates the ESG-risk score at $(T_{1}, T_{2}, T_{3}, T_{4}) = (1.25, 2.25, 3.25, 4.25)$
-\end{itemize}
-
-\textbf{Parameters}:
-\begin{itemize}
-    \item $d = 0.005$
-    \item $\delta = 1$
-    \begin{align*}
-    \left(
-    Z(0) = -\ln(\frac{20}{100}), \beta = -0.05, \lambda = 20, \mu = 150, \Delta t = \frac{1}{360}
-    \right)   
-\end{align*} 
-    \item \begin{align*}
-        \left(
-        P(t,T_{0}) = 0.995, P(t,T_{1}) = 0.985, P(t,T_{3}) = 0.975, P(t,T_{4}) = 0.965
-        \right)
-    \end{align*}
-    \item Number of simulations: $10^{6}$
-\end{itemize}
-
-We assume that the dynamics under $Q$ look the following: 
-\begin{figure}[htp]
-    \centering
-    \includegraphics[width=10cm]{figures/ESG/ESG_OU_path.png}
-    \caption{trajectory of $X(t)$}
-    \label{fig: ESG-risk score}
-\end{figure}
-
-This graph indicates that the ESG-risk score is downward trending, this could be that the company are/will implement measures to reduce $CO_{2}$-emissions.
-The blue dots represent the ESG-risk score at times $T_{i}$. 
-
-
-\newpage 
-
-In this simulation we got: 
-\begin{align*}
-\kappa_{t}^{ZCB} &= \frac{P(t,T_{0})-P(t,T_{4})}{\delta \sum_{i=1}^{4}P(t,T_{i})} = 0.01030   
-\end{align*}
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width= 9cm]{figures/ESG/ESG_plt_criteria.png}
+    \includegraphics[width= 9cm]{figures/ESG/ESG_plt_criteria1.png}
     \caption{ESG-risk score where ESG-criteria is reasonable}
-    \label{fig: ESG-risk_criteria1}
+    \label{fig: ESG_risk_criteria1}
 \end{figure}
 
-In this figure, we see the underlying ESG risk score process. Here the dark-solid lines represent the criteria $C_{T_{i}}^{ESG}$. We see that the ESG criteria were bearly met at time $T_{1}$, it was not met at $T_{2}$, met at $T_{3}$ and then met again at time $T_{4}$. 
+In this figure, we see the underlying ESG risk score process. Here the dark-solid lines represent the criteria $C_{T_{i}}^{ESG}$. The blue dots represent the ESG-risk score at time $T_{i}$.
+In this particular realization, we see that the criteria are not met at $T_{1}$ and $T_{2}$, and then met at $T_{3}$ and $T_{4}$. 
 \\~\\ 
-We summarize the findings in the following table:
-\begin{center}
-    \begin{tabular}{ | l | l | l | p{5cm} |}
-    \hline
-    Time    &   Criteria  & $\kappa_{t}^{ESG}(i)$ \\ \hline
-    $T_{1}$ &      17.6   & $0.01224$  \\ \hline
-    $T_{2}$ &      16.6   & $0.01119$  \\ \hline
-    $T_{3}$ &      15.6   & $0.01023$  \\ \hline
-    $T_{4}$ &      14.55  & $0.00780$   \\ \hline
-    \end{tabular}
-\end{center} 
+After 1 Million simulations we got:
+\\~\\
+\begin{tabular}{lcccl}
+\toprule
+           &$C_{T_{i}}^{ESG}$ & $\kappa_{t}^{ZCB}$  & $\kappa_{t}^{ESG}$ \\
+\midrule
+$T_{1}$ &  17.8 & 0.070 & 0.071 \\
+$T_{2}$ &  16.8 & 0.070 & 0.070 \\
+$T_{3}$ &  15.8 & 0.070 & 0.068 \\
+$T_{4}$ &  14.8 & 0.070 & 0.065 \\
+\bottomrule
+\end{tabular}
 
 \begin{figure}[htp]
     \centering
     \includegraphics[width= 10cm]{figures/ESG/kappa_t_ESG_1.png}
-    \caption{ESG-risk score where ESG-criteria is reasonable}
+    \caption{ESG-swap rate when ESG-criteria is reasonable}
     \label{fig: ESG_swap_1}
 \end{figure}
 
 \newpage 
-
-\textbf{Meeting criteria often}
-\\~\\ 
-In this simulation we took: $C^{ESG} = (18,17,16,15)$, and we got the following: 
+\textbf{unreasonable criteria, where criteria is always met}
+\begin{itemize}
+    \item $C^{ESG} = (24,23,22,21)$
+\end{itemize}
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width= 9cm]{figures/ESG/ESG_plt_criteria2.png}
-    \caption{ESG-risk score where ESG-criteria is met often}
-    \label{fig: ESG-risk_score_criteri2}
+    \includegraphics[width= 10cm]{figures/ESG/ESG_plt_criteria2.png}
+    \caption{ESG-risk score where ESG-criteria is unfavourable for lender}
+    \label{fig: ESG_risk_criteria_2}
 \end{figure}
 
-In this particular we met the criteria at all time points $T_{i}$ for $i=1,2,3$. 
-
-
-\begin{center}
-    \begin{tabular}{ | l | l | l | p{5cm} |}
-    \hline
-    Time    & Criteria   & $\kappa_{t}^{ESG}(i)$ \\ \hline
-    $T_{1}$ &   18       & $0.01046$  \\ \hline
-    $T_{2}$ &   17       & $0.00876$  \\ \hline
-    $T_{3}$ &   16       & $0.00605$\\ \hline
-    $T_{4}$ &   15       & $0.00273$ \\ \hline
-    \end{tabular}
-\end{center} 
+We see that the blue dots are always under the dark solid lines meaning that the criteria are always met.
+\\~\\ 
+After 1 Million simulations we got:
+\\~\\
+\begin{tabular}{lcccl}
+\toprule
+           &$C_{T_{i}}^{ESG}$ & $\kappa_{t}^{ZCB}$  & $\kappa_{t}^{ESG}$ \\
+\midrule
+$T_{1}$ &  24 & 0.070 & 0.065 \\
+$T_{2}$ &  23 & 0.070 & 0.060 \\
+$T_{3}$ &  22 & 0.070 & 0.055 \\
+$T_{4}$ &  21 & 0.070 & 0.050 \\
+\bottomrule
+\end{tabular}
 
 \begin{figure}[htp]
     \centering
     \includegraphics[width= 10cm]{figures/ESG/kappa_t_ESG_2.png}
-    \caption{Meeting criteria often}
+    \caption{ESG-swap rate, when ESG-criteria is not reasonable for the lender}
     \label{fig: ESG_swap_2}
 \end{figure}
 
-In this simulation, we got almost the swap rate at time $T_{1}$, and then the company met the criteria for $i=2,3,4$, giving a lower fixed rate. 
-
-
-\newpage
-\textbf{Never meeting criteria}
-\\~\\ 
-In this simulation we took: $C^{ESG} = 2.5$, for all timepoints and got: 
+\newpage 
+\textbf{unreasonable criteria, where criteria are never met}
+\begin{itemize}
+    \item $C^{ESG} = (15, 14, 13, 12)$
+\end{itemize}
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=9cm]{figures/ESG/ESG_plt_criteria3.png}
-    \caption{ESG-risk score where ESG-criteria is never met}
-    \label{fig: ESG-risk_score_criteria3}
+    \includegraphics[width= 10cm]{figures/ESG/ESG_plt_criteria3.png}
+    \caption{ESG-risk score where ESG-criteria is unfavourable for borrower}
+    \label{fig: ESG_risk_criteria_3}
+\end{figure} 
+
+The blue dots are consistently above the criteria, meaning that the criteria will not be met. 
+\\~\\ 
+After 1 Million simulations we got:
+\\~\\
+\begin{tabular}{lcccl}
+\toprule
+           &$C_{T_{i}}^{ESG}$ & $\kappa_{t}^{ZCB}$  & $\kappa_{t}^{ESG}$ \\
+\midrule
+$T_{1}$ &  24 & 0.070 & 0.075 \\
+$T_{2}$ &  23 & 0.070 & 0.080 \\
+$T_{3}$ &  22 & 0.070 & 0.085 \\
+$T_{4}$ &  21 & 0.070 & 0.090 \\
+\bottomrule
+\end{tabular}
+
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width= 10cm]{figures/ESG/kappa_t_ESG_3.png}
+    \caption{ESG-swap rate, when ESG-criteria is not reasonable for the borrower}
+    \label{fig: ESG_swap_3}
 \end{figure}
 
 
-
-
-\begin{center}
-    \begin{tabular}{ | l | l | l | p{5cm} |}
-    \hline
-    Time    & Criteria  & $\kappa_{t}^{ESG}(i)$ \\ \hline
-    $T_{1}$ &    2.5    & $0.0153$  \\ \hline
-    $T_{2}$ &    2.5    & $0.0203$  \\ \hline
-    $T_{3}$ &    2.5    & $0.0253$\\ \hline
-    $T_{4}$ &    2.5    & $0.0303$ \\ \hline
-    \end{tabular}
-\end{center} 
-
-
-\begin{figure}[htp]
-    \centering
-    \includegraphics[width=10cm]{figures/ESG/kappa_t_ESG_3.png}
-    \caption{ESG swap rate when ESG-criteria is never met}
-    \label{fig: ESG_swap_3}
-\end{figure} 
-
-We see the effect of the penalty $d = 0.005$, leading to an upward-trending ESG swap rate. 
 
 
 

@@ -66,19 +66,26 @@ A futures contract on $X$ with delivery $T$, is a financial asset with following
 \end{enumerate}
 \end{definition}
 
-In typical futures contracts, $X$ could for instance be oil barrels, however, in our situation, $X$ represents an underlying interest rate.  For interest rates, the typical settlement would be a cash settlement.
+In typical futures contracts, the underlying asset  
+$X$ could be oil barrels, corn, cattle etc. In our situation, the underlying asset is an interest rate. The typical settlement is a cash settlement. 
 \\~\\ 
-\textbf{Reasons to enter futures contract:}
+\textbf{Some reasons to enter a futures contract:}
 \begin{itemize}
     \item Speculation: By trading futures, one can make money by differences in quotes.  
-    \item Hedging: One could hedge against higher/lower interest rates. For instance, someone with paying a floating rate might buy futures to lock in a future interest rate. 
+    \item Hedging: One could hedge against higher/lower interest rates. For instance, someone paying a floating rate might buy futures to lock in a future interest rate. 
 \end{itemize}
 
-We will be interested in SOFR futures, such futures can be found at CME (Chicago Mercantile Exchange) \nomenclature{CME}{Chicago Mercantile Exchange}. For instance, a 3M-SOFR future with settlement Jun 23 quoted at $96.6$ would mean that the implied $3M$-SOFR rate over the period March 23 -June 23 would be: 
+
+
+We will be interested in SOFR futures, such futures can be found at CME (Chicago Mercantile Exchange) \nomenclature{CME}{Chicago Mercantile Exchange}. CME uses the following convention for quoting interest rate futures: 
+\[
+100 - R
+\]
+Here $R$ will represent the implied SOFR rate. Let's say that we observe a 3M-SOFR futures today with settlement Jun 23, being quoted at $96.6$. This would mean that the implied $3M$-SOFR rate over the period March 23 - June 23 would be: 
 \[
 (100-96.6)\% = 3.4\% 
 \] 
-For further specifications for the 3M-SOFR futures, one can consult \cite{cmegroup-sofr-futures}. 
+Further specifications on how CME quotes 3M-SOFR futures can be found in  \cite{cmegroup-sofr-futures}. 
 
 
 
@@ -130,6 +137,7 @@ R^{3M}(S,T) \approx  \frac{1}{T-S}\left(e^{\int_{S}^{T}r(s)ds} -1\right)
 This gives arise to the following definitions:
 
 \begin{definition}[\textbf{1-month SOFR futures \cite{Skov_2020}}]
+\label{def: 1M_SOFR_futures}
 \nomenclature{$f^{1M}(t,S,T)$}{1-month SOFR futures}
 We denote the time $t$ rate of the 1-month futures starting to accrue at time $S$ and with settlement on time $T$ as:
 \begin{align*}
@@ -639,7 +647,7 @@ $$
 Here $[S,T]$ will denote a 3-month period, in the market we only have available
 3-month futures $f^{3M}(t,S,T)$ (\ref{def: 3M_SOFR_futures})  calculated using a geometric average, this means that our hedge will look like: 
 \begin{align*}
-\argmin\limits_{a_{t} \in \R_{0}}\E_{Q}\left[
+\argmin\limits_{a_{t} \in \R}\E_{Q}\left[
 \left(
 X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \right)^{2}
@@ -706,7 +714,7 @@ X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \begin{proposition}
 Consider the above setting, and let $r = (r_{t})_{t\geq 0}$ be a model that provides ATS, then 
 \begin{align*}
-\argmin\limits_{a_{t} \in \R_{0}}&\E_{Q}\left[
+\argmin\limits_{a_{t} \in \R}&\E_{Q}\left[
 \left(
 X^{3M_{A}}(S,T)- a_{t}f^{3M}(t,S,T)
 \right)^{2}
@@ -837,28 +845,28 @@ This is an ordinary differential equation, with the explicit solution given by:
 
 We now denote: 
 \begin{align*}
-X^{3M_{A}}(S,T) &= \frac{1}{T-S}\int_{S}^{T}r_{u}du = \frac{1}{T-S}Z \\ 
+X^{3M_{A}}(S,T) &= \frac{1}{T-S}\int_{S}^{T}r_{u}du = \frac{1}{T-S}Z(S,T) \\ 
 f^{3M_{A}}(t,S,T) &= \frac{1}{T-S}\E_{Q}\left[
 \int_{S}^{T}r_{u}du
-\right] = \frac{1}{T-S}\E_{Q}[Z|\F_{t}]
+\right] = \frac{1}{T-S}\E_{Q}[Z(S,T)|\F_{t}]
 \end{align*}
 
 Now from Jensen's Inequality \ref{thm: Jensen's_ineuality}, we have that for $Z, \varphi(Z) \in L^{1}(\Omega, \F, Q)$, with $\varphi(x) = e^{x}$
 \begin{align}
 \label{eq: hedging_availible_inst_market_1}
 \exp\left(
-\E_{Q}[Z|\F_{t}]
+\E_{Q}[Z(S,T)|\F_{t}]
 \right)
 &\leq 
 \E_{Q}\left[
-\exp(Z)|\F_{t}
+\exp(Z(S,T))|\F_{t}
 \right] \nonumber \\ 
 &\Updownarrow \nonumber \\ 
 \exp\left(
 (T-S)f^{3M_{A}}(t,S,T)
 \right) 
 &\leq 
-\E_{Q}\left[\exp(Z)|\F_{t}\right]
+\E_{Q}\left[\exp(Z(S,T))|\F_{t}\right]
 \end{align} 
 
 Now from definition \ref{def: 3M_SOFR_futures}, we have: 
@@ -870,7 +878,7 @@ f^{3M}(t,S,T) &= \frac{1}{T-S}\left(
 \bigg{|}\F_{t}\right] - 1
 \right) \nonumber \\ 
 &\Downarrow \nonumber \\ 
-\E_{Q}[\exp(Z)|\F_{t}] &= (T-S)f^{3M}(t,S,T) + 1
+\E_{Q}[\exp(Z(S,T))|\F_{t}] &= (T-S)f^{3M}(t,S,T) + 1
 \end{align}
 
 Now by inserting \ref{eq: hedging_availible_inst_market_2} into \ref{eq: hedging_availible_inst_market_1} yields:
@@ -932,7 +940,7 @@ However, now we will not use the available 3M-SOFR future contract, rather we wi
 
 
 \begin{align*}
-\argmin\limits_{(a_{t}, b_{t}, c_{t})\in \R^{3}_{0}}\E_{Q}\left[
+\argmin\limits_{(a_{t}, b_{t}, c_{t})\in \R^{3}}\E_{Q}\left[
 \left(
 X^{3M_{A}}(S,T)- \left[
 a_{t}f^{1M}(t,S,T_{1M}) + 
@@ -1014,7 +1022,19 @@ p \\
 
 
 \newpage 
-In order to obtain a minimum we will be interested in:
+To get a bit better grasp of $G(\mathbf{x})$ we include a level plot:
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{figures/SOFR/plot_G(x)_special_case.PNG}
+    \caption{level Curve $G(\mathbf{x}) = k$, where all constants are set to one}
+    \label{fig: plot_G(x)_SOFR_1M}
+\end{figure}
+
+\textbf{NB!} Figure \ref{fig: plot_G(x)_SOFR_1M}, is purely for illustration purposes, this will not be a realistic representation of $G(\mathbf{x})$. 
+\\~\\
+We will be interested in obtaining a minimum of $G(\mathbf{x})$, meaning that we will be interested in the following:  
+
 \begin{align*}
 \nabla G(\mathbf{x}) &= 
 \left(
@@ -1048,8 +1068,8 @@ Where:
 \right]
 \end{align*}
 
+In order to verify that $G$ obtains a minimum we need the Hessian matrix $H(G)$ of $G$. This will be a $3\times 3$ matrix with entries:  
 
-We also find the Hessian matrix $H(G)$ of $G$, this matrix will in our case be $3\times 3$ with entries: 
 \begin{align*}
 [H(G)]_{i,j} &= 
 \frac{
@@ -1059,7 +1079,7 @@ We also find the Hessian matrix $H(G)$ of $G$, this matrix will in our case be $
 }, \; i=1,2,3,\;j=1,2,3
 \end{align*}
 
-Thus, the Hessian matrix looks like the following:
+Meaning that our Hessian matrix looks the following:
 \begin{align*}
 H(G) &= 
 \begingroup
@@ -1077,6 +1097,7 @@ H(G) &=
 \end{bmatrix}
 \endgroup
 \end{align*}
+
 
 Now as $\frac{\partial^{2}G(\mathbf{x}) }{\partial x_{i}^{2}} > 0$ for $i=1,2,3$ we know that the minimum should be obtained by setting $\partial_{x_{i}}G(\mathbf{x}) = 0$, i.e we must solve: 
 \begin{align}
@@ -1138,9 +1159,9 @@ In order for $\det(A) \neq 0$, we must have:
 \beta &\neq \gamma, \; \gamma \neq -(\alpha + \beta) \label{eq: condition_det(A)_not_zero}
 \end{empheq}
 
-\newpage 
-Assume that the necessary conditions in \ref{eq: condition_det(A)_not_zero} holds, we then get, that the inverse is given by: 
+%Assume that the necessary conditions in \ref{eq: condition_det(A)_not_zero} holds, we then get, that the inverse is %given by: 
 
+\begin{comment}
 \begin{align*}
 A^{-1} &= 
 \begingroup
@@ -1200,12 +1221,26 @@ A^{-1} &=
 \end{bmatrix}
 \endgroup
 \end{align*}
+\end{comment}
 
-Thus the optimal   
+Thus the optimal weight $\mathbf{x}$ will then be:   
 \begin{align*}
 \hat{\mathbf{x}} &= 
 A^{-1}\mathbf{b}
 \end{align*}
+
+
+Now if the Condition \ref{eq: condition_det(A)_not_zero} does not hold, one approach could be:
+
+\begin{align}
+\label{eq: Basis_Pursuit_lp}
+\begin{array}{ll@{}ll}
+\text{minimize}  & \displaystyle\sum\limits_{i=1}^{3}|x_{i}|&  &\\
+\text{subject to}& \displaystyle   A\mathbf{x} = & \mathbf{b}
+\end{array}    
+\end{align}
+
+Assume that $\Tilde{\mathbf{x}}$ is the optimal solution to \ref{eq: Basis_Pursuit_lp}, this method is called the Basis Pursuit \cite{chen1998atomic}. 
 
 
 \newpage 
@@ -1252,14 +1287,39 @@ $ER_{1}(0)$ and $ER_{2}(0)$.
 
 \newpage 
 
-We ran the simulation in Julia and got the following:
+\textbf{3M-arithmetic vs 3M-geometric SOFR futures:}
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=12cm]{figures/SOFR/Error_hist.png}
-    \caption{Simulation of $Er(0)$}
-    \label{fig: Error_simulation_Julia}
+    \includegraphics[width=12cm]{figures/SOFR/ER_1(0).PNG}
+    \caption{Simulation of $ER_{1}(0)$}
+    \label{fig: ER_1_(0)}
 \end{figure}
 
+Here we compare $X^{3M_{A}}(S,T)$ where we buy $\hat{a}_{t}$ number of $3M$-SOFR futures.
+\\~\\
+\textbf{3M-arithmetic vs $(\hat{a}_{t}, \hat{b}_{t}, \hat{c}_{t})$ 1M-SOFR futures}
 
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{figures/SOFR/ER_2(0)_A_inv.PNG}
+    \caption{Simulation of $ER_{2}^{inv}(0)$}
+    \label{fig: ER_2_(0)_A_inv}
+\end{figure}
 
+For calculating the different futures prices, we used Definition \ref{def: 1M_SOFR_futures}, p.\pageref{def: 1M_SOFR_futures}, in this simulation we got: 
+\begin{align*}
+\hat{x} = 
+\begin{bmatrix}
+0.501 \\
+0.501 \\
+-0.004
+\end{bmatrix}
+\;\text{and}\; 
+\Tilde{x} = 
+\begin{bmatrix}
+0.499 \\ 
+0.498 \\ 
+0.0
+\end{bmatrix}
+\end{align*}
