@@ -266,6 +266,7 @@ In this particular realization, we see that the criteria are not met at $T_{1}$ 
 \\~\\ 
 After 1 Million simulations we got:
 \\~\\
+\begin{center}
 \begin{tabular}{lcccl}
 \toprule
            &$C_{T_{i}}^{ESG}$ & $\kappa_{t}^{ZCB}$  & $\kappa_{t}^{ESG}$ \\
@@ -276,10 +277,11 @@ $T_{3}$ &  15.8 & 0.070 & 0.068 \\
 $T_{4}$ &  14.8 & 0.070 & 0.065 \\
 \bottomrule
 \end{tabular}
+\end{center}
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width= 10cm]{figures/ESG/kappa_t_ESG_1.png}
+    \includegraphics[width= 9cm]{figures/ESG/kappa_t_ESG_1.png}
     \caption{ESG-swap rate when ESG-criteria is reasonable}
     \label{fig: ESG_swap_1}
 \end{figure}
@@ -301,6 +303,7 @@ We see that the blue dots are always under the dark solid lines meaning that the
 \\~\\ 
 After 1 Million simulations we got:
 \\~\\
+\begin{center}
 \begin{tabular}{lcccl}
 \toprule
            &$C_{T_{i}}^{ESG}$ & $\kappa_{t}^{ZCB}$  & $\kappa_{t}^{ESG}$ \\
@@ -311,13 +314,17 @@ $T_{3}$ &  22 & 0.070 & 0.055 \\
 $T_{4}$ &  21 & 0.070 & 0.050 \\
 \bottomrule
 \end{tabular}
+\end{center}
+
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width= 10cm]{figures/ESG/kappa_t_ESG_2.png}
+    \includegraphics[width= 9cm]{figures/ESG/kappa_t_ESG_2.png}
     \caption{ESG-swap rate, when ESG-criteria is not reasonable for the lender}
     \label{fig: ESG_swap_2}
 \end{figure}
+
+Here we see the effect of how the discount $d$ works, for each $T_{i}$ we see that $\kappa_{t}^{ESG}$ goes down by the discount $d$. 
 
 \newpage 
 \textbf{unreasonable criteria, where criteria are never met}
@@ -336,6 +343,7 @@ The blue dots are consistently above the criteria, meaning that the criteria wil
 \\~\\ 
 After 1 Million simulations we got:
 \\~\\
+\begin{center}
 \begin{tabular}{lcccl}
 \toprule
            &$C_{T_{i}}^{ESG}$ & $\kappa_{t}^{ZCB}$  & $\kappa_{t}^{ESG}$ \\
@@ -346,7 +354,7 @@ $T_{3}$ &  22 & 0.070 & 0.085 \\
 $T_{4}$ &  21 & 0.070 & 0.090 \\
 \bottomrule
 \end{tabular}
-
+\end{center}
 
 \begin{figure}[htp]
     \centering
@@ -354,6 +362,8 @@ $T_{4}$ &  21 & 0.070 & 0.090 \\
     \caption{ESG-swap rate, when ESG-criteria is not reasonable for the borrower}
     \label{fig: ESG_swap_3}
 \end{figure}
+
+In this situation $d$ works like a penalty, and correspondingly $\kappa_{t}^{ESG}$ increases. 
 
 
 
