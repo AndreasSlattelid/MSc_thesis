@@ -113,7 +113,7 @@ where:
 The 3-month \nomenclature{3M}{3-months}
 SOFR geometric average of the daily reference rate observed over the period $[S,T]$ is defined as: 
 \[
-R^{3M}(T,S) = \frac{1}{T-S}\left(
+R^{3M}(S,T) = \frac{1}{T-S}\left(
 \prod_{i=1}^{N}(1+d_{i}R_{d_{i}}(T_{i})) - 1
 \right)
 \]
@@ -332,7 +332,9 @@ By Stochastic Fubini, we get:
 
 Now this leaves us with: 
 \begin{align*}
-(2) &= \int_{T}^{S}\int_{u}^{T}e^{-\alpha(s-u)}dsdW^{Q}(u) = (2)'
+(2) =\int_{S}^{T}\int_{S}^{s}e^{-\alpha(s-u)}dW^{Q}(u)ds 
+=
+\int_{S}^{T}\int_{u}^{T}e^{-\alpha(s-u)}dsdW^{Q}(u) = (2)'
 \end{align*}
 
 We now calculate the inner integral in $(1)'$ and $(2)'$ respectively: 
@@ -349,34 +351,34 @@ We can then define:
 \begin{align*}
 \Sigma(u,t,S,T) &= 
     \begin{cases}
-      \frac{1}{\alpha}\left[
-      e^{\alpha(S-u)}-e^{-\alpha(T-u)}\right],  & u \in [t,S)\\
-      \frac{1}{\alpha}\left[1 -e^{-\alpha(T-u)}\right], & u\in [S,T]
+      e^{\alpha(S-u)}-e^{-\alpha(T-u)},  & u \in [t,S)\\
+      1 -e^{-\alpha(T-u)}, & u\in [S,T]
     \end{cases}
 \end{align*}
 
 We are thus left with: 
-\begin{align*}
+\begin{align}
+\label{eq: Vasicek_closed_expr_3M_SOFR}
 \int_{S}^{T}r(s)ds &= \frac{r(t)}{\alpha}\left[
 e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
 \right]   
 + m(T-S) - \frac{m}{\alpha}\left[
 e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
-\right] \\
-&+ \frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(s) \\ 
+\right] \nonumber \\
+&+ \frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(u)\nonumber \\ 
 &= 
 \left(
 \frac{r(t)-m}{\alpha}
 \right)
 \left[
-e^{-\alpha(S-t) - e^{-\alpha(T-t)}}
+e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
 \right]
 + m(T-S) 
 + 
 \underbrace{
-\frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(s)
+\frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(u)
 }_{\F_{t}-\text{independent}}
-\end{align*}
+\end{align}
 
 
 As the last part is $\F_{t}$-independent,we get: 
@@ -387,7 +389,7 @@ As the last part is $\F_{t}$-independent,we get:
 \right)\bigg{|}\F_{t}
 \right] 
 &= 
-\exp\left(
+\exp\left[
 \left(
 \frac{r(t)-m}{\alpha}
 \right)
@@ -395,10 +397,11 @@ As the last part is $\F_{t}$-independent,we get:
 e^{-\alpha(S-t) - e^{-\alpha(T-t)}}
 \right]
 + m(T-S) 
-\right)\times \\ 
-&\E_{Q}\left[
+\right] \\
+&\times  
+\E_{Q}\left[
 \exp\left(
-\frac{\sigma}{\alpha}\int_{S}^{T}\Sigma(u,t,S,T)dW^{Q}(u)
+\frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(u)
 \right)
 \right]
 \end{align*}
@@ -407,7 +410,7 @@ Since $\Sigma$ is deterministic, we have that:
 \begin{align*}
 \E_{Q}\left[
 \exp\left(
-\frac{\sigma}{\alpha}\int_{S}^{T}\Sigma(u,t,S,T)dW^{Q}(u)
+\frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(u)
 \right)
 \right]
 &= 
@@ -417,7 +420,8 @@ Since $\Sigma$ is deterministic, we have that:
 \end{align*}
 
 This leaves us with the following expression:
-\begin{align*}
+\begin{align}
+\label{eq: a_hat_3M_SOFR}
  \E_{Q}\left[
 \exp\left(
 \int_{S}^{T}r(s)ds
@@ -427,24 +431,25 @@ This leaves us with the following expression:
 \exp\left(
 A(t,S,T) + B(t,S,T)r(t)
 \right):= g(t,r(t))
-\end{align*}
+\end{align}
 
 where: 
 \begin{align*}
 A(t,S,T) &= m(T-S) - \frac{m}{\alpha}\left[
 e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
-\right] + \frac{1}{2}\frac{\sigma^{2}}{\alpha^{2}}\int_{t}^{T}\Sigma^{2}(u,t,S,T) \\
+\right] + \frac{1}{2}\frac{\sigma^{2}}{\alpha^{2}}\int_{t}^{T}\Sigma^{2}(u,t,S,T)du \\
 B(t,S,T) &= \frac{1}{\alpha}\left[
 e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
 \right]
 \end{align*}
 
 This means that we have: 
-\begin{align*}
+\begin{align}
+\label{eq: Vasicek_3M_SOFR_closed_formula}
 f^{3M}(t,S,T) &= \frac{1}{T-S}\left[
-g(t,r(t) - 1
+g(t,r(t)) - 1
 \right]    
-\end{align*}
+\end{align}
 
 We note that $\E_{Q}\left[
 \exp\left(
@@ -635,7 +640,7 @@ d\Phi(d) + \varphi(d)
 \newpage 
 
 \section{SOFR hedges}
-For SOFR futures we have that there are two approaches for pricing namely arithmetic (1 month) and geometric (3 months), in this section we will study different hedges depending upon what one wants to hedge. 
+For SOFR futures we have that there are two approaches for pricing namely arithmetic (1M) and geometric (3M), in this section, we will look at some relationships between them.
 
 
 \subsection{Hedging 3-month arithmetic with 3-month geometric}
@@ -645,7 +650,8 @@ X^{3M_{A}}(S,T) = \frac{1}{T-S}\int_{S}^{T}r_{u}du
 $$
 
 Here $[S,T]$ will denote a 3-month period, in the market we only have available
-3-month futures $f^{3M}(t,S,T)$ (\ref{def: 3M_SOFR_futures})  calculated using a geometric average, this means that our hedge will look like: 
+3-month futures $f^{3M}(t,S,T)$  calculated using a geometric mean, this means that our hedge will look like this:
+
 \begin{align*}
 \argmin\limits_{a_{t} \in \R}\E_{Q}\left[
 \left(
@@ -989,82 +995,82 @@ f^{1M}(t,T_{1M}, T_{2M})f^{1M}(t,T_{2M}, T)
 &+ c_{t}^{2}[f^{1M}(t,T_{2M}, T)]^{2}
 \end{align*} 
 
-Fix $t$, to ease the notation we denote $(a_{t}, b_{t}, c_{t}) = (x_{1}, x_{2}, x_{3}) = \mathbf{x}$ furthermore let: 
+Fix $t$, to ease the notation we denote $(a_{t}, b_{t}, c_{t}) = (x_{1}(t), x_{2}(t), x_{3}(t)) = \mathbf{x}_{t}$ furthermore let: 
 \[
 \left(
 f^{1M}(t,S,T_{1M}),f^{1M}(t,T_{1M}, T_{2M}), f^{1M}(t,T_{2M}, T) 
 \right)
 = \left(
-\alpha, \beta, \gamma
+\alpha_{t}, \beta_{t}, \gamma_{t}
 \right)
 \]
 We also let: 
 \begin{align*}
-\E_{Q}\left[(X^{3M_{A}}(S,T))^{2}|\F_{t} \right] &= p \\ 
-\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}] &= q
+\E_{Q}\left[(X^{3M_{A}}(S,T))^{2}|\F_{t} \right] &= p_{t} \\ 
+\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}] &= q_{t}
 \end{align*}
 
 This leaves us with: 
 \begin{align*}
-G(\mathbf{x}) &= 
-p \\
-&- 2q\left[
-\alpha x_{1} + \beta x_{2} + \gamma x_{3}
+G(\mathbf{x}_{t}) &= 
+p_{t} \\
+&- 2q_{t}\left[
+\alpha_{t} x_{1}(t) + \beta_{t} x_{2}(t) + \gamma_{t} x_{3}(t)
 \right] \\ 
-&+ \alpha^{2}x_{1}^{2} \\ 
-&+ 2\alpha x_{1}\left[
-\beta x_{2} + \gamma x_{3}
+&+ \alpha_{t}^{2}x_{1}(t)^{2} \\ 
+&+ 2\alpha x_{1}(t)\left[
+\beta_{t} x_{2}(t) + \gamma_{t} x_{3}(t)
 \right] \\ 
-&+ \beta^{2}x_{2}^{2} \\ 
-&+ 2\beta\gamma x_{2}x_{3} \\ 
-&+ \gamma^{2}x_{3}^{2}
+&+ \beta_{t}^{2}x_{2}(t)^{2} \\ 
+&+ 2\beta_{t}\gamma_{t} x_{2}(t)x_{3}(t) \\ 
+&+ \gamma_{t}^{2}x_{3}(t)^{2}
 \end{align*}
 
 
 \newpage 
-To get a bit better grasp of $G(\mathbf{x})$ we include a level plot:
+To get a bit better grasp of $G(\mathbf{x}_{t})$ we include a level plot:
 
 \begin{figure}[htp]
     \centering
     \includegraphics[width=12cm]{figures/SOFR/plot_G(x)_special_case.PNG}
-    \caption{level Curve $G(\mathbf{x}) = k$, where all constants are set to one}
+    \caption{level Curve $G(\mathbf{x}_{t}) = k$, where all constants are set to one}
     \label{fig: plot_G(x)_SOFR_1M}
 \end{figure}
 
-\textbf{NB!} Figure \ref{fig: plot_G(x)_SOFR_1M}, is purely for illustration purposes, this will not be a realistic representation of $G(\mathbf{x})$. 
+\textbf{NB!} Figure \ref{fig: plot_G(x)_SOFR_1M}, is purely for illustration purposes, this will not be a realistic representation of $G(\mathbf{x}_{t})$. 
 \\~\\
-We will be interested in obtaining a minimum of $G(\mathbf{x})$, meaning that we will be interested in the following:  
+We will be interested in obtaining a minimum of $G(\mathbf{x}_{t})$, meaning that we will be interested in the following:  
 
 \begin{align*}
-\nabla G(\mathbf{x}) &= 
+\nabla G(\mathbf{x}_{t}) &= 
 \left(
-\partial_{x_{1}}G(\mathbf{x}), 
-\partial_{x_{2}}G(\mathbf{x}), 
-\partial_{x_{3}}G(\mathbf{x})
+\partial_{x_{1}}G(\mathbf{x}_{t}), 
+\partial_{x_{2}}G(\mathbf{x}_{t}), 
+\partial_{x_{3}}G(\mathbf{x}_{t})
 \right) 
 \end{align*}
 
 Where: 
 \begin{align*}
-\partial_{x_{1}}G(\mathbf{x}) &= 
--2q\alpha 
-+ 2 \alpha^{2}x_{1}  
-+ 2\alpha\left[
-\beta x_{2}+ \gamma x_{3}
+\partial_{x_{1}}G(\mathbf{x}_{t}) &= 
+-2q_{t}\alpha_{t} 
++ 2 \alpha_{t}^{2}x_{1}(t)  
++ 2\alpha_{t}\left[
+\beta_{t} x_{2}(t)+ \gamma_{t} x_{3}(t)
 \right] \\ 
 \\
-\partial_{x_{2}}G(\mathbf{x}) &=
--2q\beta
-+ 2\beta^{2} x_{2}
-+ 2\beta\left[
-\alpha x_{1} + \gamma x_{3}
+\partial_{x_{2}}G(\mathbf{x}_{t}) &=
+-2q_{t}\beta_{t}
++ 2\beta_{t}^{2} x_{2}(t)
++ 2\beta_{t}\left[
+\alpha_{t} x_{1}(t) + \gamma_{t} x_{3}(t)
 \right] \\ 
 \\ 
-\partial_{x_{3}}G(\mathbf{x}) &=
--2q\gamma
-+ 2\gamma^{2}x_{3}
-+ 2\gamma\left[
-\alpha x_{1} + \beta x_{2}
+\partial_{x_{3}}G(\mathbf{x}_{t}) &=
+-2q_{t}\gamma_{t}
++ 2\gamma_{t}^{2}x_{3}(t)
++ 2\gamma_{t}\left[
+\alpha_{t} x_{1}(t) + \beta_{t} x_{2}(t)
 \right]
 \end{align*}
 
@@ -1085,15 +1091,15 @@ H(G) &=
 \begingroup
 \renewcommand*{\arraystretch}{1.5}
 \begin{bmatrix}
-2\alpha^{2} & 
-2\alpha \beta & 
-2\alpha \gamma \\ 
-2\alpha \beta &
-2\beta^{2} &
-2\beta \gamma \\
-2\alpha \gamma &
-2\beta \gamma & 
-2\gamma^{2}
+2\alpha_{t}^{2} & 
+2\alpha_{t} \beta_{t} & 
+2\alpha_{t} \gamma_{t} \\ 
+2\alpha_{t} \beta_{t} &
+2\beta_{t}^{2} &
+2\beta_{t} \gamma_{t} \\
+2\alpha_{t} \gamma_{t} &
+2\beta_{t} \gamma_{t} & 
+2\gamma_{t}^{2}
 \end{bmatrix}
 \endgroup
 \end{align*}
@@ -1102,68 +1108,68 @@ H(G) &=
 Now as $\frac{\partial^{2}G(\mathbf{x}) }{\partial x_{i}^{2}} > 0$ for $i=1,2,3$ we know that the minimum should be obtained by setting $\partial_{x_{i}}G(\mathbf{x}) = 0$, i.e we must solve: 
 \begin{align}
 \label{eq: partial_derivative_equal_zero}
-\nabla G(\mathbf{x}) = \mathbf{0}    
+\nabla G(\mathbf{x}_{t}) = \mathbf{0}    
 \end{align}
 
 Now Equation \ref{eq: partial_derivative_equal_zero}, gives arise to the following matrix equation: 
 \begin{align*}
 \underbrace{
 \begin{bmatrix}
-\alpha^{2} & \alpha\beta & \alpha\gamma \\ 
-\beta^{2} & \alpha\beta & \beta\gamma \\ 
-\gamma^{2} & \alpha\gamma & \beta\gamma
+\alpha_{t}^{2} & \alpha_{t}\beta_{t} & \alpha_{t}\gamma_{t} \\ 
+\beta_{t}^{2} & \alpha_{t}\beta_{t} & \beta_{t}\gamma_{t} \\ 
+\gamma_{t}^{2} & \alpha_{t}\gamma_{t} & \beta_{t}\gamma_{t}
 \end{bmatrix}
-}_{A}
+}_{M}
 \underbrace{
 \begin{bmatrix}
-x_{1} \\ 
-x_{2} \\ 
-x_{3}
+x_{1}(t) \\ 
+x_{2}(t) \\ 
+x_{3}(t)
 \end{bmatrix}
-}_{\mathbf{x}}
+}_{\mathbf{x}_{t}}
 &= 
 \underbrace{
 q 
 \begin{bmatrix}
-\alpha \\ 
-\beta \\ 
-\gamma 
+\alpha_{t} \\ 
+\beta_{t} \\ 
+\gamma_{t} 
 \end{bmatrix}
 }_{\mathbf{b}}
 \iff  
-A\mathbf{x} = \mathbf{b}
+M\mathbf{x}_{t} = \mathbf{b}
 \end{align*}
 
 Now: 
 \begin{align*}
-\det(A) &= 
-\alpha^{2}\left[
-\alpha\beta^{2}\gamma - \alpha\beta\gamma^{2}
+\det(M) &= 
+\alpha_{t}^{2}\left[
+\alpha_{t}\beta_{t}^{2}\gamma_{t} - \alpha_{t}\beta_{t}\gamma_{t}^{2}
 \right]
-- \alpha\beta\left[
-\beta^{3}\gamma - \beta\gamma^{3}
+- \alpha_{t}\beta_{t}\left[
+\beta_{t}^{3}\gamma_{t} - \beta_{t}\gamma_{t}^{3}
 \right]
-+ \alpha\gamma\left[
-\beta^{2}\alpha\gamma -\alpha\beta\gamma^{2}
++ \alpha_{t}\gamma_{t}\left[
+\beta_{t}^{2}\alpha_{t}\gamma_{t} -\alpha_{t}\beta_{t}\gamma_{t}^{2}
 \right] \\ 
 &= 
-\alpha\beta\gamma(\beta-\gamma)\left[
-\alpha(\alpha+\gamma) -\beta(\beta + \gamma)
+\alpha_{t}\beta_{t}\gamma_{t}(\beta_{t}-\gamma_{t})\left[
+\alpha_{t}(\alpha_{t}+\gamma_{t}) -\beta_{t}(\beta_{t} + \gamma_{t})
 \right]
 \end{align*}
 
-In order for $\det(A) \neq 0$, we must have:
+In order for $\det(M) \neq 0$, we must have:
 \begin{empheq}[box=\fbox]{align}
-\alpha &\neq 0, \; \beta \neq 0, \; \gamma \neq 0  \nonumber
+\alpha_{t} &\neq 0, \; \beta_{t} \neq 0, \; \gamma_{t} \neq 0  \nonumber
 \\
-\beta &\neq \gamma, \; \gamma \neq -(\alpha + \beta) \label{eq: condition_det(A)_not_zero}
+\beta_{t} &\neq \gamma_{t}, \; \gamma_{t} \neq -(\alpha_{t} + \beta_{t}) \label{eq: condition_det(M)_not_zero}
 \end{empheq}
 
 %Assume that the necessary conditions in \ref{eq: condition_det(A)_not_zero} holds, we then get, that the inverse is %given by: 
 
 \begin{comment}
 \begin{align*}
-A^{-1} &= 
+M^{-1} &= 
 \begingroup
 \renewcommand*{\arraystretch}{3.0}
 \begin{bmatrix}
@@ -1223,24 +1229,24 @@ A^{-1} &=
 \end{align*}
 \end{comment}
 
-Thus the optimal weight $\hat{\mathbf{x}}$ will then be:   
+Thus the optimal weight $\hat{\mathbf{x}}_{t}$ will then be:   
 \begin{align*}
-\hat{\mathbf{x}} &= 
-A^{-1}\mathbf{b}
+\hat{\mathbf{x}}_{t} &= 
+M^{-1}\mathbf{b}
 \end{align*}
 
 
-Now if the Condition \ref{eq: condition_det(A)_not_zero} does not hold, one approach could be:
+Now if the Condition \ref{eq: condition_det(M)_not_zero} does not hold, one approach could be:
 
 \begin{align}
 \label{eq: Basis_Pursuit_lp}
 \begin{array}{ll@{}ll}
-\text{minimize}  & \displaystyle\sum\limits_{i=1}^{3}x_{i}&  &\\
-\text{subject to}& \displaystyle   A\mathbf{x} = & \mathbf{b}
+\text{minimize}  & \displaystyle\sum\limits_{i=1}^{3}x_{i}(t)&  &\\
+\text{subject to}& \displaystyle   M\mathbf{x}_{t} = & \mathbf{b}
 \end{array}    
 \end{align}
 
-Assume that $\Tilde{\mathbf{x}}$ is the optimal solution to \ref{eq: Basis_Pursuit_lp}, this method is
+Assume that $\Tilde{\mathbf{x}}_{t}$ is the optimal solution to \ref{eq: Basis_Pursuit_lp}, this method is
 very much related to Basis Pursuit \cite{chen1998atomic}.
 
 
@@ -1275,9 +1281,37 @@ We choose the Vasicek model for simulation:
 dr(t) &= \alpha[m-r(t)]dt + \sigma dW^{Q}(t)    
 \end{align*}
 
-In the simulation, we use the closed expression for $\int_{S}^{T}r(u)du$  as described in Equation \ref{eq: Vasicek_closed_expr_integral} p.\pageref{eq: Vasicek_closed_expr_integral}.
+For calculating $X^{3M_{A}}(S,T)$, we use the closed expression for $\int_{S}^{T}r(u)du$  as described in Equation \ref{eq: Vasicek_closed_expr_3M_SOFR} p.\pageref{eq: Vasicek_closed_expr_3M_SOFR}:
+
+\begin{align*}
+\int_{S}^{T}r(u)du 
+&= 
+\left(
+\frac{r(t)-m}{\alpha}
+\right)
+\left[
+e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
+\right]
++ m(T-S) 
++ 
+\frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(u)
+\end{align*}
+
+Where: 
+\begin{align*}
+\Sigma(u,t,S,T) &= 
+\left[
+e^{-\alpha(S-u)}-e^{-\alpha(T-u)}
+\right]\mathbbm{1}_{[t,S)}(u) 
++ 
+\left[
+1-e^{-\alpha(T-u)}
+\right]\mathbbm{1}_{[S,T]}(u)
+\end{align*}
+
+
 For simplicity we fix $t=0$, meaning that we will study: 
-$ER_{1}(0)$ and $ER_{2}(0)$.
+$ER_{1}(0)$ and $ER_{2}(0)$, using the Vasicek model, where the parameters are as shown below:
 
 \begin{figure}[htp]
     \centering
@@ -1286,14 +1320,88 @@ $ER_{1}(0)$ and $ER_{2}(0)$.
     \label{fig: Vasicek_path}
 \end{figure}
 
-For calculating the futures prices needed in $ER_{2}(t)$, we used Definition \ref{def: 1M_SOFR_futures}, p.\pageref{def: 1M_SOFR_futures}, meaning that: 
+\newpage 
+\textbf{3M-arithmetic vs $\hat{a}_{0}^{3M}$ 3M-SOFR futures calculations:}
+\\~\\
+We have that: 
 \begin{align*}
-f^{1M}(t,S,T) &= \frac{1}{T-S}\E_{Q}\left[
-\int_{S}^{T}r(u)du\bigg{|}\F_{t}
-\right]   
+\hat{a}_{t}^{3M} = \frac{
+\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du
+}{
+(T-S)f^{3M}(t,S,T)
+}    
 \end{align*}
 
-\newpage 
+For calculating $f^{3M}(t,S,T)$ we have from 
+Equation \ref{eq: Vasicek_3M_SOFR_closed_formula} p.\pageref{eq: Vasicek_3M_SOFR_closed_formula}, that:  
+\begin{align*}
+f^{3M}(t,S,T) &= 
+\frac{1}{T-S}\left[
+\exp\left(
+A(t,S,T) + B(t,S,T)r(t)
+\right)
+-1
+\right]
+\end{align*}
+
+Where: 
+\begin{align*}
+A(t,S,T) &= m(T-S) - \frac{m}{\alpha}\left[
+e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
+\right] + \frac{1}{2}\frac{\sigma^{2}}{\alpha^{2}}\int_{t}^{T}\Sigma^{2}(u,t,S,T)du \\
+B(t,S,T) &= \frac{1}{\alpha}\left[
+e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
+\right]
+\end{align*}
+
+We are interested in the case where $t=0$, giving us:
+\begin{align*}
+\hat{a}_{0}^{3M} = \frac{
+\int_{S}^{T}\E_{Q}[r(u)]du
+}{
+(T-S)f^{3M}(0,S,T)
+}
+= 0.995
+\end{align*}
+
+\textbf{3M-arithmetic vs $(\hat{a}_{0}, \hat{b}_{0}, \hat{c}_{0})$ 1M-SOFR futures calculations}
+\\~\\
+In this simulation we had that Condition \ref{eq: condition_det(M)_not_zero} were met, as we got:
+\begin{align*}
+\alpha_{0} &= 0.0423 \\ 
+\beta_{0} &= 0.0421 \\ 
+\gamma_{0} &= 0.0420
+\end{align*}
+
+Furthermore, the optimal weight $\hat{\mathbf{x}}_{0}$ turned out to be:
+\begin{align*}
+\hat{\mathbf{x}}_{0} &= 
+\begin{bmatrix}
+\alpha_{0}^{2} & \alpha_{0}\beta_{0} & \alpha_{0}\gamma_{0} \\ 
+\beta_{0}^{2} & \alpha_{0}\beta_{0} & \beta_{0}\gamma_{0} \\ 
+\gamma_{0}^{2} & \alpha_{0}\gamma_{0} & \beta_{0}\gamma_{0}
+\end{bmatrix}^{-1}
+\begin{bmatrix}
+q_{0}\alpha_{0} \\ 
+q_{0}\beta_{0} \\ 
+q_{0}\gamma_{0}
+\end{bmatrix}
+=
+\begin{bmatrix}
+0.501 \\
+0.501 \\
+-0.004
+\end{bmatrix} 
+\end{align*}
+
+Here:
+\[
+q_{0} = \E_{Q}[X^{3M_{A}}(S,T)] = 0.0421
+\]
+
+
+\newpage
+
 
 \textbf{3M-arithmetic vs 3M-geometric SOFR futures:}
 
@@ -1304,42 +1412,24 @@ f^{1M}(t,S,T) &= \frac{1}{T-S}\E_{Q}\left[
     \label{fig: ER_1_(0)}
 \end{figure}
 
-Here we compare $X^{3M_{A}}(S,T)$ where we buy $\hat{a}_{t}$ number of $3M$-SOFR futures.
+Here we see the distribution $ER_{1}(0)$, we see that the mean of $ER_{1}(0)$, $\overline{ER_{1}(0)} = 0$, this indicates that one average hedging $X^{3M_{A}}(S,T)$ where one takes $\hat{a}_{0} = 0.995$-positions in $3M$-SOFR futures would be a good hedge. We also have that $\E_{Q}[ER_{1}(0)] = 0$.  
 \\~\\
-\textbf{3M-arithmetic vs $(\hat{a}_{t}, \hat{b}_{t}, \hat{c}_{t})$ 1M-SOFR futures}
+\textbf{3M-arithmetic vs $(\hat{a}_{0}, \hat{b}_{0}, \hat{c}_{0})$ 1M-SOFR futures}
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=12cm]{figures/SOFR/ER_2(0)_A_inv.PNG}
+    \includegraphics[width=12cm]{figures/SOFR/ER_2(0)_M_inv.PNG}
     \caption{Simulation of $ER_{2}^{inv}(0)$}
-    \label{fig: ER_2_(0)_A_inv}
+    \label{fig: ER_2_(0)_M_inv}
 \end{figure}
 
-The optimal weighting in 1M-SOFR futures turned out to be:
-\begin{align*}
-\hat{\mathbf{x}} = 
-\begin{bmatrix}
-\hat{a}_{t} \\
-\hat{b}_{t} \\
-\hat{c}_{t}
-\end{bmatrix}
+Here we see the $ER_{2}(0)$ distribution under the assumption that $M$ is invertible. Here we have taken the following position in $1M$-SOFR futures: 
+\[
+(\hat{a}_{0}, \hat{b}_{0}, \hat{c}_{0})
 = 
-\begin{bmatrix}
-0.501 \\
-0.501 \\
--0.004
-\end{bmatrix}
-\end{align*}
-
-\newpage 
-
-We see that Figure \ref{fig: ER_1_(0)} and Figure \ref{fig: ER_2_(0)_A_inv} are practically indifferent, meaning that under these assumption
-
-\begin{figure}[htp]
-    \centering
-    \includegraphics[width=12cm]{figures/SOFR/ER_2(0)_111.PNG}
-    \caption{Simulation of $ER_{2}^{(1,1,1)}(0)$}
-    \label{fig: ER_2_1_1_1}
-\end{figure}
+(0.501, 0.501, -0.004)
+\]
+We see that the mean of $ER_{2}^{M_{inv}}(0)$, $\overline{ER_{2}^{M_{inv}}(0)} = 0$, which then again indicated that on average taking the above position at time $t=0$ would be a good hedge. 
+\\~\\ 
 
 
