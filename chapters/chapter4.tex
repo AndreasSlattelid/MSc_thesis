@@ -963,7 +963,8 @@ Z^{T}(0)
 \end{align*}
 
 The second part also relies on Bayes theorem: 
-\begin{align*}
+\begin{align}
+\label{eq: forward_option_price}
 \E_{Q^{T}}[X|\F_{t}]
 &= 
 \frac{
@@ -974,7 +975,7 @@ X\frac{dQ^{T}}{dQ}\bigg{|}\F_{t}
 \E_{Q}\left[
 \frac{dQ^{T}}{dQ}\bigg{|}\F_{t}
 \right]
-} \\ 
+} \nonumber \\ 
 &= 
 \frac{
 \E_{Q}\left[
@@ -982,14 +983,20 @@ XZ^{T}(T)\bigg{|}\F_{t}
 \right]
 }{
 Z^{T}(t)
-} \\ 
-&\Downarrow \\ 
-Z^{T}(t)\E_{Q^{T}}[X|\F_{t}] &= \E_{Q}[XZ^{T}(T)|\F_{t}] \\ 
-&\Downarrow \\ 
-\pi(t):= P(t,T)\E_{Q^{T}}[X|\F_{t}] &= \E_{Q}\left[
+}
+\end{align}
+
+We recall that $Z^{T}(t) = \frac{P(t,T)}{P(0,T)B(t)}$, now from Equation \ref{eq: forward_option_price} we get: 
+\begin{align*}
+Z^{T}(t)\E_{Q^{T}}[X|\F_{t}] &= 
+\E_{Q}[XZ^{T}(T)|\F_{t}]
+\iff 
+P(t,T)\E_{Q^{T}}[X|\F_{t}] = 
+\E_{Q}\left[
 \frac{B(t)}{B(T)}X\bigg{|}\F_{t}
-\right]
+\right] := \pi(t)
 \end{align*}
+
 
 \end{proof}
 
@@ -1130,8 +1137,7 @@ Thus:
 \end{align*}
 
 \textbf{Radon-Nikodym derivative:}
-\\~\\ 
-We have that: 
+
 \begin{align*}
 \frac{dQ^{S}}{dQ^{T}}\bigg{|}_{\F_{t}} 
 &= 
