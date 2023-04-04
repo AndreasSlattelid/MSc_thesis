@@ -490,14 +490,14 @@ f^{3M}(t,S,T) + \frac{1}{T-S}
 
 
 \begin{proposition}
-The fixed swap rate $\kappa_{t}^{lM-SOFR}$ in a swap with 1M/3M-SOFR as floating is given by:  
+The fixed swap rate $\kappa_{t}^{\ell M-SOFR}$ in a swap with 1M/3M-SOFR as floating is given by:  
 \begin{align*}
- \kappa_{t}^{lM-SOFR} &= 
+ \kappa_{t}^{\ell M-SOFR} &= 
  \frac{
- \sum_{i=1}^{n}P(t,T_{i})f^{lM}(t,T_{i-1}, T_{i})
+ \sum_{i=1}^{n}P(t,T_{i})f^{\ell M}(t,T_{i-1}, T_{i})
  }{
  \sum_{i=1}^{n}P(t,T_{i})
- }, \;\; l = 1,3
+ }, \;\; \ell = 1,3
 \end{align*}
 \end{proposition}
 
@@ -505,38 +505,38 @@ The fixed swap rate $\kappa_{t}^{lM-SOFR}$ in a swap with 1M/3M-SOFR as floating
     
 In this swap, we have the following specification, at time $T_{i}$:
 \begin{itemize}[leftmargin=*]
-    \item Pay $\kappa_{t}^{lM-SOFR}\delta N$ (-)
-    \item Receive $f^{kM}(t,T_{i-1}, T_{i})\delta N$, \; l=1,3 (+)
+    \item Pay $\kappa_{t}^{\ell M-SOFR}\delta N$ (-)
+    \item Receive $f^{\ell M}(t,T_{i-1}, T_{i})\delta N$, \; $\ell=1,3$ (+)
 \end{itemize} 
 
 \textbf{Cash flow at time $T_{i}$}:
 \begin{align*}
-f^{lM}(t, T_{i-1}, T_{i})\delta N - \kappa_{t}^{lM-SOFR}\delta N =
-[f^{lM}(t,T_{i-1}, T_{i}) -\kappa_{t}^{lM-SOFR}]\delta N, \;\; l=1,3
+f^{\ell M}(t, T_{i-1}, T_{i})\delta N - \kappa_{t}^{\ell M-SOFR}\delta N =
+[f^{\ell M}(t,T_{i-1}, T_{i}) -\kappa_{t}^{\ell M-SOFR}]\delta N, \;\; \ell =1,3
 \end{align*}
 
 \textbf{Time $t$-value for $t\leq T_{0}$ at time $T_{i}$}: 
 \begin{align*}
-P(t,T_{i})[f^{lM}(t,T_{i-1}, T_{i}) - \kappa_{t}^{SOFR}]\delta N,\;\; l=1,3
+P(t,T_{i})[f^{\ell M}(t,T_{i-1}, T_{i}) - \kappa_{t}^{SOFR}]\delta N,\;\; \ell =1,3
 \end{align*}
 
 \textbf{Total payer cash flow:}
 \begin{align*}
-\mathcal{C}_{P}^{lM-SOFR}(t) &= 
-\delta N \sum_{i=1}^{n}P(t,T_{i})[f^{lM}(t,T_{i-1}, T_{i}) - \kappa_{t}^{lM-SOFR}], \;\; l=1,3
+\mathcal{C}_{P}^{\ell M-SOFR}(t) &= 
+\delta N \sum_{i=1}^{n}P(t,T_{i})[f^{\ell M}(t,T_{i-1}, T_{i}) - \kappa_{t}^{\ell M-SOFR}], \;\; \ell =1,3
 \end{align*} 
 
-$\kappa_{t}^{lM-SOFR}$ should be chosen such that: 
+$\kappa_{t}^{\ell M-SOFR}$ should be chosen such that: 
 \begin{align*}
-\E_{Q}[\mathcal{C}_{P}^{lM-SOFR}(t)|\F_{t}] = 0    
+\E_{Q}[\mathcal{C}_{P}^{\ell M-SOFR}(t)|\F_{t}] = 0    
 \end{align*}
 
 Thus: 
 \begin{align*}
-\sum_{i=1}^{n}P(t,T_{i})f^{lM}(t,T_{i-1}, T_{i}) &= \sum_{i=1}^{n}P(t,T_{i})\kappa_{t}^{lM-SOFR} \\ 
+\sum_{i=1}^{n}P(t,T_{i})f^{\ell M}(t,T_{i-1}, T_{i}) &= \sum_{i=1}^{n}P(t,T_{i})\kappa_{t}^{\ell M-SOFR} \\ 
 &\Downarrow \\ 
-\kappa_{t}^{lM-SOFR} &= \frac{
-\sum_{i=1}^{n}P(t,T_{i})f^{lM}(t,T_{i-1}, T_{i})
+\kappa_{t}^{\ell M-SOFR} &= \frac{
+\sum_{i=1}^{n}P(t,T_{i})f^{\ell M}(t,T_{i-1}, T_{i})
 }{
 \sum_{i=1}^{n}P(t,T_{i})
 }
@@ -545,7 +545,7 @@ Thus:
 
 \newpage 
 
-Let us consider the case where we look at $l=3$, $n=3$, and $\delta = \frac{3}{12}$. For simplicity, we choose the Vasicek model as this gives an explicit formula for $f^{3M}(t,S,T)$ as described in Equation \ref{eq: Vasicek_3M_SOFR_closed_formula}.
+Let us consider the case where we look at $\ell=3$, $n=3$, and $\delta = \frac{3}{12}$. For simplicity, we choose the Vasicek model as this gives an explicit formula for $f^{3M}(t,S,T)$ as described in Equation \ref{eq: Vasicek_3M_SOFR_closed_formula}.
 
 \begin{figure}[htp]
     \centering

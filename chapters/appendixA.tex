@@ -1,5 +1,66 @@
-\chapter{Estimating parameters for interest rate models}
+\chapter{Estimating parameters for interest rate models} 
 
+Our methodology will be based on \cite{remillard2013statistical}
+
+\section{Vasicek}
+We recall the Vasicek model: 
+\begin{align*}
+dr(t) &= \alpha[m - r(t)]dt + \sigma dW^{Q}(t)    
+\end{align*}
+
+With explicit solution:
+\begin{align}
+\label{eq: r_VAS_explicit}
+r(T) &= e^{-\alpha(T)}r(0) + m[1-e^{-\alpha(T)}] 
++ \sigma \int_{0}^{T}e^{-\alpha(T-u)}dW^{Q}(u) \nonumber \\ 
+&= 
+m + e^{-\alpha T}\left[r(0) -m \right]
++ \sigma \int_{0}^{T}e^{-\alpha(T-u)}dW^{Q}(u)
+\end{align} 
+
+\begin{definition}[\textbf{AR(p)-process}]
+A stochastic process $X = (X_{t})_{t \in \mathcal{I}}$, where $\mathcal{I}$ is an index set, is said to be an $AR(p)$-process if it can be written as:
+\begin{align*}
+X_{t} &= \sum_{i=1}^{p}\eta_{i}X_{t-i} + \epsilon_{t} 
+\end{align*}
+Where $\epsilon_{t}$ is referred to as white noise, meaning that: 
+\begin{align*}
+\epsilon_{t} \sim \mathcal{N}\left(
+0, \sigma_{w}^{2}
+\right)    
+\end{align*}
+here $\sigma_{w}^{2}$ corresponds to a constant variance. 
+\end{definition} 
+
+\begin{proposition}[\textbf{\cite{remillard2013statistical}}]
+One can express the Vasicek model as an $AR(1)$-process: 
+\begin{align*}
+r_{k}-m &= \eta (r_{k-1}-m) + \epsilon_{k}, \; k = 2, \dots, n     
+\end{align*}
+Where:
+\begin{itemize}[leftmargin =*]
+    \item $r_{k} := r(kh)$, here $r$ is as described in Equation \ref{eq: r_VAS_explicit}.
+    \item $\eta = e^{-\alpha h}$
+    \item $\epsilon_{k} \sim \mathcal{N}\left(
+    0, \sigma^{2}\left[
+    \frac{1-\eta^{2}}{2\alpha}
+    \right]\right)$
+\end{itemize}
+\end{proposition}
+
+\newpage 
+\textbf{MLE}
+\\~\\ 
+We can find MLE  estimates for $\theta = (\alpha, m, \sigma)$, we note that 
+
+
+
+
+
+
+
+
+\newpage 
 Our approach will be based on \cite{halga2014}. We have the following relationship: 
 \begin{align*}
 P(t,T) &= e^{-R(t,T)(T-t)}
@@ -67,6 +128,10 @@ A^{VAS}(\alpha, m, \sigma, \tau_{j})
 \right]
 + \frac{\sigma^{2}}{4\alpha}B^{2}(\alpha, \tau_{j})
 \end{align*}
+
+\newpage 
+
+s
 
 
 
