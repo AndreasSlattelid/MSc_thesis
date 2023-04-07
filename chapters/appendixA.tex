@@ -35,7 +35,7 @@ here $\sigma_{w}^{2}$ corresponds to a constant variance.
 \begin{proposition}[\textbf{\cite{remillard2013statistical}}]
 One can express the Vasicek model as an $AR(1)$-process: 
 \begin{align*}
-r_{k}-m &= \eta (r_{k-1}-m) + \epsilon_{k}, \; k = 2, \dots, n     
+r_{k}-m &= \eta (r_{k-1}-m) + \epsilon_{k}, \; k = 1, \dots, n     
 \end{align*}
 Where:
 \begin{itemize}[leftmargin =*]
@@ -44,14 +44,121 @@ Where:
     \item $\epsilon_{k} \sim \mathcal{N}\left(
     0, \sigma^{2}\left[
     \frac{1-\eta^{2}}{2\alpha}
-    \right]\right)$
+    \right]\right)$, here we can interpret: 
+    $\sigma_{w}^{2} = \sigma^{2}\left[
+    \frac{1-\eta^{2}}{2\alpha}
+    \right]$
 \end{itemize}
 \end{proposition}
 
 \newpage 
-\textbf{MLE}
+\textbf{Maximum Likelihood Estimation}
 \\~\\ 
-We can find MLE  estimates for $\theta = (\alpha, m, \sigma)$, we note that 
+We can find the MLE \nomenclature{MLE}{Maximum Likelihood Estimation}  estimates for $\bm{\theta} = (\alpha, m, \sigma)$. We note that our $AR(1)$-series $r = (r_{k})_{\{k = 1, \dots, n\}}$ is markovian, meaning that: 
+\begin{align*}
+r_{k}|r_{k-1}, \dots, r_{0} \stackrel{d}{=} r_{k}|r_{k-1}    
+\end{align*}
+
+This means that: 
+\begin{align*}
+L(\bm{\theta}) &= f_{\bm{\theta}}(r_{1}, \dots, r_{n}|r_{0}) \\ 
+&= \prod_{k=1}^{n}f_{\bm{\theta}}(r_{k}|r_{k-1})
+\end{align*}
+
+We have that 
+\[
+r_{k}|r_{k-1} \sim \mathcal{N}\left(
+\E[r_{k}|r_{k-1}], Var[r_{k}|r_{k-1}]
+\right)
+\]
+
+as: 
+\begin{align*}
+r_{k} &= \underbrace{m + e^{-\alpha h}(r_{k-1}-m)}_{= \E[r_{k}|r_{k-1}]} 
++ \underbrace{\epsilon_{k}}_{\sim \mathcal{N}(0, \sigma_{w}^{2})}    
+\end{align*}
+
+Meaning that: 
+\begin{align*}
+r_{k}|r_{k-1} \sim \mathcal{N}\left(
+\underbrace{
+m + e^{-\alpha h}[r_{k-1}-m]
+}_{= \mu}, 
+\underbrace{
+\frac{\sigma^{2}}{2\alpha}\left[1-e^{-2\alpha h}\right]
+}_{= \gamma^{2}}
+\right)    
+\end{align*}
+
+Now: 
+\begin{align*}
+f_{\mathcal{N}(\mu, \gamma^{2})}(r_{k}) &=
+\frac{1}{\sqrt{2\pi}\gamma}\exp\left(
+-\frac{1}{2\gamma^{2}}\left[r_{k} - \mu \right]^{2}
+\right)
+\end{align*}
+
+This gives us: 
+\begin{align*}
+L(\bm{\theta}) &= \prod_{k=1}^{n}f_{\bm{\theta}}(r_{k}|r_{k-1}) \\ 
+&= 
+\prod_{k=1}^{n}f_{\mathcal{N}(\mu, \gamma^{2})}(r_{k}) 
+\\ 
+&= 
+(2\pi\gamma^{2})^{-\frac{n}{2}}\exp\left(
+-\frac{1}{2\gamma^{2}}\sum_{k=1}^{n}\left(
+r_{k} - \mu
+\right)^{2}
+\right) \\ 
+&\Downarrow \\ 
+l(\bm{\theta}) &:= \ln L(\bm{\theta}) \\
+&= 
+-\frac{n}{2}\ln(2\pi) - \frac{n}{2}\ln(\gamma^{2})
+-\frac{1}{2\gamma^{2}}\sum_{k=1}^{n}\left(r_{k} - \mu \right)^{2}
+\end{align*}
+
+\newpage
+From \cite{Chalmers_MSc}, we can infer the following estimates: 
+\begin{align*}
+\hat{\alpha} &= 
+-\frac{1}{n}\ln\left[
+\frac{
+n\sum_{k=1}^{n}r_{k}r_{k-1} - \sum_{k=1}^{n}r_{k}\sum_{k=1}^{n}r_{k-1}
+}{
+n\sum_{k=1}^{n}r_{k-1}^{2} - \left(\sum_{k=1}^{n}r_{k-1}\right)^{2}
+}
+\right] \\ 
+\\ 
+\hat{m} &= 
+\frac{1}{n[1-e^{\hat{\alpha}h}]}
+\left[
+\sum_{k=1}^{n}r_{k} - e^{-\hat{\alpha}h}\sum_{k=1}^{n}r_{k-1}
+\right] \\ 
+\\ 
+\hat{\sigma}^{2} &= 
+\frac{
+2\hat{\alpha}
+}
+{
+n[1-e^{-2\hat{\alpha}h}]
+}
+\sum_{k=1}^{n}\left(
+r_{k} - r_{k-1}e^{-\hat{\alpha}h} 
+- \hat{m}[1-e^{-\hat{\alpha}h}]
+\right)^{2}
+\end{align*} 
+
+\textbf{Kalman Filter}
+\\~\\ 
+hei
+
+
+
+
+
+
+
+
 
 
 
