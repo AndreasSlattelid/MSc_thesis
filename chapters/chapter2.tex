@@ -1091,7 +1091,7 @@ Furthermore, we denote:
 Z^{\theta}(T) &:= \frac{dQ^{\theta}}{dP} = \frac{e^{\theta Y}}{\E[e^{\theta Y}]}   
 \end{align*} 
 
-Now let $I(t)$ denote a CPP denote a CPP with intensity $\lambda$ and jump-distribution $J \sim F_{J}(dx)$, in this case we get: 
+Now let $I(t)$ denote a CPP with intensity $\lambda$ and jump-distribution $J \sim F_{J}(dx)$, in this case we get: 
 
 \begin{align*}
 Z^{\theta}(T) &= \frac{
@@ -1120,7 +1120,7 @@ For simplicity and ease of notation, we define:
 \nomenclature{$\xi$}{Transformed characteristic exponent of Levy process, $\xi(\theta):= \Psi(-i\theta)$}
 \end{notation}
 
-We then see that we can rewrite $Z^{\theta}(T)$ as: 
+We can now rewrite $Z^{\theta}(T)$ as: 
 \begin{align*}
 Z^{\theta}(T) &= e^{\theta I(T) - \xi(\theta)T}    
 \end{align*}
@@ -1210,6 +1210,53 @@ t \Psi_{Q^{\theta}}(u)
 \end{align*}
 \end{proof}
 
+\begin{lemma}
+\label{lemma: CPP_exp_mu}
+Let $I(t)$ be a CPP under $P$ with intensity $\lambda$, and jump distribution $J\sim Exp(\mu)$, then for $\theta < \mu$, we have: 
+\begin{align*}
+\lambda_{Q} &= \frac{\lambda \mu}{\mu - \theta}
+\;\text{and}\; J_{1} \sim Exp(\mu - \theta)
+\end{align*}
+\end{lemma}
+
+\begin{proof}
+For the Esscher transform to be well-defined, we must have that $\E[e^{\theta J}] < \infty$, now:
+\begin{align*}
+\E[e^{\theta J}] &= \int_{0}^{\infty}e^{\theta x}\mu e^{-\mu x}dx \\ 
+&= \frac{\mu}{\theta - \mu}e^{(\theta - \mu)x}\bigg{|}_{0}^{\infty} \\ 
+ &=
+    \begin{cases}
+      \infty & \theta \geq \mu\\
+      \frac{\mu}{\theta - \mu} & \theta < \mu
+    \end{cases} 
+\end{align*}
+
+To find the distribution of $J$ under $Q$, we can derive it's characteristic function: 
+\begin{align*}
+\E_{Q}[e^{iuJ}] &= \E_{Q}[e^{iuI(1)}] =  \exp\left(
+\xi(iu+\theta) - \xi(\theta)
+\right)   
+\end{align*}
+
+\begin{align*}
+\xi(iu+\theta) - \xi(\theta) &= 
+\lambda\left(\E[e^{(iu+\theta)J}]-1\right)
+- 
+\lambda\left(\E[e^{\theta J}]-1\right) \\ 
+&= 
+\lambda\E[e^{\theta J}(e^{iuJ}-1)] \\ 
+&= 
+\lambda \int_{0}^{\infty}e^{\theta x}[e^{iux}-1]F_{J}(dx)
+\\ 
+&= \lambda \int_{0}^{\infty}e^{\theta x}[e^{iux}-1]\mu e^{-\mu x}dx \cdot \frac{\theta - \mu}{\theta - \mu} \\ 
+&= 
+\frac{\lambda \mu}{\theta - \mu}\int_{0}^{\infty}[e^{iux}-1](\mu-\theta)e^{-(\mu - \theta)x}dx \\ 
+&= 
+\lambda_{Q}\int_{0}^{\infty}[e^{iux}-1]F_{J}^{Q}(dx)
+\end{align*}
+
+Meaning that $J \stackrel{Q}{\sim} Exp(\mu - \theta)$
+\end{proof}
 
 
 
