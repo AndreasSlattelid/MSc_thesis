@@ -220,10 +220,10 @@ R_{Swap}(t) &= \frac{P(t,T_{0}) - P(t,T_{n})}{\delta \sum_{i=1}^{n}P(t,T_{i})}
 \newpage
 
 \section{Short rate models}
-Consider the following probability space $(\Omega, \F, (\overline{\F_{t}})_{t \in [0,T]}, P)$, our market model will consist of:
+Consider the following probability space $(\Omega, \F, (\F_{t})_{t \in [0,T]}, P)$, the market model consists of:
 \begin{itemize}
-    \item Money market account $B = (B(t))_{t}$ with $B_{t} = e^{\int_{0}^{t}r_{u}du}$
-    \item Short rate process $r = (r_{t})_{t}$
+    \item Money market account $B = (B(t))_{t}$ with $B(t) = e^{\int_{0}^{t}r(u)du}$
+    \item Short rate process $r = (r(t))_{t}$
 \end{itemize}
 
 We assume the following short-rate dynamics:
@@ -231,9 +231,9 @@ We assume the following short-rate dynamics:
 dr(t) &= b(t)dt + \sigma(t)dW(t)   
 \end{align*} 
 
-Where $r = (r_{t})_{t\geq 0}$ is a process satisfying the conditions given in Theorem \ref{thm: SDE_sufficiency}. 
+Where $r = (r(t))_{t\geq 0}$ is a process satisfying the necessary conditions given in Theorem \ref{thm: SDE_sufficiency}. 
 \\~\\
-We also assume an arbitrage-free market, meaning that there $\exists \; Q\sim P$ so that: 
+Furthermore, the market is assumed to be arbitrage-free, meaning that there $\exists \; Q\sim P$ such that: 
 \begin{align*}
 \frac{dQ}{dP}\bigg{|}_{\F_{t}} &= \mathcal{E}_{t}\left(
 \gamma \bullet W
@@ -241,32 +241,32 @@ We also assume an arbitrage-free market, meaning that there $\exists \; Q\sim P$
 \end{align*}
 
 \begin{result}[\textbf{Relationship between zero coupon bonds and the short rate}] 
-We can express the Zero Coupon Bond rate as follows:
+We can express the Zero Coupon  Bond price as follows:
 \begin{align*}
 P(t,T) &= \E_{Q}\left[
-e^{-\int_{t}^{T}r_{s}ds}\bigg{|}\F_{t}
+e^{-\int_{t}^{T}r(u)du}\bigg{|}\F_{t}
 \right], \;\forall \; t\in[0,T]
 \end{align*}
 \end{result}
 
 \begin{proof}
-By the First Fundamental theorem of asset pricing (Theorem \ref{thm: First_fundamental_thm_asset_price}), we have that in order to avoid arbitrage, all tradable assets should be $(Q, \mathbbm{F})$-martingales after discounting, this yields: 
+By the First Fundamental theorem of asset pricing (Theorem \ref{thm: First_fundamental_thm_asset_price}), we have that to avoid arbitrage, all tradable assets should be $(Q, \mathbbm{F})$-martingales after discounting, meaning that:
 \begin{align*}
 \E_{Q}\left[
 \frac{P(T,T)}{B(T)}
 \bigg{|}\F_{t}
 \right]
 &= 
-\frac{P(t,T)}{B(t)} \\ 
-&\Updownarrow \\ 
-\E_{Q}\left[
-\frac{1}{B(T)}
-\bigg{|}\F_{t}
-\right]
-&= \frac{P(t,T)}{B(t)} \\ 
-&\Downarrow \\ 
+\frac{P(t,T)}{B(t)}
+\end{align*}
+Now $P(T,T) = 1$, and $B(t)$ is $\F_{t}$-measurable, this gives us: 
+\begin{align*}
 P(t,T) &= \E_{Q}\left[
-e^{-\int_{t}^{T}r_{s}ds}\bigg{|}\F_{t}
+\frac{B(t)}{B(T)}\bigg{|}\F_{t}
+\right]  
+= \E_{Q}\left[
+e^{-\int_{t}^{T}r(u)du}
+\bigg{|}\F_{t}
 \right]
 \end{align*}
 \end{proof}
@@ -274,7 +274,7 @@ e^{-\int_{t}^{T}r_{s}ds}\bigg{|}\F_{t}
 
 \newpage
 \begin{proposition}[\textbf{\cite{filipovic2009term}}]
-Considering the above setting, then we have that the process $r = (r_{t})_{t\in [0,T]}$ have the following dynamics under $Q$
+Considering the above setting, then we have that the process $r = (r(t))_{t\in [0,T]}$ have the following $Q$-dynamics:
 \begin{align*}
 dr(t) &= \left(b(t)+\sigma(t)\gamma(t)^{Tr}\right)dt 
 + \sigma(t)dW^{Q}(t) \;(Q)
@@ -282,7 +282,7 @@ dr(t) &= \left(b(t)+\sigma(t)\gamma(t)^{Tr}\right)dt
 \end{proposition} 
 
 \begin{proof}
-Let $W = (W_{t})_{t \in [0,T]} \in \R^{m}$, and let $\F_{t} = \sigma(W_{s}:s\leq t)$, also let $\gamma \in \R^{m}$, as well as $\gamma \in M^{2}_{loc}([0,T])$. By assumption we assume no arbitrage, thus $\mathcal{E}_{t}(\gamma \bullet W) \in M^{2}([0,T])$ and is also a $(P, \mathbbm{F})$-martingale. We then have from Girsanov's theorem, Theorem \ref{thm: Girsanov's_thm} that the $Q$-dynamics is given by:
+Let $W = (W_{t})_{t \in [0,T]} \in \R^{m}$, and let $\F_{t} = \sigma(W_{s}:s\leq t)$, also let $\gamma \in \R^{m}$, as well as $\gamma \in M^{2}_{loc}([0,T])$. By assumption there are no arbitrage, thus $\mathcal{E}_{t}(\gamma \bullet W) \in M^{2}([0,T])$, this is also a $(P, \mathbbm{F})$-martingale. Girsanov's Theorem \ref{thm: Girsanov's_thm}, then tells us that the $Q$-dynamics takes the following form:
 $$
 dW^{Q}(t) = dW(t) - \gamma(t)^{Tr}dt
 $$
@@ -306,24 +306,23 @@ Consider the general SDE:
 dr(t) = b(t,r(t))dt + \sigma(t,r(t))dW^{Q}(t), \; (Q)    
 \end{align}
 
-
-
-Assume that $b$ and $\sigma$ are such that they satisfy the conditions given in Theorem \ref{thm: SDE_sufficiency} such that the solution exists and is strong and strongly unique. 
+Assume that $b$ and $\sigma$ are such that they satisfy the
+necessary conditions given in Theorem \ref{thm: SDE_sufficiency}, meaning that a solution exists and are strongly unique. 
 
 \begin{definition}[\textbf{Affine Term Structure}]
-A short rate model $r$ is said to provide ATS (Affine Term Structure) \nomenclature{ATS}{Affine Term Structure}
-if: 
+A short rate model $r = (r(t))_{t\geq 0}$ is said to provide an ATS (Affine Term Structure) \nomenclature{ATS}{Affine Term Structure}
+if the Zero Coupon Bond price $P(t,T)$, can be expressed as:
 \begin{align*}
 P(t,T) &= \exp\left(
 -A(t,T)-B(t,T)r(t)
 \right)    
 \end{align*}
-Where $A, B$ are smooth $C^{1}$-functions, i.e: continuous and have continuous first derivatives.  
+Where $A, B$ are smooth $C^{1}$-functions, meaning that they are continuous and have continuous first derivatives.
 \end{definition}
 
 \begin{proposition}[\textbf{\cite{filipovic2009term}}]
 \label{prop: condition_on_r_ATS}
-The short rate model $r$ provides an ATS if and only if the diffusion and drift terms take the form: 
+The short rate model $r = (r(t))_{t\geq 0}$ provides an ATS if and only if the diffusion and drift terms take the form: 
 \begin{align*}
 \sigma^{2}(t,r(t)) &= a(t) + \alpha(t)r(t) \\ 
 b(t,r(t)) &= b(t) + \beta(t)r(t)
@@ -356,20 +355,8 @@ r(T) &= e^{-\alpha(T-t)}r(t) + m[1-e^{-\alpha(T-t)}]
 Furthermore, the Vasicek model belongs to the class of Affine term structures where: 
 
 \begin{align*}
-A(t,T) &= -\frac{m}{\alpha}\left[
-1-e^{-\alpha(T-t)}
-\right] - m(T-t) - 
-\frac{1}{2}
-\left(
-\frac{\sigma}{\alpha}
-\right)^{2}
-\int_{t}^{T}
-\left[
-e^{-\alpha(T-u)}-1
-\right]^{2}du \\ 
-B(t,T) &= -\frac{1}{\alpha}\left[
-e^{-\alpha(T-t)}-1
-\right]
+B(t,T) &= \frac{1}{\alpha}\left[1-e^{-\alpha(T-t)}\right] \\ 
+A(t,T) &= -mB(t,T) - m(T-t) - \frac{\sigma^{2}}{2}\int_{t}^{T}B^{2}(u,T)du
 \end{align*}
 \end{proposition}
 
@@ -379,7 +366,7 @@ e^{-\alpha(T-t)}-1
 \newpage
 
 \begin{proof}
-This follows from applying Ito's Formula (\ref{thm: Ito's_formula}) by using  $g(t,x) = e^{\alpha t}x$: 
+This follows from applying Ito's Formula on $g(t,x) = e^{\alpha t}x$: 
 \begin{align*}
 d[e^{\alpha t}r(t)] &= 
 \alpha e^{\alpha t}r(t)dt + e^{\alpha t}dr(t) \\ 
@@ -651,7 +638,7 @@ r(t) - \int_{t}^{T}\alpha(t,u)du + \frac{1}{2}
 \end{lemma} 
 
 \begin{proof}
-Consider $d=1$ for simplicity,
+For simplicity, consider $d=1$,
 we will use Ito's formula on $e^{x}$ with $x = \ln{P(t,T)}$: 
 \begin{align*}
 dP(t,T) &= P(t,T)d\ln{P(t,T)} + \frac{1}{2}P(t,T)[d\ln{P(t,T)}]^{2} \\ 
@@ -1188,10 +1175,10 @@ Typically LIBOR has the following Tenors:
     \item 12 Months
 \end{itemize}
 
-The rates are calculated by a trimmed average provided by Panel Banks, meaning that they are based upon expert judgment. Let's say that there were 16 Panel Banks: $B_{1}, \dots, B_{16}$. Each Bank $B_{i}$ would submit a borrowing rate $r_{i}$ to Intercontinental Exchange Benchmark Administration (ICE) \nomenclature{ICE}{Intercontinental Exchange Benchmark Administration}. It would then be sorted, and then one would cut the highest $25\%$, and the lowest $25\%$. For further information, one can consult \cite{ICE_IBA}.  
+The rates are calculated by a trimmed average provided by Panel Banks, meaning they are based on expert judgment. Let's say that there were 16 Panel Banks: $B_{1}, \dots, B_{16}$. Each Bank $B_{i}$ would submit a borrowing rate $r_{i}$ to Intercontinental Exchange Benchmark Administration (ICE) \nomenclature{ICE}{Intercontinental Exchange Benchmark Administration}. It would then be sorted, and then one would cut the highest $25\%$, and the lowest $25\%$. For further information, one can consult \cite{ICE_IBA}.  
 
 \begin{example}
-Assume that the data below are provided by the Panel Banks for a 3-month tenor. First one collects the data, then sort it in ascending order, followed by trimming the data: 
+Assume that the Panel Banks provide the data below for a 3-month tenor. First, one collects the data, then sort it in ascending order, followed by trimming the data: 
 \begin{align*}
 \begin{bmatrix}
 0.043 & 0.056 & 0.049 & 0.050\\
@@ -1213,7 +1200,7 @@ Assume that the data below are provided by the Panel Banks for a 3-month tenor. 
 \end{bmatrix} 
 \end{align*}
 
-After the data is trimmed one takes the mean: 
+After the data is trimmed, one takes the mean: 
 \begin{align*}
 \frac{1}{8}\left(
 0.042 + 0.043 + 0.044 + 0.045 + 0.046 + 0.049 + 0.050
@@ -1221,13 +1208,13 @@ After the data is trimmed one takes the mean:
 &= 
 0.04550
 \end{align*}
-One also has conventions for the number of decimals, but these are currency specific. 
+One also has conventions for the number of decimals, which are currency specific. 
 \end{example}
 
 
 \newpage 
 
-In a \textbf{Market model} one is interested in modelling only the relevant $T$'s, meaning that one finds a model for each $T_{i}$. In the market, there are essentially three types of interest rate derivatives: \textbf{caps}, \textbf{floors} and 
+In a \textbf{Market model}, one is interested in modelling only the relevant $T$'s, meaning that one finds a model for each $T_{i}$. In the market, there are essentially three types of interest rate derivatives: \textbf{caps}, \textbf{floors} and 
 \textbf{swaptions}. By swaption, we mean a call/put on a swap.
 
 \begin{definition}[\textbf{LIBOR-Caplet}]
@@ -1472,7 +1459,7 @@ d_{\pm}(T_{m}, T_{n-1}) &=
 \frac{1}{2}\int_{T_{m}}^{T_{n-1}}\norm{\lambda(s,T_{n-1})}^{2}ds
 }{
 \left(
-\int_{T_{m}}^{T_{n-1}}\norm{\lambda(s,T_{n-1}}^{2}ds
+\int_{T_{m}}^{T_{n-1}}\norm{\lambda(s,T_{n-1})}^{2}ds
 \right)^{1/2}
 }
 \end{align*}

@@ -1,9 +1,10 @@
 \chapter{Numerical Simulation}
+\label{chp_Num_sim}
 
 \section{Introduction}
-In order to get a grasp of the ESG-swap rate process $\kappa_{t}^{ESG}$, we need a model for the ESG-risk score process of the company. It could be logical with a downward trending score since the company will have the incentive to enter such an agreement. 
+To grasp the ESG-swap rate process $\kappa_{t}^{ESG}$, we need a model for the ESG-risk score process of the company. It could be logical with a downward trending score since the company will be incentivised to enter such an agreement. 
 \\~\\
-There are many possible alternatives to model such a model, we impose the following model for the \textbf{ESG-risk score}:
+There are many possible alternatives to model such a model, so we impose the following model for the \textbf{ESG-risk score}:
 \[
 X(t) = 100\exp(-Z(t))
 \]
@@ -14,7 +15,7 @@ given by:
 \begin{align*}
 dZ(t) &= -\beta Z(t)dt + \sigma dW^{Q}(t) + dI^{Q}(t)    
 \end{align*} 
-where: 
+Where: 
 \begin{align*}
 I^{Q}(t) &= \sum_{k=1}^{N(t)}J_{k}, \;\; J_{k}\sim Exp(\mu),\;\; N(t) \sim Pois(\lambda t)    
 \end{align*} 
@@ -86,7 +87,7 @@ iu\int_{0}^{t}e^{-\beta(t-s)}dI^{Q}(s)
 \right]
 \end{align*}
 
-The normality of deterministic Ito-integrals gives us:
+The normality of deterministic Ito-integrals gives us the following:
 \begin{align*}
 iu\int_{0}^{t}e^{-\beta(t-s)}dW^{Q}(s) &\sim \mathcal{N}\left(
 0, -u^{2}\int_{0}^{t}e^{-2\beta(t-s)}ds
