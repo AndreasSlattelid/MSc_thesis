@@ -109,12 +109,15 @@ We use the following notation for the simple forward rate:
 \begin{align*}
 F(t,T) := F(t,t,T) &= \frac{1}{T-t}\left(
 \frac{1}{P(t,T)} - 1
-\right) \\ 
-&\Downarrow \\ 
+\right)
+\end{align*}
+
+This means that we can write:
+\begin{align*}
 F(T_{i-1},T_{i}) &= \frac{1}{T_{i}-T_{i-1}}\left(
 \frac{1}{P(T_{i-1}, T_{i})} - 1
-\right) \\ 
-&= 
+\right) 
+= 
 \frac{1}{\delta}\left(
 \frac{1}{P(T_{i-1}, T_{i})} - 1
 \right)
@@ -307,7 +310,7 @@ dr(t) = b(t,r(t))dt + \sigma(t,r(t))dW^{Q}(t), \; (Q)
 \end{align}
 
 Assume that $b$ and $\sigma$ are such that they satisfy the
-necessary conditions given in Theorem \ref{thm: SDE_sufficiency}, meaning that a solution exists and are strongly unique. 
+necessary conditions given in Theorem \ref{thm: SDE_sufficiency}, meaning that a solution exists and is strongly unique. 
 
 \begin{definition}[\textbf{Affine Term Structure}]
 A short rate model $r = (r(t))_{t\geq 0}$ is said to provide an ATS (Affine Term Structure) \nomenclature{ATS}{Affine Term Structure}
@@ -841,7 +844,7 @@ In the market we can only observe: $P(0,T_{1}), \dots, P(0, T_{n})$ for maturiti
 Typical methods to estimate these term structures are regressions and interpolation methods. We will look at parametric estimation methods, in particular, exponential-polynomial families as these methods are often used by central banks. For instance, the Norwegian Central Bank uses the Svensson method \cite{NB_ZCB}.
 
 \subsection{Exponential-Polynomial Families}
-Let $P_{1}, \dots, P_{n}$ be the observed ZCB's with maturities $T_{1}, \dots, T_{n}$, the goal will be the followining: 
+Let $P_{1}, \dots, P_{n}$ be the observed ZCB's with maturities $T_{1}, \dots, T_{n}$, the goal will be the following: 
 \[
 \min\limits_{\theta}|P_{\theta}(T_{i}) - P_{i}|^{2}
 \]

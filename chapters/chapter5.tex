@@ -44,9 +44,9 @@ Where:
     \label{fig: Overnight_SOFR_rates}
 \end{figure}
 
-This Figure shows the overnight SOFR rates from April 1, 2018 until February 21, 2023, with corresponding traded volumes. 
+This Figure shows the overnight SOFR rates from April 1, 2018, until February 21, 2023, with corresponding traded volumes. 
 \\~\\
-We see that there was a spike in September 2019, this was related to quarterly corporate tax payments due September 16. This led to a demand-supply mismatch  \cite{FederalReserve2019}
+We see that there was a spike in September 2019. This was related to quarterly corporate tax payments due September 16. This led to a demand-supply mismatch  \cite{FederalReserve2019}
 \\~\\ 
 We also see the effect of the pandemic with falling rates around March 2020, until now, the rising rates. 
 
@@ -91,7 +91,7 @@ Further specifications on how CME quotes 3M-SOFR futures can be found in  \cite{
 
 \newpage 
 
-When dealing with SOFR futures, one distinguishes between 1-month- and 3-month futures, as they are not calculated in the same way:
+When dealing with SOFR futures, one distinguishes between 1-month- and 3-month futures, as they are not based upon the same calculation methodology:
 
 \begin{definition}[\textbf{SOFR 1-month arithmetic average \cite{Skov_2020}}]
 The 1-month \nomenclature{1M}{1-month}
@@ -806,7 +806,7 @@ X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \subsection{Affine Term Structure-setting}
 
 \begin{proposition}
-Consider the above setting, and let $r = (r_{t})_{t\geq 0}$ be a model that provides ATS, then 
+Consider the above setting, and let $r = (r(t))_{t\geq 0}$ be a model that provides ATS, then 
 \begin{align*}
 \argmin\limits_{a_{t} \in \R}&\E_{Q}\left[
 \left(
@@ -835,7 +835,7 @@ g(s) &= \exp\left(
 \end{proposition}
 
 \begin{proof}
-Consider the above setting, but now we assume that $r = (r_{t})_{t\geq 0}$ is a model that provides ATS (Affine Term Structure), now as described in proposition \ref{prop: condition_on_r_ATS}, we have that the dynamics of $r$ can be written as: 
+Consider the above setting, but now we assume that $r = (r(t))_{t\geq 0}$ is a model that provides ATS (Affine Term Structure), now as described in proposition \ref{prop: condition_on_r_ATS}, we have that the dynamics of $r$ can be written as: 
 \begin{align*}
 dr(t) &= [b(t) + \beta(t)r(t)]dt + \sqrt{a(t) + \alpha(t)r(t)}dW^{Q}(t)
 \end{align*}
@@ -935,7 +935,7 @@ This is an ordinary differential equation, with the explicit solution given by:
 \end{proof}
 
 
-\subsection{Hedging with available instruments in the market}
+\subsection{Bounding the hedge with available instruments in the market}
 
 We now denote: 
 \begin{align*}
@@ -1519,5 +1519,27 @@ Here we see the $ER_{2}(0)$ distribution under the assumption that $M$ is invert
 \]
 We see that the mean of $ER_{2}^{M_{inv}}(0)$, $\overline{ER_{2}^{M_{inv}}(0)} = 0$, which then again indicated that on average taking the above position at time $t=0$ would be a good hedge. 
 \\~\\ 
+To illustrate this a bit further, we can take a look at the error distribution where one naively chooses a more naively "rollover"-strategy in 1M-SOFR futures, i.e. the following weighting:  
+\[
+(\hat{a}_{0}, \hat{b}_{0}, \hat{c}_{0})
+= 
+(1, 1, 1)
+\]
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{figures/SOFR/ER_2(0)_111.PNG}
+    \caption{Simulation of $ER_{2}^{(1,1,1)}(0)$}
+    \label{fig: ER_2_(0)_111}
+\end{figure}
+
+We see that for all our simulations, the error distributions seem to be normally distributed. This is not surprising as in each simulation, and we take a normal random variable: $\int_{S}^{T}r(u)du$ as described in  Equation \ref{eq: Vasicek_closed_expr_3M_SOFR} p.\pageref{eq: Vasicek_closed_expr_3M_SOFR}, and subtract a constant/linear combination of constants. This is a new, normally distributed random variable with an altered mean. 
+We can also address the normality via a QQplot:
 
 
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=10cm]{figures/SOFR/QQ_plot_ER_1(0).PNG}
+    \caption{(Q-Q) plot of $ER_{1}(0)$}
+    \label{fig: ER_1(0)_QQ_plt}
+\end{figure}

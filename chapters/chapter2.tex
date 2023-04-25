@@ -222,7 +222,7 @@ If $1 \leq p < \infty$ and $(X,\F, \mu)$ is a measure space, we define:
 \begin{align*}
 \mathcal{L}^{p}(X,\F, \mu) = 
 \{
-f:X \to \overline{C}: f\:\text{is measurable and}
+f:X \to \overline{\mathbbm{C}}: f\:\text{is measurable and}
 \int |f|^{p}d\mu < \infty
 \}
 \end{align*}
@@ -261,7 +261,7 @@ L^{p}(X,\F, \mu) := \{[f]: f\in \mathcal{L}^{p}\}
 
 \section{Probability theory}
 
-Most of the results in this section are gathered from \cite{walsh2012knowing}, let $\F$ be a $\sigma$-algebra and $\Omega$ let denote the sample space. 
+Most of the results in this section are gathered from \cite{walsh2012knowing}, let $\F$ be a $\sigma$-algebra and let $\Omega$ denote the sample space. 
 
 \begin{definition}[\textbf{Probability measure}]
 A probability measure $P$ on $(\Omega, \F)$ is a function $P:\F \to [0,1]$ such that: 
@@ -309,7 +309,7 @@ If $X$ is integrable, we define the expectation as:
 \]
 \end{definition}
 
-In order to define the expectation of a general random variable $X$ one also consider sequences of non-negative simple functions, and decomposes the expectation in two positive random variables, i.e. $X = X^{+} - X_{-}$ whit $X^{+} = \max(X,0)$ and $X^{-} = \max(-X,0)$, and define the expectation as: 
+In order to define the expectation of a general random variable $X$ one also consider sequences of non-negative simple functions, and decomposes the expectation in two positive random variables, i.e. $X = X^{+} - X^{-}$ whit $X^{+} = \max(X,0)$ and $X^{-} = \max(-X,0)$, and define the expectation as: 
 \[
 \E[X] = \E[X^{+}] - \E[X^{-}]
 \]
@@ -531,7 +531,42 @@ i.e.
 
 \newpage 
 \centerline{\textbf{Girsanov's theorem, Equivalent martingale measures and Bayes theorem}}
-\text{}\newline
+
+\begin{definition}[\textbf{Absolutely continuous measures}]
+\label{def: absolutely_cont_measures}
+Let $\mu$ and $\nu$ be two measures defined on $(X, \F)$, and define: 
+\begin{align*}
+\mathcal{N}_{\mu} &= \{A \in \F: \mu(A) = 0\} \\ 
+\mathcal{N}_{\nu} &= \{A \in \F: \nu(A) = 0\} 
+\end{align*} 
+We say that $\nu$ is absolutely continuous w.r.t $\mu$ iff $\mathcal{N}_{\mu} \subseteq \mathcal{N}_{\nu}$ and we write $\nu \ll \mu$, i.e $\mu(A) = 0 \implies \nu(A) = 0$
+\end{definition}
+
+\begin{definition}[\textbf{Equivalent measures}]
+Consider the situation as described in Definition \ref{def: absolutely_cont_measures}, we say that $\nu$ and $\mu$ are equivalent iff $\mathcal{N}_{\mu} \subseteq \mathcal{N}_{\nu}$ and 
+$\mathcal{N}_{\nu} \subseteq \mathcal{N}_{\mu}$ i.e.  $\mathcal{N}_{\mu}= \mathcal{N}_{\nu}$
+and we write $\nu \sim \mu$, i.e: 
+$$
+\mu(A) = 0 \iff \nu(A) = 0
+$$
+\end{definition}
+
+\begin{theorem}[\textbf{Radon Nikodym derivative}]
+Let $(X, \F, \mu)$ be a $\sigma$-finite measure space. Let $\nu$ be a $\sigma$-finite measure on $(X, \F)$ such that $\nu \sim \mu$. Then there exists a unique non-negative function $f$ on $X$ which is measurable w.r.t $\F$ for which: 
+\begin{align*}
+\nu(E) := \int_{E}fd\mu, \; \forall  E\in \F    
+\end{align*}
+
+$f$ is unique in the sense that there is another non-negative measurable function $g$ such that:
+\[
+\nu(E) = \int_{E}gd\mu \implies f=g,\; \mu-\text{a.e}
+\]
+One usually denotes: 
+\[
+f = \frac{d\nu}{d\mu}
+\]
+\end{theorem} 
+
 Let $W = (W_{t})_{t\in [0,T]} \in \R^{m}$ denote a Brownian motion on $(\Omega, \F, (\F_{t})_{t\in [0,T]}, P)$, furthermore let $\phi$ be an $\R^{m}$-valued process (also valid for $\C^{m}$) with \\
 $\phi \in M^{2}_{loc}([0,T])$, the process we will be interested in looks like: 
 \begin{align}
@@ -544,30 +579,32 @@ Z_{t} := \mathcal{E}_{t}\left(
 \right)
 \end{align}
 
-\begin{definition}[\textbf{Absolutely continuous probability measures}]
-\label{def: absolutely_cont_measures}
-Let $P$ and $Q$ be two probability measures on $(\Omega, \F)$, and define: 
-\begin{align*}
-\mathcal{N}_{P} &= \{A \in \F: P(A) = 0\} \\ 
-\mathcal{N}_{Q} &= \{A \in \F: Q(A) = 0\} 
-\end{align*} 
-We say that $Q$ is absolutely continuous w.r.t $P$ iff $\mathcal{N}_{P} \subseteq \mathcal{N}_{Q}$ and we write $Q \ll P$, i.e $P(A) = 0 \implies Q(A)$
-\end{definition}
-
-\begin{definition}[\textbf{Equivalent probability measures}]
-Consider the situation described in definition \ref{def: absolutely_cont_measures}, we say that $Q$ and $P$ are equivalent iff $\mathcal{N}_{P} \subseteq \mathcal{N}_{Q}$ and 
-$\mathcal{N}_{Q} \subseteq \mathcal{N}_{P}$ i.e.  $\mathcal{N}_{P}= \mathcal{N}_{Q}$
-and we write $Q\sim P$, i.e: 
-$$
-P(A) = 0 \iff Q(A) = 0
-$$
-\end{definition}
-
-\begin{theorem}[\textbf{Radon Nikodym derivative}]
-Let $Q\sim P$ and define $Q(A) = \int_{A}Z_{T}dP$, where $A \in \F$ and $Z$ is defined as in equation \ref{eq: Dodeans_exponential}, furthermore require that $\E[Z_{T}] = 1$, then $Q$ defines a new probability measure on $(\Omega, \F)$, and $$
+\begin{proposition}[\textbf{Application of Radon-Nikodym derivative}]
+Let $Q\sim P$ and define 
+$Q(A) := \E[Z_{T}\mathbbm{1}_{A}] = \int_{A}Z_{T}dP$, where $A \in \F$ and $Z$ is defined as in Equation \ref{eq: Dodeans_exponential}, furthermore require that $\E[Z_{T}] = 1$, then $Q$ defines a new probability measure on $(\Omega, \F)$, and $$
 \frac{dQ}{dP}\bigg{|}_{\F_{T}} = Z_{T}
-$$     
-\end{theorem} 
+$$
+\end{proposition}
+
+\begin{proof}
+Let $\{A_{n}\}_{n\in \N}$ be a sequence of disjoint sets in $\F$, we then have that $Q$ defines a measure as: 
+
+\begin{align*}
+Q(\emptyset) &= \int_{\emptyset}Z_{T}dP = 0 \\
+1 &= \E[Z_{T}] = \int_{\Omega}Z_{T}dP = Q(\Omega)\\ 
+Q\left(
+\bigcup_{n\in \N}A_{n}
+\right)
+&= 
+\int_{\bigcup_{n\in \N}A_{n}}Z_{T}dP
+= \int_{\Omega}Z_{T}\mathbbm{1}_{\bigcup_{n\in \N}A_{n}}dP
+= \sum_{n\in \N}Q(A_{n})
+\end{align*}
+As $Z = (Z_{t})_{t\geq 0}$ by construction is measurable as well as non-negative, it follows from Radon-Nikodym theorem that: 
+\[
+\frac{dQ}{dP}\bigg{|}_{\F_{T}} = Z_{T}
+\]
+\end{proof}
 
 \begin{theorem}[\textbf{Girsanov's theorem \cite{baldi2017stochastic}}]
 \label{thm: Girsanov's_thm}
@@ -580,7 +617,6 @@ defines a $(Q,\F)$-Brownian motion on $[0,T]$
 
 Often what makes Girsanov's theorem hard to use is the requirement of $Z$ being a martingale under $P$, therefore the next theorem is quite useful: 
 
-\newpage 
 \begin{theorem}[\textbf{\cite{baldi2017stochastic}}]
 \label{thm: Novikov_cond_and_implications}
 Let $\phi \in M^{2}_{loc}([0,T])$, define $M_{t} = \int_{0}^{t}\phi_{s}dW_{s}, t \in [0,T]$ with $\langle M \rangle_{t} = \int_{0}^{t}\phi^{2}_{s}ds$, and let: 
@@ -616,6 +652,8 @@ Let $\G$ be a sigma-algebra with $\G \subseteq \F$, then:
 }\;\; \text{a.s}
 \end{align*}
 \end{theorem}
+
+\newpage 
 
 \centerline{\textbf{Stochastic Differential Equations}}
 \begin{definition}[\textbf{1-dimensional Ito process}]
@@ -668,6 +706,9 @@ M_{t} &= \E[M_{T}] + \int_{0}^{T}H_{s}dW_{s}
 
 Let $b(t,x) = (b_{i}(t,x))_{1\leq i \leq m}$ and
 $\sigma(t,x) = (\sigma(t,x)_{ij})_{\substack{1\leq i\leq m\\1\leq j\leq d}}$ be measurable functions on $[0,T]\times \R^{m}$
+
+\newpage 
+
 \begin{definition}[\textbf{\cite{baldi2017stochastic}}]
 Let $X = (X_{t})_{t\in [u,T]}$ be a stochastic process defined on $(\Omega, \F, (\F_{t})_{t\in [0,T]}, P)$, it is said to be a solution of the SDE \nomenclature{SDE}{Stochastic Differential Equation} (Stochastic differential equation)
 \begin{align*}
@@ -697,7 +738,6 @@ X^{1} \stackrel{d}{=} X^{2}
 \]
 \end{definition}
 
-\newpage 
 \begin{theorem}[\textbf{\cite{baldi2017stochastic}}]
 \label{thm: SDE_sufficiency}
 Let $X = (X_{t})_{t\in [u,T]}$ be a stochastic process defined on $(\Omega, \F, (\F)_{t\in [0,T]}, P)$, furthermore let $\eta \in L^{2}(\Omega, \F, P)$ be $\F_{u}$-measurable and consider the SDE:
