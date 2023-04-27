@@ -3,7 +3,6 @@ using Distributions
 using Statistics
 
 using LinearAlgebra
-using Queryverse
 using DataFrames
 
 using Combinatorics
@@ -264,6 +263,14 @@ d = 0.005
 kappa_t_ZCB = 0.070
 
 function kappa_t_ESG(i, m)
+    " 
+    The ESG swap rate process 
+    Args: 
+        i (Int64): corresponds to T_{i}
+        m (Matrix): matrix showing wheter or not criteria were met at relevant T_{i}'s
+    Returns: 
+        The ESG swap rate process in ZCB case 
+    "
     ans = kappa_t_ZCB-d*D(i,m)
     return round(ans, digits = 3)
 end

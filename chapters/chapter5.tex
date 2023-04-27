@@ -17,7 +17,7 @@ This means that SOFR is backwards looking as it is based upon overnight transact
 
 \begin{enumerate}
     \item Calculation Method: LIBOR is calculated based on submissions from Panel Banks. SOFR is based on the overnight repo market. 
-    \item Tenors: LIBOR has multiple tenors, while SOFR has one: overnight. Meaning that LIBOR is forward-looking and SOFR is backwards-looking. 
+    \item Tenors: LIBOR has multiple tenors, while SOFR has one: overnight. Meaning that LIBOR is forward-looking while SOFR is backwards-looking. 
     \item Validity: Following the LIBOR scandal, one has seen that LIBOR has been more prone to manipulation, as one can give higher or lower rate submissions altering the trimmed mean. SOFR is transaction based, meaning that it is harder to manipulate. 
 \end{enumerate}
 
@@ -36,7 +36,101 @@ Where:
 \end{itemize}
 \end{definition}
 
+\begin{comment}
+\begin{definition}[\textbf{SOFR 1-month arithmetic average \cite{Skov_2020}}]
+The 1-month \nomenclature{1M}{1-month}
+SOFR arithmetic average of the daily reference rate observed over the period $[S,T]$ is defined as: 
+\[
+R^{1M}(S,T) = \frac{1}{N}\sum_{i=1}^{N}R_{d_{i}}(T_{i})
+\]
+Where:
+\begin{itemize}[leftmargin=*]
+    \item $N$: total number of days in the month
+    \item $S\leq T_{1} \leq \dots \leq T_{N} \leq T$ 
+\end{itemize}
+\end{definition}
 
+\begin{definition}[\textbf{SOFR 3-month geometric average
+\cite{Skov_2020}}]
+The 3-month \nomenclature{3M}{3-months}
+SOFR geometric average of the daily reference rate observed over the period $[S,T]$ is defined as: 
+\[
+R^{3M}(S,T) = \frac{1}{T-S}\left(
+\prod_{i=1}^{N}(1+d_{i}R_{d_{i}}(T_{i})) - 1
+\right)
+\]
+\end{definition}
+\end{comment}
+
+\begin{definition}[\textbf{Backward-looking compounding SOFR-average \cite{Skov_2020}}]
+\label{def: backward_looking_SOFR_avg}
+The backwards-looking compounded average over the period $[S,T]$ is defined as: 
+\begin{align*}
+R^{B}(S,T) &= \frac{1}{T-S}\left(
+\prod_{i=1}^{N}[1+d_{i}R_{d_{i}}(T_{i})] - 1
+\right)    
+\end{align*}
+\begin{itemize}[leftmargin=*]
+    \item $N$: total number of days in the applicable period.
+    \item $S\leq T_{1} \leq \dots \leq T_{N} \leq T$ 
+\end{itemize}
+\end{definition}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[height = 8cm, width=16cm]{figures/SOFR/ON_1M_3M_SOFR.PNG}
+    \caption{O/N, 1M and 3M SOFR-rates}
+    \label{fig: ON_1M_3M_SOFR}
+\end{figure}
+
+This figure is collected from \cite{FredSOFR} 
+and displays the following SOFR rates:
+green: O/N, blue: 1M-average and red: 3M-average. Here the 1M-average and 3M-average are calculated according to Definition \ref{def: backward_looking_SOFR_avg}. 
+\\~\\
+If we look at the green O/N rates, we see a spike in September 2019.  This was related to quarterly corporate tax payments due September 16. This led to a demand-supply mismatch  \cite{FederalReserve2019}
+
+\newpage 
+As discussed in \cite{Skov_2020}, one has that $R^{B}(S,T)$ is $\F_{T}$-measurable. This is unsuitable as it does not incorporate market expectations about future rates. This leads to the following Definition: 
+
+\begin{definition}[\textbf{Forward-looking term-SOFR rate \cite{Skov_2020}}]
+The forward-looking term SOFR rate over the period $[S,T]$ is defined as: 
+\begin{align*}
+R^{F}(S,T) &= \frac{1}{T-S}\left[
+\frac{1}{P(S,T)} -1
+\right]    
+\end{align*}
+\end{definition}
+
+We see that the term SOFR rate is just a simple forward rate evaluated at time $t=S$ (See Definition \ref{def: Simple_forward_rate}, i.e $R^{F}(S,T) = F(S,S,T)$). 
+
+\begin{proposition}[\textbf{\cite{Skov_2020}}]
+We have the following relationship between the forward looking term SOFR rate $R^{F}(S,T)$ and the backward-looking SOFR rate $R^{B}(S,T)$: 
+\begin{align*}
+R^{F}(S,T) &= \E_{Q^{T}}[R^{B}(S,T)|\F_{S}]    
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+TO BE HONEST I DONT FULLY UNDERSTAND, WOULD LIKE SOME HELP. 
+\end{proof}
+
+
+As mentioned earlier we have that SOFR is backward looking, and cannot give any indications beyond 24-hours. However the CME group publishes daily a set of forward looking interest rate estimates, called CME Term SOFR Reference Rates Benchmarks. They use SOFR futures for calculating the term rates \cite{CMEGroup}.
+
+The following tenors are published:
+\begin{itemize}[leftmargin=*]
+    \item 1M
+    \item 3M
+    \item 6M
+    \item 12M
+\end{itemize}
+
+
+
+
+
+\newpage 
+\begin{comment}
 \begin{figure}[htp]
     \centering
     \includegraphics[height = 7cm, width=14cm]{figures/SOFR/overnight_SOFR_Volume.JPG}
@@ -44,12 +138,14 @@ Where:
     \label{fig: Overnight_SOFR_rates}
 \end{figure}
 
-This Figure shows the overnight SOFR rates from April 1, 2018, until February 21, 2023, with corresponding traded volumes. 
+
+
+This Figure shows the overnight SOFR rates from April 1, 2018, until February 21, 2023, with corresponding traded volumes.
 \\~\\
 We see that there was a spike in September 2019. This was related to quarterly corporate tax payments due September 16. This led to a demand-supply mismatch  \cite{FederalReserve2019}
 \\~\\ 
 We also see the effect of the pandemic with falling rates around March 2020, until now, the rising rates. 
-
+\end{comment}
 
 \newpage 
 
@@ -106,6 +202,8 @@ Where:
 \end{itemize}
 \end{definition}
 
+
+
 \begin{definition}[\textbf{SOFR 3-month geometric average}]
 The 3-month \nomenclature{3M}{3-months}
 SOFR geometric average of the daily reference rate observed over the period $[S,T]$ is defined as: 
@@ -115,6 +213,7 @@ R^{3M}(S,T) = \frac{1}{T-S}\left(
 \right)
 \]
 \end{definition}
+
 
 
 As futures contracts are free to enter, we get that: 
@@ -727,7 +826,7 @@ d\Phi(d) + \varphi(d)
 
 \newpage 
 
-\section{SOFR hedges}
+\section{Hedges on SOFR-futures}
 For SOFR futures we have that there are two approaches for pricing namely arithmetic (1M) and geometric (3M), in this section, we will look at some relationships between them.
 
 

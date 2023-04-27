@@ -1,5 +1,73 @@
 \chapter{Discussion}
+In the SOFR studies, we examined the implications of different underlying calculation methods for the SOFR futures. We studied a 3M-arithmetic product: 
+\[
+X^{3M_{A}}(S,T) = \frac{1}{T-S}\int_{S}^{T}r_{u}du
+\]
+Against taking  a $\hat{a}_{t}-f^{3M}(t,S,T)$ 3M-SOFR futures position vs \\ 
+taking  a $(\hat{a}_{t}, \hat{b}_{t}, \hat{c}_{t})-f^{1M}(t,S,T)$ 1M-SOFR futures position.  
+\\~\\
+For simulation purposes, we chose the following model for the integral of $r = (r(t))_{t\geq 0}$: 
+\begin{align*}
+\int_{S}^{T}r(u)du 
+&= 
+\left(
+\frac{r(t)-m}{\alpha}
+\right)
+\left[
+e^{-\alpha(S-t)} - e^{-\alpha(T-t)}
+\right]
++ m(T-S) 
++ 
+\frac{\sigma}{\alpha}\int_{t}^{T}\Sigma(u,t,S,T)dW^{Q}(u)   
+\end{align*}
+Where: 
+\begin{align*}
+\Sigma(u,t,S,T) &= 
+\left[
+e^{-\alpha(S-u)}-e^{-\alpha(T-u)}
+\right]\mathbbm{1}_{[t,S)}(u) 
++ 
+\left[
+1-e^{-\alpha(T-u)}
+\right]\mathbbm{1}_{[S,T]}(u)
+\end{align*}
 
+It should be mentioned that this may not be a realistic representation of $r$, and should be addressed accordingly. For instance, if one looks at the graph in Figure \ref{fig: Overnight_SOFR_rates}.  
+\\~\\
+From simulations we got $\hat{a}_{t}^{3M} = 0.95$ for the position in 3M-SOFR futures. An ideal hedge here would be if this number equalled $1$. Pretend that instead of hedging $X^{3M_{A}}(S,T)$, we wanted to hedge: 
+\begin{align*}
+X^{3M_{G}}(S,T) := \frac{1}{T-S}\left[
+e^{\int_{S}^{T}r(u)du}-1
+\right]    
+\end{align*}
+
+Namely a geometric average over the period $[S,T]$, then: 
+\begin{align*}
+G(a_{t}) := \argmin\limits_{a_{t} \in \R}\E_{Q}\left[
+\left(
+X^{3M_{G}}(S,T)-a_{t}f^{3M}(t,S,T)
+\right)^{2}
+\bigg{|}\F_{t}
+\right]
+\end{align*}
+
+Now following the same arguments as on p.\pageref{result: optimal_SOFR_hedge_3MA_vs_3GM}, we get: 
+\begin{align*}
+\hat{a}_{t}^{3M} &= \frac{
+\E_{Q}[X^{3M_{G}}(S,T)|\F_{t}]
+}{
+f^{3M}(t,S,T)
+}
+= 
+\frac{
+f^{3M}(t,S,T)
+}{
+f^{3M}(t,S,T)
+} = 1
+\end{align*}
+
+
+\newpage 
 We imposed a model for ESG-linked swaps, which lead to a sequence of fixed rates $\kappa_{t}^{ESG}  = (\kappa_{t}^{ESG}(i))_{i=1}^{n}$ giving a penalty/discount depending on whether the criteria were met or not.
 \\~\\ 
 We remember that the criteria $A_{i}$ looked like the following:
@@ -7,7 +75,7 @@ We remember that the criteria $A_{i}$ looked like the following:
 A_{i} &= \{X_{T_{i}} \leq C_{T_{i}}^{ESG}\}    
 \end{align*}
 
-This means that our ESG-fixed rate process heavily depends upon the OU-process $X(t)$ and the criteria $C_{T_{i}}^{ESG}$. 
+This means that our ESG-fixed rate process heavily depends upon the OU-process $X(t)$ and the criteria $C_{T_{i}}^{ESG}$. It could be hard to establish "reasonable" criteria. In our simulation, we took $C^{ESG} = (C_{T_{i}}^{ESG})_{i\geq 1}$ to be $\F_{0}$-measurable, this could lead to some uncertainty as one would have to "know" even more about the company's development. Maybe a more reasonable approach would be to take $C^{ESG}$ to be $\F_{T_{i-1}}$-measurable. However, this would require a model for $C^{ESG}$, which adds to the complexity again.    
 \\~\\
 In our modelling approach, we modelled directly under $Q$. However, the market one operates in is under $P$, meaning that it would have been suitable with an Esscher-transform of $X(t)$, which then by  Proposition \ref{prop: Esscher_transform_CPP_Q} means that we would still have a CPP, but with altered intensity $\lambda_{Q}$ and jump-size distribution $F_{J}^{Q}(dx)$.
 \\~\\
@@ -21,9 +89,7 @@ J \stackrel{Q}{\sim} Exp(\mu - \theta)
 Furthermore, $X(t)$ is company dependent, meaning that to get reasonable estimates of the necessary parameters included, data accessibility is crucial to impose a suitable model. 
 \\~\\ 
 One should also mention that there are many ESG-rating agencies and different metrics for measuring the ESG score/risk score. Furthermore, these metrics are not necessarily standardized, which adds to the complexity of modelling such a score. 
-
-
-\newpage 
+\\~\\
 If one looks at the expression $K_{n}^{ESG}(\omega)$: 
 \begin{align*}
 K_{n}^{ESG}(\omega) &= 

@@ -476,23 +476,21 @@ using Distributions
 using Statistics
 
 using LinearAlgebra
-using Queryverse
 using DataFrames
 
-using Combinatorics
 using Plots
 
 function create_array(dims::Array{Tuple{Int,Int},1})
     "
     Args: 
         dims: (array(tuple)), vector of tuples, 
-              where each element corresponds to matrix-dimension
+        where each element corresponds to matrix-dimension
     
     Returns:
-        Array of matricies A = (M_1, …, M_n)
+        Array of matrices A = (M_{1}, …, M_{n})
         Each matrix can take on different dimensions, i.e:
         dimensions = [(m,n), (k,l), (r,q), ...] 
-        The array will return matricies of zeros    
+        The array will return an initialization of zero matrices  
     "
     arr = Array{Array{Float64,2}}(undef, length(dims))
 
@@ -510,7 +508,7 @@ function all_perm(xs, n)
         n: (Int), desired length
     
     Returns:
-        generates permutation of elements in vector xs of length n
+        generates the permutation of elements in vector xs of length n
         all_perm([0.0, 1.0], 2) = [0.0, 0.0],[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]
         all_perm([0.0, 1.0], 3) = [0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [1.0, 0.0, 0.0], ...
     "
@@ -526,8 +524,8 @@ function OU_CPP(z0::Float64, beta::Float64, sigma::Float64, lambda::Float64, mu:
         NB! Julia parametrize with 1/mu
 
     Args:    
-        z0: (float) inital value of the process Z(t)
-        beta: (float), mean-retreving parameter
+        z0: (float) initial value of the process Z(t)
+        beta: (float), mean-reverting parameter
         sigma: (float), parameter of Brownian Motion
         lambda: (float), jump intensity of process, N(t)~ Pois(lambda*t) 
         dt: (float) stepsize 
@@ -563,13 +561,13 @@ function OU_CPP(z0::Float64, beta::Float64, sigma::Float64, lambda::Float64, mu:
     return df
 end
 
-function simulation(n_sim, C_ESG, T_end, relevant_times)
+function simulation(n_sim, params, C_ESG, T_end, relevant_times)
     "
     Args:
         n_sim: (int) number of simulations 
+        params: (floar) the paramaters in OU_CPP
         C_ESG: Vector(float) ESG-criteria at time T_{i}            
-        relevant_times: (float) vector of relevant times, 
-        [T1, T2, T3, ...], percentage of year.
+        relevant_times: (float) vector of relevant times, [T1, T2, T3, ...], percentage of year.
     "
 
     "
@@ -580,12 +578,17 @@ function simulation(n_sim, C_ESG, T_end, relevant_times)
              0,1,1; met criteria at T2 and T3
              ...  ] 
     "
-    
+    z0 = params[1]
+    beta = params[2]
+    sigma = params[3]
+    lambda = params[4]
+    mu = params[5]
+
     #store matrix of zeros, row = simulation number, col = agreed observation times
     m = zeros(n_sim, length(relevant_times))
     for i in 1:n_sim
         #df_tmp: general simulation 
-        df_tmp = OU_CPP(-log(20/100), -0.05, 0.0,20.0, 1/150.0,1/360, T_end)
+        df_tmp = OU_CPP(z0, beta, sigma, lambda, mu ,1/360, T_end)
         #get the relevant timepoints as df:
         df_relevant = filter(row -> row.time in relevant_times, df_tmp)
         #get the score:
@@ -659,9 +662,10 @@ function D(i::Int, m::Matrix)
     end
 
     " 
-    E_fails: (vector) Expecation of all linear combinations where: 
+    E_fails: (vector) Expectation of all linear combinations where: 
     E_fails[1]: expectation of all linear combinations giving all fails (1 path)
-    E_fails[2]: expectation of all linear combinaition giving fails, but 1 success (multiple paths)
+    E_fails[2]: the expectation of all linear combinations giving fails, 
+    but 1 success (multiple paths)
     Let i=3: E_fails[1] = E[fff|F_t]
              E_fails[2] = E[ssf|F_t] + E[sfs|F_t] + E[fss|F_t]
     etc.
@@ -696,68 +700,66 @@ function D(i::Int, m::Matrix)
     return(ans)
 end
 
+#nice parameters:
+z0 = -log(20/100)
+beta = -0.05
+sigma = 0.2
+lambda = 20.0
+mu = 1/150
+dt = 1/360
+
+OU_params = [z0, beta, sigma, lambda, mu]
+
+#ESG criteria:
+C_ESG_reas = [17.8, 16.8, 15.8, 14.8]
+C_ESG_wins = [24.0, 23.0, 22.0, 21.0]
+C_ESG_loss = [5.0, 5.0, 5.0, 5.0]
+
+
+T_end = 5.0
 relevant_times = [1.25, 2.25, 3.25, 4.25]
+n_sim = 10^(6)
+n_sim_unreas = 10^(6)
 
-C_ESG = [17.6, 16.6, 15.6, 14.55]
-m = simulation(10^(6), C_ESG, 4.25, relevant_times)
 
+m_reas = simulation(n_sim, OU_params, C_ESG_reas, 5.0, relevant_times)
+m_wins = simulation(n_sim_unreas, OU_params, C_ESG_wins, 5.0, relevant_times)
+m_loss = simulation(n_sim_unreas, OU_params, C_ESG_wins, 5.0, relevant_times)
 
 #----------------------------------------------------------------------------
-#kappa_{t}^{ESG} and kappa_{t}: 
-#Calculating kappa for the above example:
+#kappa_{t}^{ESG} and kappa_{t}^{ZCB}: 
+d = 0.005
+kappa_t_ZCB = 0.070
 
-#constants:
-d = 0.005 #discount
-delta = 1.00  #equidistant distance between T_{i} and T_{i-1}
-num_steps = 1:length(relevant_times) #number of relevant steps
-
-#ZCB:
-P_T0 = 0.995
-P_T1 = 0.985
-P_T2 = 0.975
-P_T3 = 0.965
-P_T4 = 0.955
-
-#vector of ZCB
-P = [P_T0, P_T1, P_T2, P_T3, P_T4] 
-
-#ordinary fixed rate kappa form ZCB-swap
-kappa_t_ZCB = (P[1]-P[length(P)])/(delta*sum(P[2:length(P)]))
-
-#the ESG-Swap process:
-function kappa_t_ESG(i)
-    kappa_t_ZCB-d*D(i,m)
+function kappa_t_ESG(i, m)
+    " 
+    The ESG swap rate process 
+    Args: 
+        i (Int64): corresponds to T_{i}
+        m (Matrix): matrix showing wheter or not criteria were met at relevant T_{i}'s
+    Returns: 
+        The ESG swap rate process in ZCB case 
+    "
+    ans = kappa_t_ZCB-d*D(i,m)
+    return round(ans, digits = 3)
 end
 
-println("(t, kappa_t_ZCB, kappa_t_ESG, C_ESG, relevant_times)")
+#reasonable criteria:
+println("(t, kappa_t_ZCB, kappa_t_ESG, C_ESG_reas, relevant_times)")
 for i in 1:length(relevant_times)
-    println((i, kappa_t_ZCB ,kappa_t_ESG(i), C_ESG, relevant_times))
+    println((i, kappa_t_ZCB ,kappa_t_ESG(i, m_reas), C_ESG_reas, relevant_times))
 end
 
-
-#meet criteria often:  
-C_ESG_2 = [18, 17, 16, 15]
-m2 = simulation(10^(5), C_ESG_2, 4.25, relevant_times)
-
-function kappa_t_ESG_2(i)
-    kappa_t_ZCB-d*D(i,m2)
-end
-
+#wins all the time:
+println("(t, kappa_t_ZCB, kappa_t_ESG, C_ESG_wins, relevant_times)")
 for i in 1:length(relevant_times)
-    println((i, kappa_t_ZCB ,kappa_t_ESG_2(i), C_ESG_2, relevant_times))
+    println((i, kappa_t_ZCB ,kappa_t_ESG(i, m_wins), C_ESG_wins, relevant_times))
 end
 
-#does not meet criteria: 
-C_ESG_3 = 2.5
-
-m3 = simulation(10^(5), C_ESG_3, 4.25, relevant_times)
-
-function kappa_t_ESG_3(i)
-    kappa_t_ZCB-d*D(i,m3)
-end
-
+#loss all the time
+println("(t, kappa_t_ZCB, kappa_t_ESG, C_ESG_loss, relevant_times)")
 for i in 1:length(relevant_times)
-    println((i, kappa_t_ZCB ,kappa_t_ESG_3(i), C_ESG_3, relevant_times))
+    println((i, kappa_t_ZCB ,kappa_t_ESG(i, m_loss), C_ESG_loss, relevant_times))
 end
 
 
