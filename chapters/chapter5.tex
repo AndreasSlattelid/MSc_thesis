@@ -19,6 +19,7 @@ This means that SOFR is backwards looking as it is based upon overnight transact
     \item Calculation Method: LIBOR is calculated based on submissions from Panel Banks. SOFR is based on the overnight repo market. 
     \item Tenors: LIBOR has multiple tenors, while SOFR has one: overnight. Meaning that LIBOR is forward-looking while SOFR is backwards-looking. 
     \item Validity: Following the LIBOR scandal, one has seen that LIBOR has been more prone to manipulation, as one can give higher or lower rate submissions altering the trimmed mean. SOFR is transaction based, meaning that it is harder to manipulate. 
+    \item Secured vs unsecured. Any collateral does not back up the loans that involve LIBOR. In the SOFR situation, the repo transaction is collateralized by a high-quality bond such as a US-Treasury note \cite{huggins2022sofr}. 
 \end{enumerate}
 
 \newpage 
@@ -27,7 +28,7 @@ This means that SOFR is backwards looking as it is based upon overnight transact
 The discrete overnight SOFR is defined as:
 \[
 R_{d_{i}}(T_{i}) = \frac{1}{d_{i}}\left(
-\frac{1}{P(T_{i}, T_{i+1})} - 1
+\frac{1}{P(T_{i}, T_{i}+d_{i})} - 1
 \right)
 \]
 Where:
@@ -101,29 +102,81 @@ R^{F}(S,T) &= \frac{1}{T-S}\left[
 \end{align*}
 \end{definition}
 
-We see that the term SOFR rate is just a simple forward rate evaluated at time $t=S$ (See Definition \ref{def: Simple_forward_rate}, i.e $R^{F}(S,T) = F(S,S,T)$). 
+We see that the term SOFR rate is just a simple forward rate evaluated at time $t=S$ (See Definition \ref{def: Simple_forward_rate} p.\pageref{def: Simple_forward_rate}, i.e $R^{F}(S,T) = F(S,S,T)$). 
 
 \begin{proposition}[\textbf{\cite{Skov_2020}}]
-We have the following relationship between the forward looking term SOFR rate $R^{F}(S,T)$ and the backward-looking SOFR rate $R^{B}(S,T)$: 
+We have the following relationship between the forward-looking term SOFR rate $R^{F}(S,T)$ and the backwards-looking SOFR rate $R^{B}(S,T)$: 
 \begin{align*}
 R^{F}(S,T) &= \E_{Q^{T}}[R^{B}(S,T)|\F_{S}]    
 \end{align*}
 \end{proposition}
 
 \begin{proof}
-TO BE HONEST I DONT FULLY UNDERSTAND, WOULD LIKE SOME HELP. 
+
+If one accepts that: 
+\begin{align*}
+B(t)\E_{Q}\left[
+\frac{R^{F}(S,T)}{B(T)}
+\bigg{|}\F_{t}\right]
+&= 
+B(t)\E_{Q}\left[
+\frac{R^{B}(S,T)}{B(T)}\bigg{|}\F_{t}
+\right]
+\end{align*}
+
+Now by setting $t=S$, we get that $R^{F}(S,T)$ is $\F_{S}$-measurable. Furthermore:
+\[
+\E_{Q}\left[
+\frac{B(S)}{B(T)}\bigg{|}\F_{S}
+\right] = P(S,T)
+\]
+
+This gives the following: 
+\begin{align*}
+R^{F}(S,T) &= \frac{B(S)}{P(S,T)}\E_{Q}\left[
+\frac{R^{B}(S,T)}{B(T)}\bigg{|}\F_{S}
+\right]
+\end{align*} 
+
+We use the Radon-Nikodym derivative as defined in Proposition \ref{prop: Z(T)(t)_Q_martingale}, i.e. 
+\[
+\frac{dQ^{T}}{dQ}\bigg{|}_{\F_{t}} = Z^{T}(t):= \frac{P(t,T)}{P(0,T)B(T)}
+\]
+
+And from Bayes Theorem we get: 
+\begin{align*}
+\E_{Q^{T}}[R^{B}(S,T)|\F_{S}] &= 
+\frac{
+\E_{Q}[R^{B}(S,T)Z^{T}(T)|\F_{S}]
+}{Z^{T}(S)} \\ 
+&= 
+\frac{B(S)}{P(S,T)}\E_{Q}\left[
+\frac{R^{B}(S,T)}{B(T)}\bigg{|}\F_{S}
+\right]
+\end{align*}
+
 \end{proof}
 
 
-As mentioned earlier we have that SOFR is backward looking, and cannot give any indications beyond 24-hours. However the CME group publishes daily a set of forward looking interest rate estimates, called CME Term SOFR Reference Rates Benchmarks. They use SOFR futures for calculating the term rates \cite{CMEGroup}.
+\newpage 
 
-The following tenors are published:
-\begin{itemize}[leftmargin=*]
-    \item 1M
-    \item 3M
-    \item 6M
-    \item 12M
-\end{itemize}
+As mentioned earlier, we have that SOFR is backwards-looking and cannot give any indications beyond 24 hours. However, the CME Group publishes daily a set of forward-looking interest rate estimates called CME Term SOFR Reference Rates Benchmarks. 
+They have the following tenors: 1M, 3M, 6M and 12M. \cite{CMEGroup}
+\\~\\ 
+They use SOFR futures for calculating the term rates \cite{CMEGroup}. Some of the reason why futures were chosen was because of their liquidity: 
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=14cm]{figures/SOFR/SOFR_future_volume.PNG}
+    \caption{Daily volume of SOFR futures, source: \cite{huggins2022sofr} }
+    \label{fig: Volume_SOFR_futures}
+\end{figure}
+
+We see that there are some significant differences between the volumes. This is further discussed in \cite{huggins2022sofr}, where some of the explanation could be of the calculation methods for SOFR futures, i.e. arithmetic and geometric. However, it is also mentioned that there may be a boost in demand for 1M-SOFR futures when LIBOR is fully phased out. 
+
+
+
+
 
 
 
@@ -827,7 +880,7 @@ d\Phi(d) + \varphi(d)
 \newpage 
 
 \section{Hedges on SOFR-futures}
-For SOFR futures we have that there are two approaches for pricing namely arithmetic (1M) and geometric (3M), in this section, we will look at some relationships between them.
+For SOFR futures, we have two pricing approaches: arithmetic (1M) and geometric (3M). In this section, we will look at some relationships between them.
 
 
 \subsection{Hedging 3-month arithmetic with 3-month geometric}
