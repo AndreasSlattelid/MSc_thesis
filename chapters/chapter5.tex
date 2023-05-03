@@ -113,46 +113,145 @@ R^{F}(S,T) &= \E_{Q^{T}}[R^{B}(S,T)|\F_{S}]
 
 \begin{proof}
 
-If one accepts that: 
-\begin{align*}
-B(t)\E_{Q}\left[
-\frac{R^{F}(S,T)}{B(T)}
-\bigg{|}\F_{t}\right]
+We start by calculating the expectation: 
+\begin{align}
+\label{eq: QT_expectation_R_Backwards}
+\E_{Q^{T}}\left[
+R^{B}(S,T)|\F_{S}
+\right]
 &= 
-B(t)\E_{Q}\left[
-\frac{R^{B}(S,T)}{B(T)}\bigg{|}\F_{t}
+\E_{Q^{T}}\left[
+\frac{1}{T-S}\left(
+\prod_{i=1}^{N}[1+d_{i}R_{d_{i}}(T_{i})] - 1
+\right)
+\bigg{|}\F_{S}
+\right] \nonumber \\ 
+&= 
+\frac{1}{T-S}
+\left(\E_{Q^{T}}\left[
+\prod_{i=1}^{N}[1+d_{i}R_{d_{i}}(T_{i})]\bigg{|}\F_{S} 
+\right] - 1
+\right)
+\end{align}
+
+Now: $R_{d_{i}}(T_{i}) = R^{F}(T_{i}, T_{i}+d_{i})$, this means that: 
+\[
+1 + d_{i}R_{d_{i}}(T_{i}) = \frac{1}{P(T_{i}, T_{i} + d_{i})}
+\]
+
+This yields:
+\begin{align*}
+\E_{Q^{T}}\left[
+\prod_{i=1}^{N}[1+d_{i}R_{d_{i}}(T_{i})]\bigg{|}\F_{S} 
+\right]
+&= 
+\E_{Q^{T}}\left[
+\prod_{i=1}^{N}\frac{
+1
+}{
+P(T_{i}, T_{i} + d_{i})
+}
+\bigg{|}\F_{S}
+\right]
+= 
+\E_{Q^{T}}\left[
+\prod_{i=1}^{N}\frac{
+P(T_{i}, T_{i})
+}{
+P(T_{i}, T_{i} + d_{i})
+}
+\bigg{|}\F_{S}
 \right]
 \end{align*}
 
-Now by setting $t=S$, we get that $R^{F}(S,T)$ is $\F_{S}$-measurable. Furthermore:
-\[
-\E_{Q}\left[
-\frac{B(S)}{B(T)}\bigg{|}\F_{S}
-\right] = P(S,T)
-\]
+For simplicity we let $T_{i+1} = T_{i} + d_{i}$, this gives us the following timeline:
 
-This gives the following: 
+
+\begin{tikzpicture}[snake=zigzag, line before snake = 5mm, line after snake = 5mm]
+    % draw horizontal line   
+    \draw (0,0) -- (3,0);
+    \draw[snake] (3,0) -- (6,0);
+    \draw (6,0) -- (9,0);
+
+    % draw vertical lines
+    \foreach \x in {0,3,6,9}
+      \draw (\x cm,3pt) -- (\x cm,-3pt);
+
+    % draw nodes
+    \draw (0,0) node[below=3pt] {$ S = T_{1} $} node[above=3pt] {$   $};
+    \draw (3,0) node[below=3pt] {$ T_{2} $} node[above=3pt] {$  $};
+    \draw (6,0) node[below=3pt] {$ T_{N} $} node[above=3pt] {$  $};
+    \draw (9,0) node[below=3pt] {$ T_{N+1} = T $} node[above=3pt] {$  $};
+  \end{tikzpicture}
+
+
+We use the fact from Lemma \ref{lemma: T-discounted-S-discounted-bond} p.\pageref{lemma: T-discounted-S-discounted-bond}, that for $t\leq S \leq T$:
 \begin{align*}
-R^{F}(S,T) &= \frac{B(S)}{P(S,T)}\E_{Q}\left[
-\frac{R^{B}(S,T)}{B(T)}\bigg{|}\F_{S}
-\right]
-\end{align*} 
+\frac{P(t,S)}{P(t,T)}\;\text{is a $Q^{T}$-martingale}    
+\end{align*}
 
-We use the Radon-Nikodym derivative as defined in Proposition \ref{prop: Z(T)(t)_Q_martingale}, i.e. 
-\[
-\frac{dQ^{T}}{dQ}\bigg{|}_{\F_{t}} = Z^{T}(t):= \frac{P(t,T)}{P(0,T)B(T)}
-\]
+\newpage 
 
-And from Bayes Theorem we get: 
+We iterate backwards and use that, for $i = 2, \dots, N$: 
 \begin{align*}
-\E_{Q^{T}}[R^{B}(S,T)|\F_{S}] &= 
-\frac{
-\E_{Q}[R^{B}(S,T)Z^{T}(T)|\F_{S}]
-}{Z^{T}(S)} \\ 
+\E_{Q^{T}}\left[
+\frac{P(T_{i}, T_{i})}{P(T_{i}, T_{i+1})}
+\bigg{|}\F_{T_{i-1}}\right] 
 &= 
-\frac{B(S)}{P(S,T)}\E_{Q}\left[
-\frac{R^{B}(S,T)}{B(T)}\bigg{|}\F_{S}
+\frac{P(T_{i-1}, T_{i})}{P(T_{i-1}, T_{i+1})}
+\end{align*}
+
+This means that we now have: 
+\begin{align*}
+\E_{Q^{T}}\left[
+\prod_{i=1}^{N}\frac{
+P(T_{i}, T_{i})
+}{
+P(T_{i}, T_{i} + d_{i})
+}
+\bigg{|}\F_{S}
 \right]
+&= 
+\E_{Q^{T}}\left[
+\frac{1}{P(T_{1}, T_{2})}\prod_{i=2}^{N}\frac{P(T_{i-1}, T_{i})}{P(T_{i-1}, T_{i+1})}
+\bigg{|}\F_{S}\right]
+\end{align*}
+
+We will now iterate further backwards and use the tower law until we eventually end up with $T_{1}$ in the 
+denominator and numerator of the product sum, meaning that we end up with: 
+\begin{align*}
+\E_{Q^{T}}\left[
+\prod_{i=1}^{N}\frac{
+P(T_{i}, T_{i})
+}{
+P(T_{i}, T_{i} + d_{i})
+}
+\bigg{|}\F_{S}
+\right]
+&= 
+\E_{Q^{T}}\left[
+\frac{1}{P(T_{1}, T_{2})}
+\prod_{i=2}^{N}\frac{P(T_{1}, T_{i})}{P(T_{1}, T_{i+1})}
+\bigg{|}\F_{S}\right]
+\end{align*}
+
+We note that $T_{1} = S$, meaning that what's inside the expectation is $\F_{S}$-measurable, furthermore: 
+\begin{align*}
+\frac{1}{P(T_{1}, T_{2})}\prod_{i=2}^{N}\frac{P(T_{1}, T_{i})}{P(T_{1}, T_{i+1})}
+&= 
+\frac{1}{P(T_{1}, T_{N+1})} = \frac{1}{P(S,T)}
+\end{align*}
+
+Plugging this into Equation \ref{eq: QT_expectation_R_Backwards}, yields: 
+\begin{align*}
+\E_{Q^{T}}\left[
+R^{B}(S,T)|\F_{S}
+\right] 
+&= 
+\frac{1}{T-S}
+\left(
+\frac{1}{P(S,T)} - 1
+\right) := R^{F}(S,T)
 \end{align*}
 
 \end{proof}
@@ -161,9 +260,9 @@ And from Bayes Theorem we get:
 \newpage 
 
 As mentioned earlier, we have that SOFR is backwards-looking and cannot give any indications beyond 24 hours. However, the CME Group publishes daily a set of forward-looking interest rate estimates called CME Term SOFR Reference Rates Benchmarks. 
-They have the following tenors: 1M, 3M, 6M and 12M. \cite{CMEGroup}
+They have the following tenors: 1M, 3M, 6M and 12M. The calculation method can be found in\cite{CMEGroup}. For modelling SOFR dynamics \cite{gellert2021short} can be consulted.  
 \\~\\ 
-They use SOFR futures for calculating the term rates \cite{CMEGroup}. Some of the reason why futures were chosen was because of their liquidity: 
+They use SOFR futures for calculating the term rates \cite{CMEGroup}. Some of the reasons why futures were chosen were because of their liquidity. This represents the market's view on the rate; furthermore, this does not require expert judgment or a survey of market participants.  
 
 \begin{figure}[htp]
     \centering
