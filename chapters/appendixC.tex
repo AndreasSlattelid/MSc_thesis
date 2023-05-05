@@ -1,0 +1,322 @@
+\chapter{Scripts Chapter 6}
+%New colors defined below
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+%Code listing style named "mystyle"
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour}, commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=2
+}
+
+\section{Numerical Simulation For ESG swap rate}
+
+\begin{minted}{julia}
+using Random 
+using Distributions
+using Statistics
+
+using LinearAlgebra
+using DataFrames
+
+using Plots
+
+function create_array(dims::Array{Tuple{Int,Int},1})
+    "
+    Args: 
+        dims: (array(tuple)), vector of tuples, 
+        where each element corresponds to matrix-dimension
+    
+    Returns:
+        Array of matrices A = (M_{1}, …, M_{n})
+        Each matrix can take on different dimensions, i.e:
+        dimensions = [(m,n), (k,l), (r,q), ...] 
+        The array will return an initialization of zero matrices  
+    "
+    arr = Array{Array{Float64,2}}(undef, length(dims))
+
+    for (i, dim) in enumerate(dims)
+        arr[i] = zeros(dim...)
+    end
+
+    return(arr)
+end
+
+function all_perm(xs, n)
+    " 
+    Args: 
+        xs: (Vector)
+        n: (Int), desired length
+    
+    Returns:
+        generates the permutation of elements in vector xs of length n
+        all_perm([0.0, 1.0], 2) = [0.0, 0.0],[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]
+        all_perm([0.0, 1.0], 3) = [0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [1.0, 0.0, 0.0], ...
+    "
+    return(vec(map(collect, Iterators.product(ntuple(_ -> xs, n)...))))
+end 
+
+
+function OU_CPP(z0::Float64, beta::Float64, sigma::Float64, lambda::Float64, mu::Float64, dt::Float64,T_end::Float64)
+    " 
+    Description:
+        dZ(t) = -beta*Z(t)dt + sigma*dW(t) + dI(t)
+        I(t): I(t) = sum_{i=1}^{N(t)}J_k, J_k ~ Exp(mu), 
+        NB! Julia parametrize with 1/mu
+
+    Args:    
+        z0: (float) initial value of the process Z(t)
+        beta: (float), mean-reverting parameter
+        sigma: (float), parameter of Brownian Motion
+        lambda: (float), jump intensity of process, N(t)~ Pois(lambda*t) 
+        dt: (float) stepsize 
+        T_end: (float), for how long the simulation should go
+     
+    Returns: 
+        X(t) = 100exp(-Z(t))
+    "
+
+    time = collect(0:dt:T_end) 
+    n = length(time)
+
+    #number of jumps from [0,T_end] on each dt: N(dt) ~ Pois(lambda*dt)
+    N = rand(Poisson(lambda*dt),n) 
+
+    #Brownian motion W~N(0,dt) on [0,dt]
+    W = rand(Normal(0,1) ,n)
+
+    #intialising Z(t)
+    z = zeros(n)
+
+    z[1] = z0
+
+    #dZ(t) = -beta*Z(t)dt + sigma*dW(t) + dI(t)
+    for i in 2:n 
+        dI = sum(rand(Exponential(mu), N[i])) - sum(rand(Exponential(mu), N[i-1]))
+        z[i] = z[i-1] - beta*z[i-1]*dt + sigma*W[i]*dt + dI
+    end
+
+    #X(t) = 100exp(-Z(t))
+    x = 100*exp.(-z)
+    df = DataFrame(time = time, score = x)
+    return df
+end
+
+function simulation(n_sim, params, C_ESG, T_end, relevant_times)
+    "
+    Args:
+        n_sim: (int) number of simulations 
+        params: (floar) the paramaters in OU_CPP
+        C_ESG: Vector(float) ESG-criteria at time T_{i}            
+        relevant_times: (float) vector of relevant times, [T1, T2, T3, ...], percentage of year.
+    "
+
+    "
+    retruns:
+        matrix of wheter or not criteria is meet
+        each row in the matrix corresponds to a simulation, i.e
+        m = [0,0,0; did not meet any criteria
+             0,1,1; met criteria at T2 and T3
+             ...  ] 
+    "
+    z0 = params[1]
+    beta = params[2]
+    sigma = params[3]
+    lambda = params[4]
+    mu = params[5]
+
+    #store matrix of zeros, row = simulation number, col = agreed observation times
+    m = zeros(n_sim, length(relevant_times))
+    for i in 1:n_sim
+        #df_tmp: general simulation 
+        df_tmp = OU_CPP(z0, beta, sigma, lambda, mu ,1/360, T_end)
+        #get the relevant timepoints as df:
+        df_relevant = filter(row -> row.time in relevant_times, df_tmp)
+        #get the score:
+        relevant_score = df_relevant.score
+    
+        #check if X_{T_{i}} <= C^_{T_{i}}^{ESG} for T_{1}, ..., T_{n}
+        ESG_criteria = relevant_score .<= C_ESG 
+        ESG_criteria = Float64.(ESG_criteria)
+        
+        #store ESG_criteria:
+        m[i, :] = ESG_criteria
+    end
+
+    return(m)
+end
+
+function D(i::Int, m::Matrix)
+    " 
+    Args:
+        i: (Int), index in sequence 
+        m: (Matrix), matrix containing simulations
+
+    Returns: 
+        D(i)-term in in E_{Q}[K_{i}^{ESG}(omega)|F_{t}]    
+    "
+    if i > size(m)[2]
+        return println("You cannot evaluate D outside of agreed contract")
+    end
+    
+    #adjusting for column dimensions in Boolean check:
+    m_adj = m[:, 1:i]
+
+    v = all_perm([0.0, 1.0], i)
+    possible_patterns = mapreduce(permutedims, vcat, v)
+    
+    #use the row sum to determine how many errors/fails there are:
+    success_sum = collect(0.0:Float64(i))
+    
+    #p is the indicator of successes for the trial:
+    p = zeros(size(possible_patterns)[1], i+1)
+    for k in 1:(i+1)
+        p[:, k] = Bool[success_sum[k] == sum(possible_patterns[j, :]) for j=1:size(possible_patterns,1)]'
+    end
+    #turn p into Boolean object so that we can use findall:
+    p = Bool.(p)
+
+    #store row dimensions, so that we can initialize array later
+    row_dims = zeros(Int, i+1)
+    for i in 1:(i+1)
+        row_dims[i] = size(possible_patterns[findall(p[:, i]), :])[1]
+    end
+    
+    #initializing the needed dimensions
+    dimensions = [(row_dims[k], i) for k in 1:(i+1)] 
+    " 
+    A: array of matricies, A=(M_1, ..., M_i)
+    Let i = 3:
+    M_1: matrix of patterns giving zero successes  [0,0,0] (1x3)
+    M_2: matrix of patterns giving one succeses    [0,0,1;
+                                                    0,1,0; 
+                                                    1,0,0] (3x3)
+    M_3: matrix of patterns giving two succeses    [1,1,0;
+                                                    1,0,1;
+                                                    0,1,1] (3x3)                                                
+    etc. 
+    "
+    A = create_array(dimensions) 
+
+    for l in 1:(i+1)
+        A[l] = possible_patterns[findall(p[:, l]), :]
+    end
+
+    " 
+    E_fails: (vector) Expectation of all linear combinations where: 
+    E_fails[1]: expectation of all linear combinations giving all fails (1 path)
+    E_fails[2]: the expectation of all linear combinations giving fails, 
+    but 1 success (multiple paths)
+    Let i=3: E_fails[1] = E[fff|F_t]
+             E_fails[2] = E[ssf|F_t] + E[sfs|F_t] + E[fss|F_t]
+    etc.
+    "
+    E_fails = zeros(i+1)
+
+    for l in 1:(i+1)
+        s = 0 
+        for j in 1:size(A[l],1)
+            s += mean(Bool[A[l][j, :] == m_adj[r, :] for r=1:size(m_adj,1)])
+        end
+        E_fails[l] = s
+    end 
+    
+    #represents I_{2i}^{Even} = {2,...,2i}
+    I_2_Even = collect(2.0:2.0:Float64(2*i))
+
+    #represents vector of sum_{alpha in I_{2i}^{Even}}[i-alpha], 
+    weight = i .- I_2_Even
+
+    #all success, all success but one, all success but two, ... 
+    E_success = reverse(E_fails)
+    
+    #=
+    i*E_{Q}[\cap 1(A_{l})|F_t] + 
+    sum_[alpha \in I_2_Even]sum_[j_1 != ... != j_I_alpha_Even]x
+    E_{Q}[(\cap 1(A_{l}))^[[j_{1} != ... != j_I_alpha_Even]]|F_t] 
+    =#
+
+    ans = i*E_success[1] + sum(weight.*E_success[2:length(E_success)])
+
+    return(ans)
+end
+
+#nice parameters:
+z0 = -log(20/100)
+beta = -0.05
+sigma = 0.2
+lambda = 20.0
+mu = 1/150
+dt = 1/360
+
+OU_params = [z0, beta, sigma, lambda, mu]
+
+#ESG criteria:
+C_ESG_reas = [17.8, 16.8, 15.8, 14.8]
+C_ESG_wins = [24.0, 23.0, 22.0, 21.0]
+C_ESG_loss = [5.0, 5.0, 5.0, 5.0]
+
+
+T_end = 5.0
+relevant_times = [1.25, 2.25, 3.25, 4.25]
+n_sim = 10^(6)
+n_sim_unreas = 10^(6)
+
+
+m_reas = simulation(n_sim, OU_params, C_ESG_reas, 5.0, relevant_times)
+m_wins = simulation(n_sim_unreas, OU_params, C_ESG_wins, 5.0, relevant_times)
+m_loss = simulation(n_sim_unreas, OU_params, C_ESG_wins, 5.0, relevant_times)
+
+#----------------------------------------------------------------------------
+#kappa_{t}^{ESG} and kappa_{t}^{ZCB}: 
+d = 0.005
+kappa_t_ZCB = 0.070
+
+function kappa_t_ESG(i, m)
+    " 
+    The ESG swap rate process 
+    Args: 
+        i (Int64): corresponds to T_{i}
+        m (Matrix): matrix showing wheter or not criteria were met at relevant T_{i}'s
+    Returns: 
+        The ESG swap rate process in ZCB case 
+    "
+    ans = kappa_t_ZCB-d*D(i,m)
+    return round(ans, digits = 3)
+end
+
+#reasonable criteria:
+println("(t, kappa_t_ZCB, kappa_t_ESG, C_ESG_reas, relevant_times)")
+for i in 1:length(relevant_times)
+    println((i, kappa_t_ZCB ,kappa_t_ESG(i, m_reas), C_ESG_reas, relevant_times))
+end
+
+#wins all the time:
+println("(t, kappa_t_ZCB, kappa_t_ESG, C_ESG_wins, relevant_times)")
+for i in 1:length(relevant_times)
+    println((i, kappa_t_ZCB ,kappa_t_ESG(i, m_wins), C_ESG_wins, relevant_times))
+end
+
+#loss all the time
+println("(t, kappa_t_ZCB, kappa_t_ESG, C_ESG_loss, relevant_times)")
+for i in 1:length(relevant_times)
+    println((i, kappa_t_ZCB ,kappa_t_ESG(i, m_loss), C_ESG_loss, relevant_times))
+end
+
+
+\end{minted}

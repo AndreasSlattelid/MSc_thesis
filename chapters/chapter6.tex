@@ -5,31 +5,32 @@
 \section{ESG}
 ESG \nomenclature{ESG}{Environmental, Social, and Governance} stands for Environmental, Social, and Governance. ESG metrics are becoming more critical for the financial sector in the European Union. The European Union have established a new taxonomy \cite{EU:2021} for sustainable activities. 
 \\~\\
-This taxonomy is put in place so that the EU can be carbon neutral by 2050, the goal is to help investors and companies contribute to the Paris Climate agreement. It will enable companies and issuers to access financing consistent with these goals.
+This taxonomy is implemented so the EU can be carbon neutral by 2050. The goal is to help investors and companies contribute to the Paris Climate Agreement. It will enable companies and issuers to access financing consistent with these goals.
 \\~\\ 
-One such contribution could be to access cheaper swap prices by meeting certain ESG criteria. Which in our case will be a particular ESG score. Let us take a look at what the different letters could represent:
+One such contribution could be to access cheaper financing, for instance, by lowering the fixed swap rate to meet certain ESG criteria. In our case, this will be when a firm manages to get below a certain ESG risk score. We take a look at what the different letters could represent:
+
 \begin{itemize}
-    \item Environmental: typically Climate risks, one metric could be $CO_{2}$-emissions. 
-    \item Social: metrics could be: workforce rights, consumer protests etc. 
-    \item Governance: management structure, diversity, crisis management, codes of conduct etc. 
+    \item Environmental: Carbon emissions, usage of renewable energy, waste generation etc. 
+    \item Social: workforce rights, human-rights policies, customer satisfaction etc. 
+    \item Governance: management structure and diversity, crisis management, transparency,  codes of conduct etc. 
 \end{itemize}
 
-We will not go into detail when it comes to the ESG risk score, as this would be a thesis in itself. However, we propose a model and show some implications. 
+We will not go too much into detail regarding the ESG risk score, however, we propose a model and highlight some implications. 
 
 \newpage 
 
 \section{Case study}
-Our modelling approach will be based on the ISDA document \cite{ISDA:2021}, and in particular, the interest rate swap between SBM Offshore and ING, where the ESG score is set by Sustainalytics. The deal has the following specifications:
+Our modelling approach will be based on the ISDA document \cite{ISDA:2021}, and in particular, the interest rate swap between SBM Offshore and ING, where Sustainalytics set the ESG risk score. The deal has the following specifications:
 \begin{itemize}
     \item It gets added a positive or negative spread to the fixed rate set at the inception of the swap, based upon SBM's ESG score set by Sustainalytics. 
-    \item At the beginning of every year during the life of the swap, ING set's a target ESG score.
-    \item If the score has been met, then a discount of 5-10 basis points is applied to the fixed rate.
+    \item At the beginning of every year during the contract's life, ING sets a target ESG score.
+    \item If the score has been met, a discount of 5-10 basis points is applied to the fixed rate.
     \item If the score has not been met, then a penalty of 5-10 basis points is applied to the fixed rate. 
 \end{itemize} 
 
-In our simulation we will consider the ESG criteria to be $\F_{0}$-measurable, we will also take a constant discount $d$. To exemplify this deal pretend that the original fixed rate was set at $\kappa = 0.07$, with a discount/penalty $d = 0.005$ and the contract length is $n=4$ years. 
+We consider the ESG criteria to be $\F_{0}$-measurable. We will also take a constant discount $d$. To exemplify this deal pretend that the original fixed rate was set at $\kappa = 0.07$, with a discount/penalty $d = 0.005$ and the contract length is $n=4$ years. 
 \\~\\
-Assume that SBM Offshore met the criteria the first three times but did not meet the criteria the last time, that would given arise to the following ESG fixed rate sequence: 
+Assume that SBM Offshore met the criteria the first three times but did not meet the last time. That would give rise to the following ESG fixed rate sequence: 
 \begin{align*}
 K_{1}^{ESG} &=  0.065, \;\; 
 K_{2}^{ESG} =   0.060, \;\;
@@ -46,18 +47,6 @@ K_{4}^{ESG} =   0.060
 \end{figure}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 \newpage 
 
 
@@ -66,26 +55,26 @@ We will take this deal as motivation, but generalize a bit further:
 \begin{assumption}
 We assume the following: 
 \begin{itemize}[leftmargin=*]
-    \item $N$ represents the nominal value, think of it as the amount you loan/lend.
+    \item $N$ represents the nominal value. Think of it as the amount you loan/lend.
     \item $0 < T_{0} < T_{1} < \dots < T_{n}$ a sequence of future dates. 
     \item $\delta = T_{i} - T_{i-1}$ a fixed leg between payments 
-    \item $\kappa$ the fixed rate from the original swap, i.e without ESG-link. 
+    \item $\kappa$ the fixed rate from the original swap, i.e. without ESG-link. 
     \item $d$ basis points added or subtracted to the fixed rate $\kappa$
     \item $\{A_{i}\}_{i=1}^{n}$ sequence of events, where: 
-    $A_{i} = \{X_{T_{i}} \leq C_{T_{i}}^{ESG}\}$ i.e the sequence of events measuring whether or not the ESG-criteria $C_{T_{i}}^{ESG}$ is met at time $T_{i}$ or not. 
+    $A_{i} = \{X_{T_{i}} \leq C_{T_{i}}^{ESG}\}$ i.e. the sequence of events measuring whether or not the ESG-criteria $C_{T_{i}}^{ESG}$ is met at time $T_{i}$ or not. 
 \end{itemize}
 \end{assumption} 
 
 
 \begin{definition}[\textbf{ESG fixed rate process}]
-Let $K^{ESG} = (K_{i}^{ESG})_{i=1}^{n}$ \nomenclature{$K^{ESG}$}{ESG fixed rate process}
+Let $K^{ESG} = (K_{i}^{ESG}(\omega))_{i=1}^{n}$ \nomenclature{$K^{ESG}$}{ESG fixed rate process}
 denote the ESG fixed rate process, we define it recursively as: 
 \begin{align*}
 K_{i}^{ESG}(\omega) &= (K_{i-1}^{ESG}(\omega)-d)\mathbbm{1}_{A_{i}}(\omega)
 + (K_{i-1}^{ESG}(\omega)+d)\mathbbm{1}_{A_{i}^{C}}(\omega), \;\; i\geq 2
 \end{align*}
 
-where:
+Where:
 \begin{align*}
 K_{1}^{ESG}(\omega) &= (\kappa - d)\mathbbm{1}_{A_{1}}(\omega)
 + (\kappa + d)\mathbbm{1}_{A_{1}^{C}}(\omega)    
@@ -190,7 +179,7 @@ j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
 
 The number of unique possible outcomes will be $|\{2,4,6\}| + 1 = 4$. If we fix $\alpha$, say, $\alpha = 4$, we get the value $\kappa +d$, and there are $3$ paths leading to this result. Now for $j_{1} < j_{2}$, we see that $j_{1}, j_{2} \in \{1,2,3\}$, leads to the following set-combinations: 
 \begin{align*}
-\{1,2\}, \; \{1,3\},\; \{2,3\}    
+\{1,2\}, \; \{1,3\}\;\text{and}\; \{2,3\}    
 \end{align*}
 
 Namely $3$ sets, where we got the index of where the criteria were not met. And this corresponds to the following expression: 

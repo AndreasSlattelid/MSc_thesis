@@ -1,6 +1,7 @@
 using Random 
 using Distributions
 using Statistics
+using StatsPlots #qqplot
 
 #for matrix operations and linear programming
 using LinearAlgebra
@@ -12,6 +13,9 @@ using DataFrames
 
 #for numerical integration:
 using QuadGK
+
+#rerun calculations easier:
+using Revise
 
 #plotting histogram and LaTeX labels:
 using Plots 
@@ -36,18 +40,17 @@ function Sigma1(u,t,S,T)
     return ans   
 end
 
-
 function Sigma2(u,t,S,T)
     ans = 1-exp(-alpha*(T-u))
     return ans
 end
 
-
 function int_r_start_stop(low,up, t)
     "
+    The integral: integral(r(u)du, low, up) as described in Eq (5.5) p.66
     Args: 
-        low: (float), lower integration limit
-        up: (float), upper integtation limit
+        low{Float64}: lower integration limit
+        up{Float64}:  upper integtation limit
     Returns: 
         the integral: int_low_up r(u)du
     "
@@ -66,7 +69,6 @@ function int_r_start_stop(low,up, t)
     return ans
 end
 
-
 function integrand_E_Q_r(u, r_t, t)
     ans = exp(-alpha*(u-t))*r_t + m*(1-exp(-alpha*(u-t)))
     return ans
@@ -78,7 +80,6 @@ integral_E_Q_r, _ = quadgk(u -> integrand_E_Q_r(u, r_t, t), S,T)
 integral_E_Q_r
 #--------------------------------------------------------------------------#
 # Calculating a_hat_3M:
-
 function B(t,S,T)
     ans = (1/alpha)*(exp(-alpha*(S-t))-exp(-alpha*(T-t)))
     return ans
@@ -96,6 +97,9 @@ end
 
 
 function f_3M(t,S,T)
+    " 
+    Vasicek representation of f^{3M}(t,S,T) as described in Eq. (5.4) p.60
+    "
     ans = (1/(T-S))*(exp(A(t,S,T) + B(t,S,T)*r_t) - 1)
     return ans
 end
@@ -143,8 +147,7 @@ model = Model(HiGHS.Optimizer)
 @variable(model, x[1:3])
 @objective(model, Min, sum(x))
 @constraint(model, M * x .== b)
-@constraint(model, -1 .<= x .<= 1 )
-abs.([1,2,-3])
+
 # Solve optimization problem
 optimize!(model)
 # optimal value
@@ -159,41 +162,34 @@ integral_E_Q_r, _ = quadgk(u -> integrand_E_Q_r(u, r_t, t), S,T)
 
 futures_weighted_M_inv = x_hat'futures
 futures_weighted_BP = x_tilde'futures
-futures_weighted_one_each = [1,1,1]'futures
 
+
+Random.seed!(1234)
 X_3MA = zeros(n_sim)
 for i in 1:n_sim
     #aritmetic interest rate relaization:
     X_3MA[i] = (1/(T-S))*(int_r_start_stop(S,T,t))
 end
 
-X_3MA
+mean(X_3MA)
 #elementwise substraction:
 ER_1 = X_3MA .-(1/(T-S))*integral_E_Q_r
 ER_2_M_inv = X_3MA .-futures_weighted_M_inv
-ER_2_111 = X_3MA .-futures_weighted_one_each
-
-
+ER_2_random = X_3MA .-[0.33, -0.33, 0.33]'futures
 
 #-----------------------------------------------------------
 # plotting of histograms: 
-mean_ER_1 = mean(ER_1)
-mean_ER_1 = round(mean_ER_1, digits = 3)
+#hedge with a_{t}^{3M}- f^{3M}
+mean_ER_1 = round(mean(ER_1), digits = 3)
+sigma_ER_1 = round(std(ER_1), digits = 2) 
 
-sigma_ER_1 = std(ER_1) 
-sigma_ER_1 = round(sigma_ER_1, digits = 2)
+#hedge with optimal (a_{t}^{1M}, b_{t}^{1M}, c_{t}^{1M})-f^{1M}
+mean_ER_2_M_inv = round(mean(ER_2_M_inv), digits = 3)
+sigma_ER_2 = round(std(ER_2_M_inv), digits = 2)
 
-mean_ER_2_M_inv = mean(ER_2_M_inv)
-mean_ER_2_M_inv = round(mean_ER_2_M_inv, digits = 3)
-
-sigma_ER_2 = std(ER_2_M_inv)
-sigma_ER_2 = round(sigma_ER_2_M_inv, digits = 2)
-
-mean_ER_2_111 = mean(ER_2_111)
-mean_ER_2_111 = round(mean_ER_2_111,digits =3)
-
-sigma_ER_2_111 = std(ER_2_111)
-sigma_ER_2_111 = round(sigma_ER_2_111, digits = 2)
+#not optimal 1M hedges, naive strategy:  
+mean_ER_2_random = round(mean(ER_2_random), digits = 3)
+sigma_ER_2_random = round(std(ER_2_random), digits = 2)
 
 #ER_1
 histogram(ER_1, 
@@ -218,14 +214,41 @@ histogram(ER_2_M_inv,
           )
 vline!([mean_ER_2_M_inv], lw = 5, labels = L"mean(ER_{2}^{M_{inv}}(0))")
 
-#(1,1,1)-weight of futures:
-histogram(ER_2_111, 
+
+#Naive strategy ER_2_random (0.33, -0.33, 0.33)
+ticks = round.([mean_ER_2_random + i*sigma_ER_2_random for i in -2:1:2], digits = 3)
+
+histogram(ER_2_random, 
           color =:lightblue, 
           xlabel="Value", 
           ylabel="Frequency", 
-          title = L"Histogram\; of\; ER_{2}^{(1,1,1)}(0), \; s_{ER_{2}^{(1,1,1)}} \approx 0.01, \;n_{sim} = 10^{6}", 
-          labels = L"ER_{2}^{(1,1,1)}(0)", 
-          xticks = [-12*sigma_ER_2_111,-10*sigma_ER_2_111, mean_ER_2_111, -7*sigma_ER_2_111, -5*sigma_ER_2_111])
-vline!([mean_ER_2_one_each], lw = 5, labels =  L"mean(ER_{2}^{(1,1,1)}(0))")
+          title = L"Hist\; of\; ER_{2}^{(\hat{a}_{0}, \hat{b}_{0}, \hat{c}_{0})}(0), \; s_{ER_{2}^{(\hat{a}_{0}, \hat{b}_{0}, \hat{c}_{0})}} \approx 0.01, \;n_{sim} = 10^{6}", 
+          labels = L"ER_{2}^{(0.33,-0.33,0.33)}(0)", 
+          xticks = ticks
+          )
+vline!([mean_ER_2_random], lw = 5, labels =  L"mean(ER_{2}^{(0,0,1)}(0))")
+
+
+
+#adressing normality:
+#-----------------------------------------
+x = ER_1[1:10^(6)]
+y = rand(Normal(mean_ER_1, sigma_ER_1), 10^(6))
+
+qqplot(x,y, title =  L"(Q-Q)\; plot\; of\; ER_{1}(0) \;vs\; \mathcal{N}\left(\overline{ER_1(0)}, s_{ER_1(0)}^{2})\right)", 
+            xlabel = "Theoretical Quantiles", 
+            ylabel = "Sample Quantiles")
+
+
+
+
+
+
+
+
+
+
+
+
 
 

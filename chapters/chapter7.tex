@@ -214,17 +214,17 @@ Now if $\beta > 0$, one can find:
     \label{fig: ESG_risk_score_underlying_X(t)}
 \end{figure}
 
-The blue dots represent the observed ESG-risk score at the relevant observation times. The solid dark line represents the ESG-risk score between observation times, and the orange underlying process represents our continuous time ESG-risk score process $X(t)$.  
+The blue dots represent the observed ESG-risk score at the relevant observation times. The solid dark line represents the ESG-risk score between observation times, and the orange underlying process describes our continuous time ESG-risk score process $X(t)$.  
 
 \newpage 
 
 \section{Simulation of Zero Coupon Bond ESG-swap}
 
-In this section, we will look at a numerical simulation of the ESG-swap rate process $\kappa_{t}^{ESG} = (\kappa_{t}^{ESG}(i))_{i=1, \dots, 4}$. We will simulate different scenarios, these will be when the ESG-criteria $C^{ESG}$ is reasonable, and when the ESG criteria are unreasonable. 
+In this section, we will look at a numerical simulation of the ESG-swap rate process $\kappa_{t}^{ESG} = (\kappa_{t}^{ESG}(i))_{i=1, \dots, 4}$. We will simulate different scenarios. These will be when the ESG-criteria $C^{ESG}$ is reasonable and when the ESG criteria are unreasonable. 
 \\~\\
-By unreasonable we will look at the extremes, i.e where the criteria are met all the time, and where the criteria are never met. This will show the effect of the discount and penalty respectively. 
+By unreasonable, we will look at the extremes, i.e. where the criteria are met all the time and where the criteria are never satisfied. This will show the effect of the discount and penalty, respectively. 
 \\~\\ 
-Assume that after analysis one has arrived at the conclusion that the model as described in Figure \ref{fig: ESG_risk_score_underlying_X(t)} is a good fit for the counterparty company in this ESG-swap. 
+After analysis, one has concluded that the model described in Figure \ref{fig: ESG_risk_score_underlying_X(t)} is a good fit for the counterparty company in this ESG swap. 
 \\~\\
 \textbf{Parameters}
 \begin{itemize}
@@ -235,15 +235,15 @@ Assume that after analysis one has arrived at the conclusion that the model as d
     \item $\mu = 150$
 \end{itemize}
 
-We will use a stepsize of $dt = \frac{1}{360}$, and since the calculation is based upon Monte Carlo simulations, we will base the calculation on 1 Million simulations ($n\_sim = 10^{6})$. 
+We will use a stepsize of $dt = \frac{1}{360}$, and since the calculation is based upon Monte Carlo simulations, we will establish the analysis on 1 Million simulations ($n\_sim = 10^{6})$. 
 \\~\\ 
 \textbf{Agreement/specifications}
 \begin{itemize}
-    \item For simplicity we will assume that our ESG criteria process $C^{ESG} = (C^{ESG}_{T_{i}})_{
+    \item For simplicity, we will assume that our ESG criteria process $C^{ESG} = (C^{ESG}_{T_{i}})_{
     \{i=1, \dots, 4\}}$ to be $\F_{0}$-measurable. 
     \item $\delta = 1$ meaning that the time between observations times $T_{i}$ and $T_{i-1}$ is one year. 
     \item We assume that the penalty/discount $d = 0.005$.
-    \item We will also for simplicity set: 
+    \item We will also, for simplicity, set: 
     \[
     \kappa_{t}^{ZCB} = \frac{P(t,T_{0})-P(t,T_{4})}{\delta \sum_{i=1}^{4}P(t,T_{i})} = 0.07
     \]
@@ -265,7 +265,7 @@ We will use a stepsize of $dt = \frac{1}{360}$, and since the calculation is bas
 In this figure, we see the underlying ESG risk score process. Here the dark-solid lines represent the criteria $C_{T_{i}}^{ESG}$. The blue dots represent the ESG-risk score at time $T_{i}$.
 In this particular realization, we see that the criteria are not met at $T_{1}$ and $T_{2}$, and then met at $T_{3}$ and $T_{4}$. 
 \\~\\ 
-After 1 Million simulations we got:
+After 1 Million simulations, we got:
 \\~\\
 \begin{center}
 \begin{tabular}{lcccl}
@@ -288,7 +288,7 @@ $T_{4}$ &  14.8 & 0.070 & 0.065 \\
 \end{figure}
 
 \newpage 
-\textbf{unreasonable criteria, where criteria is always met}
+\textbf{unreasonable criteria, where criteria are always met}
 \begin{itemize}
     \item $C^{ESG} = (24,23,22,21)$
 \end{itemize}
@@ -300,9 +300,9 @@ $T_{4}$ &  14.8 & 0.070 & 0.065 \\
     \label{fig: ESG_risk_criteria_2}
 \end{figure}
 
-We see that the blue dots are always under the dark solid lines meaning that the criteria are always met.
+The blue dots are always under the dark solid lines, meaning the criteria are always met.
 \\~\\ 
-After 1 Million simulations we got:
+After 1 Million simulations, we got:
 \\~\\
 \begin{center}
 \begin{tabular}{lcccl}
@@ -325,7 +325,7 @@ $T_{4}$ &  21 & 0.070 & 0.050 \\
     \label{fig: ESG_swap_2}
 \end{figure}
 
-Here we see the effect of how the discount $d$ works, for each $T_{i}$ we see that $\kappa_{t}^{ESG}$ goes down by the discount $d$. 
+Here we see the effect of how the discount $d$ works. For each $T_{i}$, we see that $\kappa_{t}^{ESG}$ goes down by the discount $d$. 
 
 \newpage 
 \textbf{unreasonable criteria, where criteria are never met}
@@ -342,7 +342,7 @@ Here we see the effect of how the discount $d$ works, for each $T_{i}$ we see th
 
 The blue dots are consistently above the criteria, meaning that the criteria will not be met. 
 \\~\\ 
-After 1 Million simulations we got:
+After 1 Million simulations, we got:
 \\~\\
 \begin{center}
 \begin{tabular}{lcccl}
@@ -364,15 +364,5 @@ $T_{4}$ &  21 & 0.070 & 0.090 \\
     \label{fig: ESG_swap_3}
 \end{figure}
 
-In this situation $d$ works like a penalty, and correspondingly $\kappa_{t}^{ESG}$ increases. 
-
-
-
-
-
-
-
-
-
-
+In this situation, $d$ works like a penalty, and correspondingly $\kappa_{t}^{ESG}$ increases. 
 

@@ -1,4 +1,5 @@
-\chapter{Discussion}
+\chapter{Discussion and Conclusion}
+
 In the SOFR studies, we examined the implications of different underlying calculation methods for the SOFR futures. We studied a 3M-arithmetic product: 
 \[
 X^{3M_{A}}(S,T) = \frac{1}{T-S}\int_{S}^{T}r_{u}du
@@ -32,7 +33,9 @@ e^{-\alpha(S-u)}-e^{-\alpha(T-u)}
 \right]\mathbbm{1}_{[S,T]}(u)
 \end{align*}
 
-It should be mentioned that this may not be a realistic representation of $r$, and should be addressed accordingly. For instance, if one looks at the graph in Figure \ref{fig: Overnight_SOFR_rates}.  
+It should be mentioned that this may not be a realistic representation of $r$, and should be addressed accordingly. As mentioned in \cite{brigo2013interest}, a solution could be multi-factor models, as one source of uncertainty could be too restrictive for realistic modelling approaches.
+\\~\\
+In \cite{Skov_2020}, they consider 1-, 2- and 3-factor versions of Gaussian arbitrage-free short-rate models. One should also take into account the market price of risk $\lambda_{t}$, coming from Girsanov's Theorem: $dW^{Q}(t) = dW(t) - \lambda_{t}dt$, to get suitable  $P$-dynamics of the futures rates: $f^{\ell M}, \ell = 1,3$
 \\~\\
 From simulations we got $\hat{a}_{t}^{3M} = 0.95$ for the position in 3M-SOFR futures. An ideal hedge here would be if this number equalled $1$. Pretend that instead of hedging $X^{3M_{A}}(S,T)$, we wanted to hedge: 
 \begin{align*}
@@ -88,7 +91,7 @@ J \stackrel{Q}{\sim} Exp(\mu - \theta)
 
 Furthermore, $X(t)$ is company dependent, meaning that to get reasonable estimates of the necessary parameters included, data accessibility is crucial to impose a suitable model. 
 \\~\\ 
-One should also mention that there are many ESG-rating agencies and different metrics for measuring the ESG score/risk score. Furthermore, these metrics are not necessarily standardized, which adds to the complexity of modelling such a score. 
+One should also mention that many ESG-rating agencies have different metrics for measuring the ESG score/risk score. These metrics are not necessarily standardized, and it can be unclear how the rating firm weighs the "E", "S", and "G". Should "E" be more "important" than "S" or "G"? 
 \\~\\
 If one looks at the expression $K_{n}^{ESG}(\omega)$: 
 \begin{align*}

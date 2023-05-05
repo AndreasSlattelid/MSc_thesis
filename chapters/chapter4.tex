@@ -620,7 +620,7 @@ r(t)dt - \int_{t}^{T}\alpha(t,u)dudt - \int_{t}^{T}\sigma(t,u)dudW(t)
 \end{proof}
 
 \begin{notation}[\textbf{Volatility process}]
-\nomenclature{$v(t,T)$}{Volatility process}
+\nomenclature{$v(t,T)$}{Volatility process, where: $v(t,T) = -\int_{t}^{T}\sigma(t,u)du$}
 We will use the following notation for the volatility process:
 \[
 v(t,T) := -\int_{t}^{T}\sigma(t,u)du
@@ -891,7 +891,9 @@ We use the following notation:
 \begin{align*}
 Z^{T}(t) := \frac{P(t,T)}{P(0,T)B(t)}    
 \end{align*}
+\nomenclature{$Z^{T}(t)$}{Radon Nikodym derivative where: $Z^{T}(t) = \frac{P(t,T)}{P(0,T)B(t)}$}
 \end{notation}
+
 
 \begin{proposition}
 \label{prop: Z(T)(t)_Q_martingale}
