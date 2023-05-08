@@ -9,9 +9,9 @@ There are also other RFR alternatives (Risk-Free Reference Rates) \nomenclature{
 \\~\\
 On November.30,2020, the Federal Reserve announced that the LIBOR would be phased out and eventually replaced by June 2023. Banks were also instructed to stop writing contracts using the LIBOR by the end of 2021 and that all contracts using the LIBOR should wrap up by June 30, 2023. \cite{hayes_2022}
 \\~\\ 
-SOFR is fundamentally different from LIBOR. The Federal Reserve Bank of New York collects transaction data from the overnight Treasury Repo market. It then calculates a volume-weighted median interest rate. Which then gets published 08.00 AM (Eastern Time) the following business day \cite{ARRC_SOFR}.
+SOFR is fundamentally different from LIBOR. The Federal Reserve Bank of New York collects transaction data from the overnight Treasury Repo market. It then calculates a volume-weighted median interest rate. Which then gets published at 08.00 AM (Eastern Time) the following business day \cite{ARRC_SOFR}.
 \\~\\ 
-This means that SOFR is backwards looking as it is based upon overnight transactions, furthermore, it cannot look beyond 24 hours.  
+This means that SOFR is backwards looking as it is based upon overnight transactions. Furthermore, it cannot look beyond 24 hours.  
 \\~\\
 \textbf{Key differences between LIBOR and SOFR/RFR's}
 
@@ -253,16 +253,42 @@ R^{B}(S,T)|\F_{S}
 \frac{1}{P(S,T)} - 1
 \right) := R^{F}(S,T)
 \end{align*}
-
 \end{proof}
+
+It should also be mentioned that SOFR is closely related to EFFR (Effective Federal Funds Rate). This is an overnight rate reflecting the rate banks and depository institutions lend/borrow to maintain the reserve requirements given by the Federal Reserve.
+
+\nomenclature{EFFR}{Effective Federal Funds Rate}
+\begin{figure}[htp]
+    \centering
+    \includegraphics[height = 7cm, width=15cm]{figures/SOFR/SOFR_EFFR.PNG}
+    \caption{SOFR and EFFR}
+    \label{fig: SOFR_EFFR}
+\end{figure}
+
+
+
 
 
 \newpage 
 
 As mentioned earlier, we have that SOFR is backwards-looking and cannot give any indications beyond 24 hours. However, the CME Group publishes daily a set of forward-looking interest rate estimates called CME Term SOFR Reference Rates Benchmarks. 
-They have the following tenors: 1M, 3M, 6M and 12M. The calculation method can be found in\cite{CMEGroup}. For modelling SOFR dynamics \cite{gellert2021short} can be consulted.  
+They have the following tenors: 1M, 3M, 6M and 12M. 
+
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=12cm]{figures/SOFR/CME_term_SOFR.PNG}
+    \caption{CME term SOFR }
+    \label{fig: CME_term_SOFR}
+\end{figure}
+
+
+
+\begin{comment}
+The calculation method can be found in\cite{CMEGroup}. For modelling SOFR dynamics \cite{gellert2021short} can be consulted.  
 \\~\\ 
-They use SOFR futures for calculating the term rates \cite{CMEGroup}. Some of the reasons why futures were chosen were because of their liquidity. This represents the market's view on the rate; furthermore, this does not require expert judgment or a survey of market participants.  
+\end{comment}
+They use SOFR futures for calculating the term rates. The calculation method can be found at \cite{CMEGroup}. Some of the reasons why futures were chosen were because of their liquidity. This represents the market's view on the rate; furthermore, this does not require expert judgment or a survey of market participants.  
 
 \begin{figure}[htp]
     \centering
@@ -371,8 +397,8 @@ R^{3M}(S,T) = \frac{1}{T-S}\left(
 As futures contracts are free to enter, we get that: 
 \begin{align*}
 \E_{Q}\left[
-R^{iM}(S,T) - f^{iM}(t,S,T)\bigg{|}\F_{t}
-\right] = 0, \;\; i = 1,3   
+R^{\ell M}(S,T) - f^{\ell M}(t,S,T)\bigg{|}\F_{t}
+\right] = 0, \;\; \ell = 1,3   
 \end{align*}
 
 Furthermore, one uses the following convention: 
@@ -814,12 +840,12 @@ Let us consider the case where we look at $\ell=3$, $n=3$, and $\delta = \frac{3
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=12cm]{figures/SOFR/1M_Vasicek_relaizations.PNG}
+    \includegraphics[width=12cm]{figures/SOFR/Vasicek_realizations.PNG}
     \caption{Realizations of $t \mapsto r(t), t \in [0,T_{0}]$}
     \label{fig: Vasicek_paths}
 \end{figure}
 
-Here we see 10 realizations of $[0,T_{0}] \ni t \mapsto r(t)$. In the graph below we see the effect of the time horizon and the starting point for the fixed rate $\kappa_{t}^{3M-SOFR}$:
+Here we see two realizations of $[0,T_{0}] \ni t \mapsto r(t)$. In the graph below, we see the effect of the time horizon and the starting point for the fixed rate $\kappa_{t}^{3M-SOFR}$:
 
 
 \begin{figure}[htp]
@@ -829,7 +855,7 @@ Here we see 10 realizations of $[0,T_{0}] \ni t \mapsto r(t)$. In the graph belo
     \label{fig: 3M_SOFR_swap_rate}
 \end{figure}
 
-Here we took 10 realizations of $[0,T_{0}] \ni t \mapsto \kappa_{t}^{3M-SOFR}$. For $t=0$, we got: 
+Here we took two realizations of $[0,T_{0}] \ni t \mapsto \kappa_{t}^{3M-SOFR}$. For $t=0$, we got: 
 \begin{align*}
 \kappa_{0}^{3M-SOFR} &= 
 \frac{
@@ -838,7 +864,7 @@ Here we took 10 realizations of $[0,T_{0}] \ni t \mapsto \kappa_{t}^{3M-SOFR}$. 
 \sum_{i=1}^{3}P(0,T_{i})
 }
 = 
-0.04234
+0.042
 \end{align*}
 
 
@@ -849,17 +875,17 @@ Here we took 10 realizations of $[0,T_{0}] \ni t \mapsto \kappa_{t}^{3M-SOFR}$. 
 
 \section{Options on SOFR futures}
 
-Consider a call option on a SOFR futures, with exercise time $\tau \leq S \leq T$ and strike $\kappa$, the price at time $t \leq \tau$ for $i=1,3$ is given by:
+Consider a call option on SOFR futures, with exercise time $\tau \leq S \leq T$ and strike $\kappa$, the price at time $t \leq \tau$ for $\ell =1,3$ is given by:
 \begin{align*}
-C^{iM}(t,\tau) :&= \E_{Q}\left[
+C^{\ell M}(t,\tau) :&= \E_{Q}\left[
 \frac{B(t)}{B(\tau)}\left(
-f^{iM}(t,S,T) - \kappa
+f^{\ell M}(t,S,T) - \kappa
 \right)^{+}
 \bigg{|}\F_{t}
 \right]  
 &\stackrel{\text{Prop \ref{prop: general_option_price}}}{=} 
 P(t,\tau)\E_{Q^{\tau}}\left[
-\left(f^{iM}(t,S,T) - \kappa
+\left(f^{\ell M}(t,S,T) - \kappa
 \right)^{+}
 \bigg{|}\F_{t}
 \right]

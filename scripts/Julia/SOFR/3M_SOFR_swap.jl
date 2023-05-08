@@ -1,3 +1,5 @@
+using Revise
+
 #statistics and distributions
 using Random 
 using Distributions
@@ -28,13 +30,13 @@ function r_Vasicek(alpha, m,sigma, r_t, time_interval, n_steps)
     """
     Args: 
         #Vasicek parameters:
-        alpha (Float): speed of reversion 
-        m (float): long term mean level 
-        sigma (float): volatility 
-        r_t (float): initial value of r = (r(u))
+        alpha{Float64}: speed of reversion 
+        m{Float64}: long term mean level 
+        sigma{Float64}: volatility 
+        r_t{Float64}: initial value of r = (r(u))
         
         #time:
-        time_interval (vector): the time interval we model over e.g [0,3]
+        time_interval (vector): the time interval we model measured in years.
         n_steps (int): number of timesteps we partition over
     
     Returns: 
@@ -55,7 +57,7 @@ function r_Vasicek(alpha, m,sigma, r_t, time_interval, n_steps)
     Z = rand(Normal(0,1), n_steps)
 
     for i in 2:n_steps
-        r[i] = r[i-1] - alpha*(m-r[i-1])*dt + sigma*Z[i]*dt
+        r[i] = r[i-1] - alpha*(m-r[i-1])*dt + sigma*sqrt(dt)*Z[i]
     end
 
     return r
@@ -111,14 +113,16 @@ function f_3M(t,S,T, r_t)
     return ans
 end 
 
-#time t-value of kappa in SOFR-swap
+#time t-value of kappa in 3M SOFR-futures rate swap
 function kappa_t(t, r_t)
     "
     Args: 
-        t (float): a vector of time points i.e [0,T1]
-        r_t (float): vector of realization of interest rate model
+        t{Float64}: vector of time points i.e [0,T1]
+        r_t{Float64}: vector of realization of interest rate model
     Returns: 
-        the fixed swap rate kappa_t_3M-SOFR
+        above = sum(P(t,T_{i}*f^{3M}(t,T_{i-1}, T_{i})), i = 1:n)
+        below = sum(P(t,T_{i}), i = 1:3)
+        kappa_t_3M_SOFR = above/below
     "
     ZCB_prices = map(T -> P(t,T, r_t), timepoints[2:end])
     f_3M_rates = map((x, y) -> f_3M(t, x, y, r_t), timepoints[1:end-1], timepoints[2:end])
@@ -129,59 +133,49 @@ function kappa_t(t, r_t)
 end
 
 
-function kappa_path(t, r)
-    "
-    Args: 
-        t (float): vector of timepoints 
-        r (float): vector of desired interest rate model
-    Returns: 
-        vector of (t,r_t)-valued kappa_t
-    "
-    ans = map((x, y) -> kappa_t(x, y), t, r)
-    return ans
-end
-
 #Vasicek parameters: 
 alpha = 0.25
 m = 0.035
 r_0 = 0.0425
-sigma = 0.05
+sigma = 0.02
 
-r_0 = 0.0425
+#time:
 t_start = 0 
 t_end = T0
-
-r = r_Vasicek(alpha, m, sigma, r_0, [t_start,t_end], n_steps)
 dt = (t_end-t_start)/n_steps
 t = collect(t_start:dt:t_end)
 
-length(r)
-n_sim = 10
-M = zeros(length(r), n_sim)
-R = zeros(length(r), n_sim)
+#initialization of simulation
+n_sim = 2
 
+R = zeros(length(t), n_sim) #Vasicek rates
+K = zeros(length(t), n_sim) #fixed rate kappa for each pair (t,r_t)
 
 Random.seed!(1234)
 for i in 1:n_sim
+    #Vasicek realization:
     r = r_Vasicek(alpha, m, sigma, r_0, [t_start,t_end], n_steps)
-    kappa = kappa_path(t,r)
+    #collect the time t rate and time t kappa:
     R[:, i] = r
-    M[:, i] = kappa
+    K[:, i] = map((x,y)-> kappa_t(x,y), t, r)
 end
-M
-R
 
+R
+K[1]
+
+#plot of rates
 plot(R, layout = (1,1), 
         legend = false,
-        title = L"t \mapsto r(t),\alpha = 0.25, m = 0.035, \sigma = 0.05, r_{0} = 0.0425 "
+        title = L"t \mapsto r(t),\alpha = 0.25, m = 0.035, \sigma = 0.02, r_{0} = 0.0425 "
         )
 xticks!([0, 10_000/2 ,10_000], ["0", L"\frac{T_{0}}{2}", L"T_{0}"])
 
 
-# plot each column of the matrix
-plot(M, layout=(1,1), 
+#plot of kappa_t
+plot(K, layout=(1,1), 
         legend = false, 
-        title = L"t \mapsto \kappa_{t}^{3M-SOFR},\alpha = 0.25, m = 0.035, \sigma = 0.05, r_{0} = 0.0425"
+        title = L"t \mapsto \kappa_{t}^{3M-SOFR},\alpha = 0.25, m = 0.035, \sigma = 0.02, r_{0} = 0.0425"
         )
-xticks!([0, 10_000/2 ,10_000], ["0", L"\frac{T_{0}}{2}", L"T_{0}"])
+xticks!([0, 10_000/2 ,10_000], ["0", L"\frac{T_{0}}{2}", L"T_{0}"]) 
+
 
