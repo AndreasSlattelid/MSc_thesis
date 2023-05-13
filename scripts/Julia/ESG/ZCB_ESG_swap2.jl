@@ -1,3 +1,5 @@
+using Revise
+
 using Random 
 using Distributions
 using Statistics
@@ -5,24 +7,19 @@ using Statistics
 using LinearAlgebra
 using DataFrames
 
-using Combinatorics
+#using Combinatorics
 using Plots
-
-#= 
-In this script we alter how m is calculated, some more flexibility.
-Inlcuding OU-parameters. 
-=#
 
 function create_array(dims::Array{Tuple{Int,Int},1})
     "
     Args: 
-        dims: (array(tuple)), vector of tuples, where each element corresponds to matrix-dimension
+        dims{Array{Int64}}: vector of tuples, where each element corresponds to matrix-dimension
     
     Returns:
         Array of matricies A = (M_{1}, …, M_{n})
         Each matrix can take on different dimensions, i.e:
         dimensions = [(m,n), (k,l), (r,q), ...] 
-        The array will return matricies of zeros    
+        The array will return an inizialitation of zero matricies  
     "
     arr = Array{Array{Float64,2}}(undef, length(dims))
 
@@ -36,8 +33,8 @@ end
 function all_perm(xs, n)
     " 
     Args: 
-        xs: (Vector)
-        n: (Int), desired length
+        xs{Vector}: input vector of what should be permutated
+        n{Int64}: desired length of vector 
     
     Returns:
         generates permutation of elements in vector xs of length n
@@ -56,12 +53,12 @@ function OU_CPP(z0::Float64, beta::Float64, sigma::Float64, lambda::Float64, mu:
         NB! Julia parametrize with 1/mu
 
     Args:    
-        z0: (float) inital value of the process Z(t)
-        beta: (float), mean-retreving parameter
-        sigma: (float), parameter of Brownian Motion
-        lambda: (float), jump intensity of process, N(t)~ Pois(lambda*t) 
-        dt: (float) stepsize 
-        T_end: (float), for how long the simulation should go
+        z0{Float64}: inital value of the process Z(t)
+        beta{Float64}: mean-retreving parameter
+        sigma{Float64}: volatility parameter of Brownian Motion
+        lambda{Float64}: jump intensity of process, N(t)~ Pois(lambda*t) 
+        dt{Float64}: stepsize 
+        T_end{Float64}: for how long the simulation should go
      
     Returns: 
         X(t) = 100exp(-Z(t))
@@ -84,7 +81,7 @@ function OU_CPP(z0::Float64, beta::Float64, sigma::Float64, lambda::Float64, mu:
     #dZ(t) = -beta*Z(t)dt + sigma*dW(t) + dI(t)
     for i in 2:n 
         dI = sum(rand(Exponential(mu), N[i])) - sum(rand(Exponential(mu), N[i-1]))
-        z[i] = z[i-1] - beta*z[i-1]*dt + sigma*W[i]*dt + dI
+        z[i] = z[i-1] - beta*z[i-1]*dt + sigma*W[i]*sqrt(dt) + dI
     end
 
     #X(t) = 100exp(-Z(t))
@@ -96,16 +93,17 @@ end
 function simulation(n_sim, params, C_ESG, T_end, relevant_times)
     "
     Args:
-        n_sim: (int) number of simulations 
-        params: (floar) the paramaters in OU_CPP
-        C_ESG: Vector(float) ESG-criteria at time T_{i}            
-        relevant_times: (float) vector of relevant times, [T1, T2, T3, ...], percentage of year.
+        n_sim{Int64}: number of simulations 
+        params{Vector{Float64}}: the paramaters in OU_CPP
+        C_ESG{Vector{Float64}}: ESG-criteria at time T_{i}            
+        relevant_times{Vector{Float64}}: vector of relevant times, [T1, T2, T3, ...],
+        expressed as percentage of year.
     "
 
     "
     retruns:
-        matrix of wheter or not criteria is meet
-        each row in the matrix corresponds to a simulation, i.e
+        m{Matrix{Float64}}: matrix checking if criteria at time T_{i} is met or not.
+        Each row in the matrix corresponds to a simulation, i.e.
         m = [0,0,0; did not meet any criteria
              0,1,1; met criteria at T2 and T3
              ...  ] 
@@ -140,11 +138,11 @@ end
 function D(i::Int, m::Matrix)
     " 
     Args:
-        i: (Int), index in sequence 
-        m: (Matrix), matrix containing simulations
+        i{Int64}: index in sequence 
+        m{Matrix}: matrix with measurements of whether criteria were met or not. 
 
     Returns: 
-        D(i)-term in in E_{Q}[K_{i}^{ESG}(omega)|F_{t}]    
+        D(i)-term in in E_{Q}[K_{i}^{ESG}(omega)|F_{t}] = kappa_t - d*D(i)    
     "
     if i > size(m)[2]
         return println("You cannot evaluate D outside of agreed contract")
@@ -234,7 +232,7 @@ end
 #nice parameters:
 z0 = -log(20/100)
 beta = -0.05
-sigma = 0.2
+sigma = 0.02
 lambda = 20.0
 mu = 1/150
 dt = 1/360
@@ -255,7 +253,7 @@ n_sim_unreas = 10^(6)
 
 m_reas = simulation(n_sim, OU_params, C_ESG_reas, 5.0, relevant_times)
 m_wins = simulation(n_sim_unreas, OU_params, C_ESG_wins, 5.0, relevant_times)
-m_loss = simulation(n_sim_unreas, OU_params, C_ESG_wins, 5.0, relevant_times)
+m_loss = simulation(n_sim_unreas, OU_params, C_ESG_loss, 5.0, relevant_times)
 
 #----------------------------------------------------------------------------
 #kappa_{t}^{ESG} and kappa_{t}^{ZCB}: 
@@ -295,13 +293,25 @@ end
 
 
 
+
 #=
 #nice parameters:
+#using dt and not sqrt(dt:)
 z0 = -log(20/100)
 beta = -0.05
 sigma = 0.2
 lambda = 50.0
-mu = 1/15
+mu = 1/150
+dt = 1/360
+T_end = 5.0
+
+
+#using sqrt(dt):
+z0 = -log(20/100)
+beta = -0.05
+sigma = 0.02
+lambda = 50.0
+mu = 1/150
 dt = 1/360
 T_end = 5.0
 

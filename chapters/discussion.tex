@@ -1,10 +1,12 @@
-\chapter{Discussion and Conclusion}
+\chapter{Conclusion and further work}
+\label{chp_Conclusion}
 
-In the SOFR studies, we examined the implications of different underlying calculation methods for the SOFR futures. We studied a 3M-arithmetic product: 
+\section{SOFR}
+In the SOFR studies, we examined the implications of different underlying calculation methods for the SOFR futures. We studied a 3M-arithmetic interest rate: 
 \[
 X^{3M_{A}}(S,T) = \frac{1}{T-S}\int_{S}^{T}r_{u}du
 \]
-Against taking  a $\hat{a}_{t}-f^{3M}(t,S,T)$ 3M-SOFR futures position vs \\ 
+We bench marked  taking  a $\hat{a}_{t}-f^{3M}(t,S,T)$ 3M-SOFR futures position against \\ 
 taking  a $(\hat{a}_{t}, \hat{b}_{t}, \hat{c}_{t})-f^{1M}(t,S,T)$ 1M-SOFR futures position.  
 \\~\\
 For simulation purposes, we chose the following model for the integral of $r = (r(t))_{t\geq 0}$: 
@@ -33,10 +35,13 @@ e^{-\alpha(S-u)}-e^{-\alpha(T-u)}
 \right]\mathbbm{1}_{[S,T]}(u)
 \end{align*}
 
-It should be mentioned that this may not be a realistic representation of $r$, and should be addressed accordingly. As mentioned in \cite{brigo2013interest}, a solution could be multi-factor models, as one source of uncertainty could be too restrictive for realistic modelling approaches.
+It should be mentioned that this may not be a realistic representation of $r$, and should be addressed accordingly. As discussed in \cite{brigo2013interest}, a solution could be multi-factor models, as one source of uncertainty could be too restrictive for realistic modelling approaches.
 \\~\\
 In \cite{Skov_2020}, they consider 1-, 2- and 3-factor versions of Gaussian arbitrage-free short-rate models. One should also take into account the market price of risk $\lambda_{t}$, coming from Girsanov's Theorem: $dW^{Q}(t) = dW(t) - \lambda_{t}dt$, to get suitable  $P$-dynamics of the futures rates: $f^{\ell M}, \ell = 1,3$
 \\~\\
+It would also be interesting to study term-SOFR dynamics further. For instance, in \cite{gellert2021short} the authors discuss how SOFR is related to EFFR, which then again is heavily affected by US monetary policy rates. It would also be interesting to further study how the CME term SOFR is inferred from the futures market.       
+
+\newpage 
 From simulations we got $\hat{a}_{t}^{3M} = 0.95$ for the position in 3M-SOFR futures. An ideal hedge here would be if this number equalled $1$. Pretend that instead of hedging $X^{3M_{A}}(S,T)$, we wanted to hedge: 
 \begin{align*}
 X^{3M_{G}}(S,T) := \frac{1}{T-S}\left[
@@ -54,7 +59,7 @@ X^{3M_{G}}(S,T)-a_{t}f^{3M}(t,S,T)
 \right]
 \end{align*}
 
-Now following the same arguments as on p.\pageref{result: optimal_SOFR_hedge_3MA_vs_3GM}, we get: 
+Now following the same arguments as on p.\pageref{prop: optimal_hedge_arithmetic_3M_geometric}, one has:
 \begin{align*}
 \hat{a}_{t}^{3M} &= \frac{
 \E_{Q}[X^{3M_{G}}(S,T)|\F_{t}]
@@ -69,18 +74,18 @@ f^{3M}(t,S,T)
 } = 1
 \end{align*}
 
-
-\newpage 
-We imposed a model for ESG-linked swaps, which lead to a sequence of fixed rates $\kappa_{t}^{ESG}  = (\kappa_{t}^{ESG}(i))_{i=1}^{n}$ giving a penalty/discount depending on whether the criteria were met or not.
+\section{ESG}
+We imposed a model for ESG-linked swaps, which led to an ESG swap rate process $\kappa_{t}^{ESG}  = (\kappa_{t}^{ESG}(i))_{i=1}^{n}$ giving a penalty/discount depending on whether the criteria were met or not.
 \\~\\ 
 We remember that the criteria $A_{i}$ looked like the following:
 \begin{align*}
 A_{i} &= \{X_{T_{i}} \leq C_{T_{i}}^{ESG}\}    
 \end{align*}
 
-This means that our ESG-fixed rate process heavily depends upon the OU-process $X(t)$ and the criteria $C_{T_{i}}^{ESG}$. It could be hard to establish "reasonable" criteria. In our simulation, we took $C^{ESG} = (C_{T_{i}}^{ESG})_{i\geq 1}$ to be $\F_{0}$-measurable, this could lead to some uncertainty as one would have to "know" even more about the company's development. Maybe a more reasonable approach would be to take $C^{ESG}$ to be $\F_{T_{i-1}}$-measurable. However, this would require a model for $C^{ESG}$, which adds to the complexity again.    
-\\~\\
-In our modelling approach, we modelled directly under $Q$. However, the market one operates in is under $P$, meaning that it would have been suitable with an Esscher-transform of $X(t)$, which then by  Proposition \ref{prop: Esscher_transform_CPP_Q} means that we would still have a CPP, but with altered intensity $\lambda_{Q}$ and jump-size distribution $F_{J}^{Q}(dx)$.
+This means that our ESG-fixed rate process heavily depends upon the OU-process $X(t)$ and the criteria $C_{T_{i}}^{ESG}$. It could be hard to establish "reasonable" criteria. In our simulation, we took $C^{ESG} = (C_{T_{i}}^{ESG})_{i\geq 1}$ to be $\F_{0}$-measurable, this could lead to some uncertainty as one would have to "know" even more about the company's development. Maybe a more reasonable approach would be to take $C^{ESG}$ to be $\F_{T_{i-1}}$-measurable. 
+However, this would again add to the complexity.   
+\\~\\ 
+In our modelling approach, we modelled directly under $Q$. However, the market one operates in is under $P$, meaning that it would have been suitable with an Esscher-transform of $X(t)$, which then by  Proposition \ref{prop: Esscher_transform_CPP_Q} implies that we would still have a CPP, but with altered intensity $\lambda_{Q}$ and jump-size distribution $F_{J}^{Q}(dx)$.
 \\~\\
 In our case we have $I(t) = \sum_{k=1}^{N(t)}J_{k}$ with $N(t) \sim Pois(\lambda t)$ and 
 $J\sim Exp(\mu)$, and from Lemma \ref{lemma: CPP_exp_mu}, with $\theta \in (-\infty, \mu)$, we have:
@@ -90,9 +95,22 @@ J \stackrel{Q}{\sim} Exp(\mu - \theta)
 \end{align*}
 
 Furthermore, $X(t)$ is company dependent, meaning that to get reasonable estimates of the necessary parameters included, data accessibility is crucial to impose a suitable model. 
+
+\newpage 
+
+As highlighted in \cite{berg2022aggregate}, there are several problems associated with ESG scoring, including: 
+\begin{itemize}
+    \item Measurement: measure the same indicator using different ESG metrics. 
+    \item Scope: ratings based upon different sets of ESG indicators. 
+    \item Weight: different views on the relative importance of ESG indicators. 
+\end{itemize}
+
+Consider the case where the ESG score $\mathcal{S}$ is defined as a linear combination of weighted ESG metrics $X_{j}$ i.e.
+\begin{align*}
+\mathcal{S} &= \sum_{j=1}^{m}w_{j}X_{j}   
+\end{align*}
+How many metrics $X_{1}, \dots, X_{m}$ should one choose? And how should one choose the weights $w_{1}, \dots w_{m}$? In \cite{Billio2021}, it is even highlighted that rating agencies can have opposite opinions on the same evaluated companies. 
 \\~\\ 
-One should also mention that many ESG-rating agencies have different metrics for measuring the ESG score/risk score. These metrics are not necessarily standardized, and it can be unclear how the rating firm weighs the "E", "S", and "G". Should "E" be more "important" than "S" or "G"? 
-\\~\\
 If one looks at the expression $K_{n}^{ESG}(\omega)$: 
 \begin{align*}
 K_{n}^{ESG}(\omega) &= 
@@ -117,8 +135,7 @@ j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
 \right)(\omega) 
 \end{align*}
 
-We see that it tracks every path, and for each $n$ there are $2^{n}$-possible paths, meaning that as $n$ increases, the complexity increases. Furthermore, this expression is rather general, meaning that one must rely upon Monte Carlo simulations to get an estimate of $\kappa_{t}^{ESG}(i)$. At the same time, it also gives possibilities for other types of stochastic models for the ESG-risk score. 
-
+We see that it tracks every path, and for each $n$ there are $2^{n}$-possible paths, meaning that as $n$ increases, the complexity increases. Furthermore, this expression is rather general, meaning that one must rely upon Monte Carlo simulations to get an estimate of $\kappa_{t}^{ESG}(i)$. At the same time, its generality also gives greater flexibility  for other types of stochastic models for the ESG-risk score. 
 
 
 

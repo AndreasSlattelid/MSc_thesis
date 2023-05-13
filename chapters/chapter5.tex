@@ -5,9 +5,9 @@
 Following the LIBOR scandal, the Federal Reserve and regulators in the U.K. have come up with a replacement called the Secured Overnight Financing Rate (SOFR) \nomenclature{SOFR}{Secured Overnight Financing Rate}.
 There are also other RFR alternatives (Risk-Free Reference Rates) \nomenclature{RFR}{Risk-Free Reference Rates} who work similarly: SONIA (Sterling Overnight Index Average) 
 \nomenclature{SONIA}{Sterling Overnight Index Average} managed by The Bank of England. One could also mention €STR (Euro Short-Term Rate) \nomenclature{€STR}{Euro Short-Term Rate}
-\cite{CME_SOFR}
+\cite{CME_SOFR}.
 \\~\\
-On November.30,2020, the Federal Reserve announced that the LIBOR would be phased out and eventually replaced by June 2023. Banks were also instructed to stop writing contracts using the LIBOR by the end of 2021 and that all contracts using the LIBOR should wrap up by June 30, 2023. \cite{hayes_2022}
+On November 30, 2020, the Federal Reserve announced that the LIBOR would be phased out and eventually replaced by June 2023. Banks were also instructed to stop writing contracts using the LIBOR by the end of 2021, and that all contracts using the LIBOR should wrap up by June 30, 2023 \cite{hayes_2022}.
 \\~\\ 
 SOFR is fundamentally different from LIBOR. The Federal Reserve Bank of New York collects transaction data from the overnight Treasury Repo market. It then calculates a volume-weighted median interest rate. Which then gets published at 08.00 AM (Eastern Time) the following business day \cite{ARRC_SOFR}.
 \\~\\ 
@@ -88,10 +88,10 @@ This figure is collected from \cite{FredSOFR}
 and displays the following SOFR rates:
 green: O/N, blue: 1M-average and red: 3M-average. Here the 1M-average and 3M-average are calculated according to Definition \ref{def: backward_looking_SOFR_avg}. 
 \\~\\
-If we look at the green O/N rates, we see a spike in September 2019.  This was related to quarterly corporate tax payments due September 16. This led to a demand-supply mismatch  \cite{FederalReserve2019}
+If we look at the green O/N rates, we see a spike in September 2019.  This was related to quarterly corporate tax payments due September 16. This led to a demand-supply mismatch  \cite{FederalReserve2019}.
 
 \newpage 
-As discussed in \cite{Skov_2020}, one has that $R^{B}(S,T)$ is $\F_{T}$-measurable. This is unsuitable as it does not incorporate market expectations about future rates. This leads to the following Definition: 
+As discussed in \cite{Skov_2020}, one has that $R^{B}(S,T)$ is $\F_{T}$-measurable. This is unsuitable as it does not incorporate market expectations about future rates. This leads to the following definition. 
 
 \begin{definition}[\textbf{Forward-looking term-SOFR rate \cite{Skov_2020}}]
 The forward-looking term SOFR rate over the period $[S,T]$ is defined as: 
@@ -153,15 +153,6 @@ P(T_{i}, T_{i} + d_{i})
 }
 \bigg{|}\F_{S}
 \right]
-= 
-\E_{Q^{T}}\left[
-\prod_{i=1}^{N}\frac{
-P(T_{i}, T_{i})
-}{
-P(T_{i}, T_{i} + d_{i})
-}
-\bigg{|}\F_{S}
-\right]
 \end{align*}
 
 For simplicity we let $T_{i+1} = T_{i} + d_{i}$, this gives us the following timeline:
@@ -184,7 +175,30 @@ For simplicity we let $T_{i+1} = T_{i} + d_{i}$, this gives us the following tim
     \draw (9,0) node[below=3pt] {$ T_{N+1} = T $} node[above=3pt] {$  $};
   \end{tikzpicture}
 
+We observe that: 
+\begin{align*}
+P(S,T) = P(T_{1}, T_{N+1}) &= \prod_{i=1}^{N}P(T_{i}, T_{i+1})    
+\end{align*}
 
+This gives us:
+\begin{align*}
+\E_{Q^{T}}\left[
+\prod_{i=1}^{N}\frac{
+1
+}{
+P(T_{i}, T_{i} + d_{i})
+}
+\bigg{|}\F_{S}
+\right]
+&= 
+\E_{Q^{T}}\left[
+\frac{1}{P(S,T)}
+\bigg{|}\F_{S}\right]
+= \frac{1}{P(S,T)}
+\end{align*}
+
+
+\begin{comment}
 We use the fact from Lemma \ref{lemma: T-discounted-S-discounted-bond} p.\pageref{lemma: T-discounted-S-discounted-bond}, that for $t\leq S \leq T$:
 \begin{align*}
 \frac{P(t,S)}{P(t,T)}\;\text{is a $Q^{T}$-martingale}    
@@ -241,7 +255,7 @@ We note that $T_{1} = S$, meaning that what's inside the expectation is $\F_{S}$
 &= 
 \frac{1}{P(T_{1}, T_{N+1})} = \frac{1}{P(S,T)}
 \end{align*}
-
+\end{comment}
 Plugging this into Equation \ref{eq: QT_expectation_R_Backwards}, yields: 
 \begin{align*}
 \E_{Q^{T}}\left[
@@ -255,6 +269,8 @@ R^{B}(S,T)|\F_{S}
 \end{align*}
 \end{proof}
 
+\newpage 
+
 It should also be mentioned that SOFR is closely related to EFFR (Effective Federal Funds Rate). This is an overnight rate reflecting the rate banks and depository institutions lend/borrow to maintain the reserve requirements given by the Federal Reserve.
 
 \nomenclature{EFFR}{Effective Federal Funds Rate}
@@ -265,11 +281,6 @@ It should also be mentioned that SOFR is closely related to EFFR (Effective Fede
     \label{fig: SOFR_EFFR}
 \end{figure}
 
-
-
-
-
-\newpage 
 
 As mentioned earlier, we have that SOFR is backwards-looking and cannot give any indications beyond 24 hours. However, the CME Group publishes daily a set of forward-looking interest rate estimates called CME Term SOFR Reference Rates Benchmarks. 
 They have the following tenors: 1M, 3M, 6M and 12M. 
@@ -288,6 +299,9 @@ They have the following tenors: 1M, 3M, 6M and 12M.
 The calculation method can be found in\cite{CMEGroup}. For modelling SOFR dynamics \cite{gellert2021short} can be consulted.  
 \\~\\ 
 \end{comment}
+
+\newpage 
+
 They use SOFR futures for calculating the term rates. The calculation method can be found at \cite{CMEGroup}. Some of the reasons why futures were chosen were because of their liquidity. This represents the market's view on the rate; furthermore, this does not require expert judgment or a survey of market participants.  
 
 \begin{figure}[htp]
@@ -357,7 +371,7 @@ We will be interested in SOFR futures, and such futures can be found at CME (Chi
 \[
 100 - R
 \]
-Here $R$ will represent the implied SOFR rate. Let's say we observe a 3M-SOFR futures today (March 23) with settlement Jun 23, quoted at $96.6$. This would mean that the implied $3M$-SOFR rate over the period March 23 - June 23 would be: 
+Here $R$ will represent the implied SOFR rate. Let's say we observe a 3M-SOFR futures today (March 23) with settlement Jun 23, quoted at $96.6$. This would mean that the implied $3M$-SOFR rate (annualized) over the period March 23 - June 23 would be: 
 \[
 (100-96.6)\% = 3.4\% 
 \] 
@@ -879,19 +893,19 @@ Consider a call option on SOFR futures, with exercise time $\tau \leq S \leq T$ 
 \begin{align*}
 C^{\ell M}(t,\tau) :&= \E_{Q}\left[
 \frac{B(t)}{B(\tau)}\left(
-f^{\ell M}(t,S,T) - \kappa
+f^{\ell M}(\tau,S,T) - \kappa
 \right)^{+}
 \bigg{|}\F_{t}
 \right]  
 &\stackrel{\text{Prop \ref{prop: general_option_price}}}{=} 
 P(t,\tau)\E_{Q^{\tau}}\left[
-\left(f^{\ell M}(t,S,T) - \kappa
+\left(f^{\ell M}(\tau,S,T) - \kappa
 \right)^{+}
 \bigg{|}\F_{t}
 \right]
 \end{align*} 
 
-Here we use the convention that $(x)^{+} = \max(x,0)$. From Theorem \ref{thm: arbitrage_condition_Q}, we have: 
+Here we use the convention that $(x)^{+} = \max(x,0)$. From Theorem \ref{thm: arbitrage_condition_Q} p \pageref{thm: arbitrage_condition_Q}, we have: 
 \begin{align*}
 \frac{dQ^{\tau}}{dQ}\bigg{|}_{\F_{t}} &= \mathcal{E}_{t}(v(\cdot, \tau)\bullet W^{Q})
 \end{align*} 
@@ -947,11 +961,10 @@ Let
 b^{2} = \int_{t}^{\tau}\Sigma^{1M}(u,S,T)^{2}du
 \]
 
-We are then left with: 
+We are then left with the following: 
 \begin{align*}
-C^{1M}(t,\tau) &= 
 \E_{Q^{\tau}}\left[
-(f^{1M}(\tau, S,T)-\kappa)^{+}|\F_{t}
+(f^{1M}(\tau, S,T)-\kappa)^{+}\bigg{|}\F_{t}
 \right]    
 = 
 \E\left[
@@ -969,7 +982,7 @@ where $Z \sim \mathcal{N}(0,1)$, this yields:
 \int_{\R}(x+m+bz-\kappa)^{+}\varphi(z)dz 
 \end{align*}
 
-furthermore: 
+Furthermore: 
 \begin{align*}
 x + m + bz - \kappa \geq 0 \iff z \geq \frac{\kappa-x-m}{b}:= d'    
 \end{align*}
@@ -1005,10 +1018,10 @@ Leaving us with:
 (A) &= (x+m-\kappa)\Phi(d) + b\varphi(d) \\ 
 &= b[d\Phi(d) + \varphi(d)]
 \end{align*}
-Now from Proposition \ref{prop: general_option_price}, we get: 
+Now from Proposition \ref{prop: general_option_price} p.\pageref{prop: general_option_price}, we get: 
 \begin{align*}
-C^{1M}(t,\tau) :&= \pi(t) = P(t,\tau)\E_{Q^{\tau}}\left[
-(f^{1M}(\tau, S,T)-\kappa)^{+}|\F_{t}
+C^{1M}(t,\tau) &= P(t,\tau)\E_{Q^{\tau}}\left[
+(f^{1M}(\tau, S,T)-\kappa)^{+}\bigg{|}\F_{t}
 \right] \\ 
 &= 
 P(t,\tau)\sqrt{
@@ -1022,7 +1035,7 @@ d\Phi(d) + \varphi(d)
 
 \newpage 
 
-\section{Hedges on SOFR-futures}
+\section{Hedging with SOFR-futures}
 For SOFR futures, we have two pricing approaches: arithmetic (1M) and geometric (3M). In this section, we will look at some relationships between them.
 
 
@@ -1034,54 +1047,10 @@ Consider the case where we want to hedge:
 X^{3M_{A}}(S,T) = \frac{1}{T-S}\int_{S}^{T}r_{u}du    
 \end{align}
 
-We want to hedge an arithmetic interest rate over the 3M period $[S,T]$. The only available product for hedging a 3M period in the market is the 3M futures contract $f^{3M}(t,S,T)$. Now this is based upon a geometric average, meaning that our hedge looks like this:
+We want to hedge an arithmetic interest rate over the 3M period $[S,T]$. The only available product for hedging a 3M period in the market is the 3M futures contract $f^{3M}(t,S,T)$. 
 
-
-\begin{align*}
-\argmin\limits_{a_{t} \in \R}\E_{Q}\left[
-\left(
-X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
-\right)^{2}
-\bigg{|}\F_{t}
-\right]
-\end{align*}
-
-Now, fix $t$ and denote
- $G(a_{t}) :=\E_{Q}\left[
-\left(X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
-\right)^{2}
-\bigg{|}\F_{t}
-\right]
-$ 
-expanding the square yields:
-\begin{align*}
-G(a_{t}) &= \E_{Q}\left[(X^{3M_{A}}(S,T))^{2}|\F_{t}\right] -2a_{t}f^{3M}(t,S,T) +
-a_{t}^{2}[f^{3M}(t,S,T)]^{2}
-\end{align*}
-Taking the derivative w.r.t. $a_{t}$ yields: 
-\begin{align*}
-\frac{d}{da_{t}}G(a_{t}) &= -2f^{3M}(t,S,T) + 2a_{t}[f^{3M}(t,S,T)]^{2}  
-\end{align*} 
-
-Now as $\frac{d^{2}}{da_{t}^{2}}G(a_{t}) = 2[f^{3M}(t,S,T)]^{2} > 0$, we have that the minimum is obtained by setting $\frac{d}{da_{t}}G(a_{t}) = 0$:
-\begin{align*}
-\frac{d}{da_{t}}G(a_{t}) &= 0 \\ 
-&\Downarrow \\ 
-a_{t} &= \frac{
-\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}]
-}{
-f^{3M}(t,S,T)
-} \\ 
-&= \frac{
-\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du
-}{
-(T-S)f^{3M}(t,S,T)
-}
-\end{align*}
-
-\begin{result}
-\label{result: optimal_SOFR_hedge_3MA_vs_3GM}
-Considering the above situation, we then have the following:
+\begin{proposition}
+\label{prop: optimal_hedge_arithmetic_3M_geometric}
 \begin{align*}
 \argmin\limits_{a_{t} \in \R}\E_{Q}\left[
 \left(
@@ -1089,21 +1058,107 @@ X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
 \right)^{2}
 \bigg{|}\F_{t}
 \right] 
-\implies
-\hat{a}_{t}^{3M} = \frac{
+= \frac{
 \int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du
 }{
 (T-S)f^{3M}(t,S,T)
 }
 \end{align*}
-\end{result} 
+
+Meaning that the optimal weighting $\hat{a}_{t}^{3M}$ in 3M-SOFR futures will be: 
+
+\begin{align*}
+\hat{a}_{t}^{3M} &= \frac{
+\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du
+}{
+(T-S)f^{3M}(t,S,T)
+}   
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+    
+We have that the 3M-SOFR futures $f^{3M}(t,S,T)$ is based upon a geometric average, giving us the following hedge:
+
+\begin{align*}
+\argmin\limits_{a_{t} \in \R}\E_{Q}\left[
+\left(
+X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
+\right)^{2}
+\bigg{|}\F_{t}
+\right]
+\end{align*}
+
+Now, fix $t$ and denote: 
+\begin{align*}
+G(a_{t}) :=\E_{Q}\left[
+\left(X^{3M_{A}}(S,T)-a_{t}f^{3M}(t,S,T)
+\right)^{2}
+\bigg{|}\F_{t}
+\right]    
+\end{align*} 
+
+Expanding the square yields:
+\begin{align*}
+G(a_{t}) &= \E_{Q}\left[(X^{3M_{A}}(S,T))^{2}|\F_{t}\right] -2a_{t}f^{3M}(t,S,T)\E_{Q}\left[X^{3M_{A}}(S,T)\bigg{|}\F_{t}\right] +
+a_{t}^{2}[f^{3M}(t,S,T)]^{2}
+\end{align*}
+Taking the derivative w.r.t. $a_{t}$ yields: 
+\begin{align*}
+\frac{d}{da_{t}}G(a_{t}) &= -2f^{3M}(t,S,T)
+\E_{Q}\left[X^{3M_{A}}(S,T)\bigg{|}\F_{t}\right] + 2a_{t}[f^{3M}(t,S,T)]^{2}  
+\end{align*} 
+
+\newpage 
+
+Since: 
+\begin{align*}
+\frac{d^{2}}{da_{t}^{2}}G(a_{t}) = 2[f^{3M}(t,S,T)]^{2} > 0    
+\end{align*}
+
+We have that the minimum is obtained by setting the derivative equal to zero, i.e. 
+\begin{align*}
+\frac{d}{da_{t}}G(a_{t}) = 0    
+\end{align*}
+
+Now: 
+\begin{align*}
+\frac{d}{da_{t}}G(a_{t}) &= 0 \\
+&\Updownarrow \\ 
+a_{t} &= \frac{
+\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}]
+}{
+f^{3M}(t,S,T)
+}
+\end{align*}
+
+Furthermore: 
+\begin{align*}
+\E_{Q}[X^{3M_{A}}(S,T)|\F_{t}] 
+&= 
+\frac{1}{T-S}\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]
+\end{align*}
+
+Yielding: 
+\begin{align*}
+a_{t} &= \frac{
+\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du
+}{
+(T-S)f^{3M}(t,S,T)
+}    
+\end{align*}
+\end{proof}
 
 \newpage 
 
 \subsection{Affine Term Structure-setting}
 
 \begin{proposition}
-Consider the above setting, and let $r = (r(t))_{t\geq 0}$ be a model that provides ATS, then 
+Consider the above setting, and let $r = (r(t))_{t\geq 0}$ be a model that provides ATS, meaning that: 
+\begin{align*}
+dr(t) &= [b(t) + \beta(t)r(t)]dt + \sqrt{a(t) + \alpha(t)r(t)}dW^{Q}(t)
+\end{align*}
+$a, \alpha, b, \beta$ are continuous and deterministic functions. This gives us the following: 
 \begin{align*}
 \argmin\limits_{a_{t} \in \R}&\E_{Q}\left[
 \left(
@@ -1111,16 +1166,17 @@ X^{3M_{A}}(S,T)- a_{t}f^{3M}(t,S,T)
 \right)^{2}
 \bigg{|}\F_{t}
 \right] \\
-&\Downarrow \\
-\hat{a}_{t} &= \frac{
+\\
+&= \frac{
 r(t)(T-S)
 + \int_{S}^{T}\int_{t}^{u}b(s)dsdu 
-+ \int_{S}^{T}\int_{t}^{u}\alpha(s)g(s)dsdu
++ \int_{S}^{T}\int_{t}^{u}\beta(s)g(s)dsdu
 }{
 (T-S)f^{3M}(t,S,T)
 }
 \end{align*}
-Where:
+
+Where: 
 \begin{align*}
 g(s) &= \exp\left(
 \int_{t}^{s}\beta(v)dv
@@ -1129,33 +1185,34 @@ g(s) &= \exp\left(
 \int_{t}^{s}e^{-\int_{t}^{w}\beta(v)dv}b(w)dw + \E_{Q}[r(t)]
 \right) 
 \end{align*}
+
 \end{proposition}
 
 \begin{proof}
-Consider the above setting, but now we assume that $r = (r(t))_{t\geq 0}$ is a model that provides ATS (Affine Term Structure), now as described in proposition \ref{prop: condition_on_r_ATS}, we have that the dynamics of $r$ can be written as: 
+
+Since $r = (r(t))_{t\geq 0}$ is a model that provides ATS (Affine Term Structure), as described in Proposition \ref{prop: condition_on_r_ATS}, as well as above, we have the following dynamics:
+
 \begin{align*}
 dr(t) &= [b(t) + \beta(t)r(t)]dt + \sqrt{a(t) + \alpha(t)r(t)}dW^{Q}(t)
 \end{align*}
+
 Here $b, \beta, a, \alpha$ are deterministic continuous functions. Now from the dynamics, we get that for $u\geq t$: 
-\begin{align*}
+
+\begin{align}
+\label{eq: r(u)_given_r(t)}
 r(u) &= r(t) + \int_{t}^{u}b(s)ds + \int_{t}^{u}[\beta(s)r(s)]ds
-+ \int_{t}^{u}\sqrt{\alpha(s)}dW^{Q}(s)
-+ \int_{t}^{u}\sqrt{\alpha(s)r(s)}dW^{Q}(s)
-\end{align*}
++\int_{t}^{u}\sqrt{a(s) + \alpha(s)r(s)}dW^{Q}(s)
+\end{align}
 
 Each term is assumed to be Ito-integrable, i.e in $M^{2}([0,T])$, and by \\ $\F_{t}$-independence, we get:
+
 \begin{align*}
 \E_{Q}\left[
-\int_{t}^{u}\sqrt{\alpha(s)}dW^{Q}(s)
-\right]
-&= 0 \\ 
-\E_{Q}\left[
-\int_{t}^{u}\sqrt{\alpha(s)r(s)}dW^{Q}(s)
-\right] 
-&= 0
-\end{align*} 
+\int_{t}^{u}\sqrt{a(s) + \alpha(s)r(s)}dW^{Q}(s)
+\right] = 0 
+\end{align*}
 
-And by using Stochastic-Fubini(\ref{thm: Stochastic_Fubini}), we get:
+And again by $\F_{t}$-independence in combination with Fubini, we get:
 \begin{align*}
 \E_{Q}\left[
 \int_{t}^{u}[\beta(s)r(s)]ds
@@ -1164,13 +1221,14 @@ And by using Stochastic-Fubini(\ref{thm: Stochastic_Fubini}), we get:
 \int_{t}^{u}\beta(s)\E_{Q}[r(s)]ds
 \end{align*}
 
-This leaves us with: 
-\begin{align*}
+This leaves us with the following: 
+\begin{align}
+\label{eq: integral_cond_exp_r(u)}
 \int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du 
 &= r(t)(T-S)
 + \int_{S}^{T}\int_{t}^{u}b(s)dsdu 
-+ \int_{S}^{T}\int_{t}^{u}\alpha(s)\E_{Q}[r(s)]dsdu
-\end{align*}
++ \int_{S}^{T}\int_{t}^{u}\beta(s)\E_{Q}[r(s)]dsdu
+\end{align}
 
 
 \textbf{Overview of time-interval:}
@@ -1201,34 +1259,39 @@ This leaves us with:
     %\draw (9,0) node[below=3pt] {$ T_{M} $} node[above=3pt] {$ $};
 \end{tikzpicture} 
   
-Thus in our setting we have: $t\leq S \leq s \leq u \leq T$, using same argument as above: 
+Thus in our setting we have: $t\leq S \leq s \leq u \leq T$, proceeding as in Equation \ref{eq: r(u)_given_r(t)}, we have:
 
+\begin{align}
+\label{eq: r(s)_given_r(t)}
+r(s) &= r(t) + \int_{t}^{s}b(v)dv + \int_{t}^{s}\beta(v)r(v)dv 
++ 
+\int_{t}^{s}
+\sqrt{a(v) + \alpha(v)r(v)}dW^{Q}(v)
+\end{align}
+
+
+Now let $g(s) := \E_{Q}[r(s)]$, applying the expectation to \ref{eq: r(s)_given_r(t)} yields:
 \begin{align*}
-r(s) &= r(t) + \int_{t}^{s}b(v)dv + \int_{t}^{s}[\beta(v)r(v)]dv
-+ \int_{t}^{s}\sqrt{\alpha(v)}dW^{Q}(v)
-+ \int_{t}^{s}\sqrt{\alpha(v)r(v)}dW^{Q}(v)    
+g(s) &= r(t) + \int_{t}^{s}b(v)dv + \int_{t}^{s}\beta(v)g(v)dv    
 \end{align*}
 
-Now let $g(s) := \E_{Q}[r(s)]$: 
+Taking the derivative w.r.t. $s$ and using the fundamental theorem of calculus gives us the following: 
 \begin{align*}
-g(s) &= r(t) + \int_{t}^{s}b(v)dv + \int_{t}^{s}\beta(v)\E_{Q}[r(v)]dv
+g'(s) &= b(s) + \beta(s)g(s)    
 \end{align*}
 
-Now taking the derivative w.r.t. $s$ and using the fundamental theorem of calculus, we get: 
+We have initial condition $g(t) = \E_{Q}[r(t)]$, this is an ordinary differential equation with solution:
 \begin{align*}
-g'(s) &= b(s) + \beta(s)\E_{Q}[r(s)] \\ 
-&= b(s) + \beta(s)g(s), \; g(t) = \E_{Q}[r(t)]
+g(s) &= \exp\left(
+\int_{t}^{s}\beta(v)dv
+\right)
+\left(
+\int_{t}^{s}e^{-\int_{t}^{w}\beta(v)dv}b(w)dw +g(t)
+\right)    
 \end{align*}
 
-This is an ordinary differential equation, with the explicit solution given by:
-\begin{align*}
- g(s) &= \exp\left(
- \int_{t}^{s}\beta(v)dv
- \right)
- \left(
- \int_{t}^{s}e^{-\int_{t}^{w}\beta(v)dv}b(w)dw + \E_{Q}[r(t)]
- \right)
-\end{align*}
+We have that $g(s) = \E_{Q}[r(u)]$ appears in Equation \ref{eq: integral_cond_exp_r(u)}, this gives us the desired result. 
+
 \end{proof}
 
 
@@ -1459,7 +1522,7 @@ Where:
 \right]
 \end{align*}
 
-In order to verify that $G$ obtains a minimum we need the Hessian matrix $H(G)$ of $G$. This will be a $3\times 3$ matrix with entries:  
+To verify that $G$ obtains a minimum we need the Hessian matrix $H(G)$ of $G$. This will be a $3\times 3$ matrix with entries:  
 
 \begin{align*}
 [H(G)]_{i,j} &= 
@@ -1552,67 +1615,6 @@ In order for $\det(M) \neq 0$, we must have:
 
 %Assume that the necessary conditions in \ref{eq: condition_det(A)_not_zero} holds, we then get, that the inverse is %given by: 
 
-\begin{comment}
-\begin{align*}
-M^{-1} &= 
-\begingroup
-\renewcommand*{\arraystretch}{3.0}
-\begin{bmatrix}
-\frac{
-\beta -\gamma
-}{
-(\alpha - \beta)[\alpha\beta - \alpha\gamma + \beta^{2}-\gamma^{2}]
-}
-& 
-\frac{
--\beta^{2}+\alpha\gamma
-}{
-\beta(\alpha -\beta)[\alpha\beta - \alpha\gamma + \beta^{2}-\gamma^{2}]
-}
-& 
--\frac{
-1
-}{
-\alpha\beta -\alpha\gamma + \beta^{2}-\gamma^{2}
-} \\
-\frac{
--\beta^{2}+\gamma
-}{
-\alpha(\alpha-\beta)[\alpha\beta -\alpha\gamma +\beta^{2}-\gamma^{2}]
-}
-& 
-\frac{
-\alpha\beta -\gamma^{2}
-}{
-\beta(\alpha-\beta)[\alpha\beta -\alpha\gamma +\beta^{2}-\gamma^{2}]
-}
-& 
--\frac{
-1
-}{
-\alpha\beta -\alpha\gamma +\beta^{2}-\gamma^{2}
-} \\ 
-\frac{
-\beta-\gamma
-}{
-(\alpha -\beta)[\alpha\beta -\alpha\gamma + \beta^{2}-\gamma^{2}]
-} 
-& 
-\frac{
-\alpha^{2}-\beta\gamma
-}{
-\beta(\alpha-\beta)[\alpha\beta - \alpha\gamma + \beta^{2}-\gamma^{2}]
-}
-&
-\frac{
-\alpha + \beta
-}{
-\gamma[\alpha\beta -\alpha\gamma + \beta^{2} - \gamma^{2}]
-}
-\end{bmatrix}
-\endgroup
-\end{align*}
-\end{comment}
 
 Thus the optimal weight $\hat{\mathbf{x}}_{t}$ will then be:   
 \begin{align*}
@@ -1640,7 +1642,7 @@ very much related to Basis Pursuit \cite{chen1998atomic}.
 
 \subsection{Simulation of Error distribution}
 
-In order to say something about how good the hedge is in Result \ref{result: optimal_SOFR_hedge_3MA_vs_3GM}, we study: 
+To say something about how good the hedge in Proposition \ref{prop: optimal_hedge_arithmetic_3M_geometric}, we study: 
 \begin{align*}
 ER_{1}(t) :&= X^{3M_{A}}(S,T) - \hat{a}_{t}^{3M}f^{3M}(t,S,T) \\ 
 &= \frac{1}{T-S}\int_{S}^{T}r(u)du - \frac{1}{T-S}\int_{S}^{T}\E_{Q}[r(u)|\F_{t}]du \\ 

@@ -1,4 +1,5 @@
 \chapter{Scripts Chapter 5}
+\label{chp_appendixB}
 %New colors defined below
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -42,7 +43,7 @@
 
 \section{SOFR: Dynamics of $f^{1M}(t,S_{1M}, T_{1M})$ and $f^{3M}(t,S_{3M}, T_{3M})$}
 
-\begin{minted}{julia}
+\begin{minted}[breaklines]{julia}
 using Revise
 
 #stats etc.
@@ -155,7 +156,7 @@ xticks!([0, n/2 ,n], ["0", L"\frac{S_{1M}}{2}", L"S_{1M}"])
 
 \newpage 
 \section{SOFR: Simulation of $\kappa_{t}^{3M-SOFR}$}
-\begin{minted}{julia}
+\begin{minted}[breaklines]{julia}
 using Revise
 
 #statistics and distributions
@@ -343,7 +344,7 @@ xticks!([0, 10_000/2 ,10_000], ["0", L"\frac{T_{0}}{2}", L"T_{0}"])
 \newpage 
 
 \section{SOFR: Hedging 3M-arithmetic SOFR}
-\begin{minted}{julia}
+\begin{minted}[breaklines]{julia}
 using Random 
 using Distributions
 using Statistics

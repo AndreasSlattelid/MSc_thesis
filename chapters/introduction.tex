@@ -1,24 +1,67 @@
-\chapter{Outline}
+\chapter{Introduction}
 \label{intro}
 \begin{comment}
 The rest of the text is organised as follows. This is an example of a description list; see more lists in \cref{discussion} and \vref{tab14}.    
 \end{comment}
 
+\section{Overview}
+
+Following the LIBOR scandal, the Alternative Reference Rates Committee (ARRC) \nomenclature{ARRC}{Alternative Reference Rates Committee} was established to help ensure a robust alternative (for USD-LIBOR) and came up with the Secured Overnight Financing Rate (SOFR). Other options include SONIA (Sterling Overnight Index Average) for GBP-LIBOR and €STR ( Euro Short-Term Rate) for the Euro-zone. 
+\\~\\ 
+Since LIBOR will no longer be the key benchmark, it is crucial to understand the new alternative reference rates and how they differ. For instance, LIBOR is an interbank rate based on a market survey, while SOFR is an overnight rate based on the U.S. Treasury repurchase market. This leads to a fundamental difference as LIBOR works as a forward-looking prediction of future rates, while the overnight rates will be backwards-looking.  
+\\~\\ 
+This transition also requires a better understanding of available products and hedging instruments tied to Risk-Free Reference rates, and we will study SOFR futures and associated derivatives.  
+\\~\\
+There is an urgent need for a green transition to address climate change. The EU has put in place a new taxonomy so that the EU can be carbon neutral by 2050. Incorporating ESG into Finance (Sustainable Finance) is becoming increasingly important, and with this in mind, we propose a framework for ESG-linked interest-rate swaps. This framework is constructed to incentivise one to achieve favourably climatic goals.
+\\~\\ 
+Understanding the new RFRs and ESG-linked financial products is crucial for the Insurance industry. A pension fund might have many SOFR-linked products in its portfolio. A better understanding of ESG-linked products is needed to meet stakeholder expectations, and regulatory requirements, get better risk management and provide measures for a sustainable future.   
+
+
+
+
+
+
+\begin{comment}
+ This thesis studies Risk-free reference rates (SOFR), the new key RFR in US dollars and ESG-linked interest rate swaps.   
+\end{comment}
+
+\newpage 
+
+\section{Outline}
+
 The thesis is organized as follows: 
 \begin{description}
-    \item[\cref{chp_theoretical_background}] Consists of the necessary theoretical background for the thesis. This includes measure theory, Probability theory and stochastic analysis. 
+    \item[\cref{chp_theoretical_background}]
+    The theoretical background/framework for interest rate theory is established. This includes Measure Theory, its relationship with Probability Theory, and then, finally Stochastic Analysis.  
 
     \item[\cref{chp_mathematical_finance}] Introduces important concepts from mathematical finance, like the fundamental theorems of asset pricing. 
 
     \item[\cref{chp_interest_rate_theory}] Consists of interest rate theory. Here we introduce the zero coupon bond, interest rate swaps, short rate models, HJM framework, and the outgoing LIBOR rates.
 
-    \item[\cref{chp_SOFR}] We establish what SOFR is, including definitions, the difference between 1-month and 3-month SOFR futures, Black and Scholes Option methodology, Swaps and some specific hedges.
-
-    \item[\cref{chp_ESG_swaps}] Here, we introduce an approach for incorporating ESG into Interest-rate swaps. We take one particular case study from real life and use it as motivation for establishing a mathematical framework. 
-
-    \item[\cref{chp_Num_sim}] To better grasp how ESG-swaps could work in general, we have included a numerical simulation. Here, we test different scenarios and see how the ESG framework responds.     
-
+    \item[\cref{chp_SOFR}] We look deeper into Risk-Free Reference rates, particularly SOFR. We highlight fundamental differences between SOFR and LIBOR and look further into interest rate futures. The difference between 1-month and 3-month SOFR futures, Black and Scholes Option methodology, Swaps and specific hedges are studied. 
     
+
+    \item[\cref{chp_ESG_swaps}] 
+    An approach for incorporating ESG into Interest-rate Swaps is introduced. We take one particular case study from real life and use this as motivation for establishing a mathematical framework for ESG-linked Interest-rate swaps. 
+
+
+    \item[\cref{chp_Num_sim}] 
+    We include a numerical simulation to grasp better how ESG-linked Interest-rate swaps could work. 
+    Here we benchmark different scenarios and study how the ESG framework responds.   
+
+    \item[\cref{chp_Conclusion}]
+    We summarize our findings and discuss shortcomings, possible model extensions and aspects for further research. 
+
+    \item[\cref{chp_AppendixA}]
+    A method for estimating parameters in the Vasicek model is presented, and how estimation can be done in an Affine Term Structure-setting. 
+
+    \item [\cref{chp_appendixB}]
+    The Julia code used in SOFR examples includes dynamics of 1M- and 3M-SOFR futures, 3M-SOFR futures swap, and the specified SOFR hedge. 
+
+    \item [\cref{chp_appendixC}]
+    Julia code for the Monte Carlo simulation of the ESG-linked interest rate swap. 
+    
+        
 \begin{comment}
     \item[\cref{intro}] consists of an interesting introduction. Zooming in on your research question, taking history into account and clarify what your problem is. You could consider calling this a part if you have multiple result parts in your thesis. It ends with an outline.
     \item[\cref{background}] is all about the theoretical background, methods and notation. Don't forget a description of data. 

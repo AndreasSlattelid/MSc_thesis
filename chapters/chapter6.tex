@@ -3,29 +3,29 @@
 
 
 \section{ESG}
-ESG \nomenclature{ESG}{Environmental, Social, and Governance} stands for Environmental, Social, and Governance. ESG metrics are becoming more critical for the financial sector in the European Union. The European Union have established a new taxonomy \cite{EU:2021} for sustainable activities. 
+ESG \nomenclature{ESG}{Environmental, Social, and Governance} stands for Environmental, Social, and Governance. ESG metrics are becoming more critical for the financial sector in the European Union. The European Union have established a new taxonomy  for sustainable activities \cite{EU:2021}. 
 \\~\\
 This taxonomy is implemented so the EU can be carbon neutral by 2050. The goal is to help investors and companies contribute to the Paris Climate Agreement. It will enable companies and issuers to access financing consistent with these goals.
 \\~\\ 
-One such contribution could be to access cheaper financing, for instance, by lowering the fixed swap rate to meet certain ESG criteria. In our case, this will be when a firm manages to get below a certain ESG risk score. We take a look at what the different letters could represent:
+One such contribution could be to access cheaper financing, for instance, by lowering the fixed swap rate if certain ESG criteria are met. In our case, this will be when a firm manages to get below a certain ESG risk score. We take a look at what the different letters could represent:
 
 \begin{itemize}
     \item Environmental: Carbon emissions, usage of renewable energy, waste generation etc. 
     \item Social: workforce rights, human-rights policies, customer satisfaction etc. 
-    \item Governance: management structure and diversity, crisis management, transparency,  codes of conduct etc. 
+    \item Governance: management structure and diversity, CEO pay ratio, crisis management, transparency,  codes of conduct etc. 
 \end{itemize}
 
-We will not go too much into detail regarding the ESG risk score, however, we propose a model and highlight some implications. 
+We will not go into detail regarding the ESG risk score, however, we propose a model and highlight some implications. 
 
 \newpage 
 
 \section{Case study}
-Our modelling approach will be based on the ISDA document \cite{ISDA:2021}, and in particular, the interest rate swap between SBM Offshore and ING, where Sustainalytics set the ESG risk score. The deal has the following specifications:
+Our modelling approach will be based on the ISDA document \cite{ISDA:2021}, particularly the interest rate swap between SBM Offshore and ING, where Sustainalytics set the ESG risk score. The deal has the following specifications:
 \begin{itemize}
     \item It gets added a positive or negative spread to the fixed rate set at the inception of the swap, based upon SBM's ESG score set by Sustainalytics. 
     \item At the beginning of every year during the contract's life, ING sets a target ESG score.
     \item If the score has been met, a discount of 5-10 basis points is applied to the fixed rate.
-    \item If the score has not been met, then a penalty of 5-10 basis points is applied to the fixed rate. 
+    \item If the score has not been met, a 5-10 basis points penalty is applied to the fixed rate. 
 \end{itemize} 
 
 We consider the ESG criteria to be $\F_{0}$-measurable. We will also take a constant discount $d$. To exemplify this deal pretend that the original fixed rate was set at $\kappa = 0.07$, with a discount/penalty $d = 0.005$ and the contract length is $n=4$ years. 
@@ -51,7 +51,7 @@ K_{4}^{ESG} =   0.060
 
 
 \section{General setup}
-We will take this deal as motivation, but generalize a bit further:
+We will take this deal as motivation but generalize a bit further:
 \begin{assumption}
 We assume the following: 
 \begin{itemize}[leftmargin=*]

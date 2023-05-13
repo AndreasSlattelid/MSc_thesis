@@ -209,12 +209,12 @@ Now if $\beta > 0$, one can find:
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=11cm]{figures/ESG/Trajectory_X(t)_params.png}
+    \includegraphics[width=11cm]{figures/ESG/ESG_OU_path.png}
     \caption{ESG-risk score with underlying process $X(t)$}
     \label{fig: ESG_risk_score_underlying_X(t)}
 \end{figure}
 
-The blue dots represent the observed ESG-risk score at the relevant observation times. The solid dark line represents the ESG-risk score between observation times, and the orange underlying process describes our continuous time ESG-risk score process $X(t)$.  
+The blue dots represent the observed ESG-risk score at the relevant observation times. The solid dark line represents the ESG-risk score between observation times, and the underlying orange process describes our continuous time ESG-risk score process $X(t)$.  
 
 \newpage 
 
@@ -230,12 +230,12 @@ After analysis, one has concluded that the model described in Figure \ref{fig: E
 \begin{itemize}
     \item $X(0) = 20 \implies Z(0) = -\ln\left(\frac{20}{100}\right)$
     \item $\beta = -0.05$
-    \item $\sigma = 0.2$
+    \item $\sigma = 0.02$
     \item $\lambda = 20$
     \item $\mu = 150$
 \end{itemize}
 
-We will use a stepsize of $dt = \frac{1}{360}$, and since the calculation is based upon Monte Carlo simulations, we will establish the analysis on 1 Million simulations ($n\_sim = 10^{6})$. 
+We will use a stepsize of $dt = \frac{1}{360}$, and since the calculation is based upon Monte Carlo simulations, we will establish the analysis on 1 Million simulations. 
 \\~\\ 
 \textbf{Agreement/specifications}
 \begin{itemize}
