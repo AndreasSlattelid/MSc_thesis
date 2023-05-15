@@ -61,7 +61,9 @@ We assume the following:
     \item $\kappa$ the fixed rate from the original swap, i.e. without ESG-link. 
     \item $d$ basis points added or subtracted to the fixed rate $\kappa$
     \item $\{A_{i}\}_{i=1}^{n}$ sequence of events, where: 
-    $A_{i} = \{X_{T_{i}} \leq C_{T_{i}}^{ESG}\}$ i.e. the sequence of events measuring whether or not the ESG-criteria $C_{T_{i}}^{ESG}$ is met at time $T_{i}$ or not. 
+    $A_{i} = \{X_{T_{i}} \leq C_{T_{i}}^{ESG}\}$
+    i.e. the sequence of events measuring if the ESG-risk score at time $T_{i}$: $X_{T_{i}}$, is below the ESG-criteria $C_{T_{i}}$ or not. 
+
 \end{itemize}
 \end{assumption} 
 
@@ -364,16 +366,22 @@ and:
 [\kappa -d\cdot i]s(l=1,i) \\
 &+ 
 \kappa \sum_{\alpha \in \mathcal{I}_{2i}^{Even}}
+\left(
 \sum_{
 j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
 }
-f(l=1, i, j_{|\mathcal{I}_{\alpha}^{Even}|}) \\ 
+f(l=1, i, j_{|\mathcal{I}_{\alpha}^{Even}|})
+\right)
+\\ 
 &-
 d\sum_{\alpha \in \mathcal{I}_{2i}^{Even}}
-[i-\alpha]\sum_{
+[i-\alpha]
+\left(
+\sum_{
 j_{1}\neq \dots \neq j_{|\mathcal{I}_{\alpha}^{Even}|}
 }
 f(l=1, i, j_{|\mathcal{I}_{\alpha}^{Even}|})
+\right)
 \end{align*}
 
 \newpage 
